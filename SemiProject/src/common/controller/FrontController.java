@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(
 		urlPatterns = { "*.go" }, 
 		initParams = { 
-				@WebInitParam(name = "FrontControllerA", value = "C:/NCS/workspace(jsp)/SemiProject/WebContent/WEB-INF/Command.properties")
+				@WebInitParam(name = "FrontControllerA", value = "C:/git/SemiProject/WebContent/WEB-INF/Command.properties")
 		})
 public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
