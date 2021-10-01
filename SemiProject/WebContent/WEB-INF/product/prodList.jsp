@@ -30,7 +30,7 @@
 
 </script>
 
-<style>
+<style type="text/css">
 	div.container{
 		width:80%;
 		font-family: Sans KR;
