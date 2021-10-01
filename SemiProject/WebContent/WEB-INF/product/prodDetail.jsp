@@ -492,6 +492,8 @@
 			<%-- 최상단, 최하단 이동 버튼 끝 --%>
 			
 	</div>
+	
+	<jsp:include page="../footer.jsp"/>
 
 </body>
 </html>
