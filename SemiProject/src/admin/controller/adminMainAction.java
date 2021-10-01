@@ -1,10 +1,14 @@
 package admin.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import member.model.InterMemberDAO;
+import member.model.MemberDAO;
 import member.model.MemberVO;
 
 public class adminMainAction extends AbstractController {
@@ -18,6 +22,11 @@ public class adminMainAction extends AbstractController {
 			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 			int grade = loginuser.getGrade();
 			if(grade == 1) {
+				
+				InterMemberDAO mdao = new MemberDAO();
+				List<MemberVO> memberList = mdao.getMemberList();
+				request.setAttribute("memberList", memberList);
+				
 				super.setViewPage("/WEB-INF/views/admin/admin_main.jsp");
 			} else {		
 				request.setAttribute("message", "관리자 전용 페이지입니다.");

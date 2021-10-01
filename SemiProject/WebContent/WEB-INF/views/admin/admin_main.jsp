@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -167,54 +168,53 @@
                                 회원 목록
                             </div>
                             <div class="card-body">
-                                <table class="table table-hover">
+							<!-- search{s} -->
+							<div class="form-group row justify-content-center">
+								<div class="w100" style="padding-right: 10px">
+									<select class="form-control form-control-sm" name="searchType"
+										id="searchType">
+										<option value="title">제목</option>
+										<option value="Content">본문</option>
+										<option value="reg_id">작성자</option>
+									</select>
+								</div>
+								<div class="w300" style="padding-right: 10px">
+									<input type="text" class="form-control form-control-sm"
+										name="keyword" id="keyword">
+								</div>
+								<div>
+									<button class="btn btn-sm btn-primary" name="btnSearch"
+										id="btnSearch">검색</button>
+								</div>
+							</div>
+							<!-- search{e} -->
+							<table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Nd</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>아이디</th>
+                                            <th>이름</th>
+                                            <th>이메일</th>
+                                            <th>핸드폰</th>
+                                            <th>성별</th>
+                                            <th>생년월일</th>
+                                            <th>포인트</th>
                                         </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot>
+                                    </thead>                                
                                     <tbody>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
+                                    <c:forEach var="memberList" items="${requestScope.memberList}">
+                                    	<tr>
+                                            <td>${memberList.userid}</td>
+                                            <td>${memberList.name}</td>
+                                            <td>${memberList.email}</td>
+                                            <td>${memberList.mobile}</td>
+                                            <td>
+                                            	<c:if test="${memberList.gender == 1}">남자</c:if>
+                                            	<c:if test="${memberList.gender == 2}">여자</c:if>
+                                            </td>
+                                            <td>${memberList.birthday}</td>
+                                            <td>${memberList.point}</td>
                                         </tr>
-                                       
-                                        <tr>
-                                            <td>Shad Decker</td>
-                                            <td>Regional Director</td>
-                                            <td>Edinburgh</td>
-                                            <td>51</td>
-                                            <td>2008/11/13</td>
-                                            <td>$183,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Michael Bruce</td>
-                                            <td>Javascript Developer</td>
-                                            <td>Singapore</td>
-                                            <td>29</td>
-                                            <td>2011/06/27</td>
-                                            <td>$183,000</td>
-                                        </tr>
-                                       
+                                    </c:forEach>                                                                                                                  
                                     </tbody>
                                 </table>
                             </div>
@@ -241,5 +241,7 @@
         <script src="/js/admin/chart-area-demo.js"></script>
         <script src="/js/admin/chart-bar-demo.js"></script>
     </body>
+<script>
+</script>
 </html>
     

@@ -3,7 +3,7 @@
 <jsp:include page="/WEB-INF/include/header.jsp"/>
 <style>
 	
-   table#tblMemberRegister {
+   table#tblMemberUpdate {
           width: 60%;
           
           /* 선을 숨기는 것 */
@@ -12,13 +12,13 @@
           margin: 10px;
    }  
    
-   table#tblMemberRegister #th {
+   table#tblMemberUpdate #th {
          height: 30px;
          text-align: center;
          font-size: 15pt;
    }
    
-   table#tblMemberRegister td {
+   table#tblMemberUpdate td {
          /* border: solid 1px gray;  */
          line-height: 30px;
          padding-top: 8px;
@@ -42,13 +42,13 @@
 </style>
 <div class="row" id="updateFrm">
    <div class="col-md-12" align="center">
-   <form name="registerFrm">
+   <form name="updateFrm">
    
-   <table id="tblMemberRegister">
+   <table id="tblMemberUpdate">
       <thead>
       <tr>
           <%-- 아래의 ${name_scope_request}&nbsp; 은 <c:set var="변수명" value="${값}" scope="" /> 를 테스트 하기 위해서 사용하는 것임. --%> 
-           <th colspan="2" id="th">&nbsp;회원정보 수정 (<span style="font-size: 10pt; font-style: italic;"><span class="star"></th>
+           <th colspan="2" id="th">&nbsp;회원정보 수정></th>
       </tr>
       </thead>
       <tbody>
@@ -91,8 +91,8 @@
          <td style="width: 20%; font-weight: bold;">연락처</td>
          <td style="width: 80%; text-align: left;">
              <input class="requiredInfo form-control form-control-sm2" type="text" id="hp1" name="hp1" size="6" maxlength="3" value="010" readonly />&nbsp;-&nbsp;
-             <input class="requiredInfo form-control form-control-sm2" type="text" id="hp2" name="hp2" size="6" maxlength="4" value="value="${fn:substring(sessionScope.loginuser.mobile, 3, 7)}"/>&nbsp;-&nbsp;
-             <input class="requiredInfo form-control form-control-sm2" type="text" id="hp3" name="hp3" size="6" maxlength="4" value="value="${fn:substring(sessionScope.loginuser.mobile, 7, 11)}" />
+             <input class="requiredInfo form-control form-control-sm2" type="text" id="hp2" name="hp2" size="6" maxlength="4" value="${fn:substring(sessionScope.loginuser.mobile, 3, 7)}"/>&nbsp;-&nbsp;
+             <input class="requiredInfo form-control form-control-sm2" type="text" id="hp3" name="hp3" size="6" maxlength="4" value="${fn:substring(sessionScope.loginuser.mobile, 7, 11)}" />
              <span class="error">휴대폰 형식이 아닙니다.</span>
          </td>
       </tr>
@@ -109,8 +109,9 @@
 </div>
 <script>
 
-var b_flagIdDuplicateClick = true;
-var b_flagEmailDuplicateClick = false;
+var b_flagEmailDuplicateClick = true; // 이메일 중복검사
+var pwdCheck = false; // 비밀번호 검사
+var pwdConfirmCheck = false; // 비밀번호 확인 검사
 
 function isExistEmailCheck(){
 	 
@@ -138,7 +139,6 @@ function isExistEmailCheck(){
    
 }
 // 이메일 수정시 중복확인 초기화 
-
 $("#email").on("propertychange change keyup paste input", function(){
 	b_flagEmailDuplicateClick = false;
 });  
@@ -148,6 +148,8 @@ function goUpdate(){
 	var pwd = $("input#pwd").val().trim();
 	if(pwd == ""){
 		$("input#pwd").val('${sessionScope.loginuser.pwd}');
+		pwdCheck = true;
+		pwdConfirmCheck = true;
 	}
 	
 	if(!b_flagEmailDuplicateClick){
@@ -155,44 +157,48 @@ function goUpdate(){
 		return;
 	}
 	
+	if(pwdCheck == false || pwdConfirmCheck == false){
+		alert("비밀번호 및 비밀번호확인을 확인하시기 바랍니다.");
+		return;
+	}
+	
 	var frm = document.updateFrm;
-	frm.action = "/member/memberUpdate.up";
+	frm.action = "/member/updateMember.go";
 	frm.method = "post";
 	frm.submit();
 }
 
 function showError(event){
 	
-	$("table#tblMemberRegister :input").prop("disabled", true);
-	$(event).prop("disabled", false);
-	
 	$(event).parent().find(".error").show();
-	$(event).focus();
+	
 }
 
 function nextStep(event){
-	$("table#tblMemberRegister :input").prop("disabled", false);
+
 	$(event).parent().find(".error").hide();
 }
 
 $(function(){
+	
+	$("span.error").hide();
+	
+	$("input#pwd").blur(function(){
 		
-		$("input#name").focus();
-			
-		$("input#pwd").blur(function(){
-			// 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
-			var regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
-			var pwd = $(this).val().trim();
-			
-			var bool = regExp.test(pwd);
-			if(!bool){
-				showError($(this));
-			} else{
-				nextStep($(this));
-			}
-			
-		}); // 비번 체킹
+		// 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
+		var regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
+		var pwd = $(this).val().trim();
 		
+		var bool = regExp.test(pwd);
+		if(!bool){
+			showError($(this));
+			pwdCheck = false;
+		} else{
+			nextStep($(this));
+			pwdCheck = true;
+		}
+		
+	});
 		$("input#pwdcheck").blur(function(){
 			
 			var pwd = $("input#pwd").val();
@@ -200,8 +206,10 @@ $(function(){
 			
 			if(pwd != pwdcheck){
 				showError($(this));
+				pwdConfirmCheck = false;
 			} else{
 				nextStep($(this));
+				pwdConfirmCheck = true;
 			}
 			
 		}); // 비번확인 체킹

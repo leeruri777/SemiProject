@@ -15,12 +15,13 @@ public interface InterMemberDAO {
 		int registerMember(MemberVO member) throws SQLException;
 		// email 중복검사
 		boolean emailDuplicateCheck(String email) throws SQLException;
-		
+		// 회원정보 수정
+		int updateMember(MemberVO member) throws SQLException;
 		
 		// 회원 한 명의 정보 가져오기
 		MemberVO selectOneMember(Map<String, String> paraMap) throws SQLException;
 		// 전체 회원목록 가져오기
 		List<MemberVO> getMemberList() throws SQLException;
-
+		
 }
 

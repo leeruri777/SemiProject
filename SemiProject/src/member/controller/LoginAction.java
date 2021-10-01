@@ -20,7 +20,15 @@ public class LoginAction extends AbstractController {
 		String method = request.getMethod();
 		
 		if(method.equalsIgnoreCase("GET")) {
-			super.setViewPage("/WEB-INF/views/member/loginForm.jsp");
+			if(super.checkLogin(request)) {
+				
+				request.setAttribute("message", "이미 로그인을 하셨습니다.");
+		        request.setAttribute("loc", "/");
+		         
+		        super.setViewPage("/WEB-INF/msg.jsp");
+			} else {
+				super.setViewPage("/WEB-INF/views/member/loginForm.jsp");
+			}
 			
 		} else {
 			String userid = request.getParameter("userid");

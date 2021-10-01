@@ -223,22 +223,62 @@ public class MemberDAO implements InterMemberDAO {
 		
 		List<MemberVO> memberList = new ArrayList<>();
 		
-//		try {
-//			conn = ds.getConnection();
-//			String sql = "select userid, name, email, mobile, gender, birthday, "
-//					+ " from tbl_member"
-//					+ " where grade = 0 ";
-//			
-//			pstmt = conn.prepareStatement(sql);
-//			pstmt.setString(1, userid);
-//			rs = pstmt.executeQuery();
-//			
-//			
-//			
-//		} finally {
-//			close();
-//		}
+		try {
+			conn = ds.getConnection();
+			String sql = "select userid, name, email, mobile, gender, birthday, point"
+					+ " from tbl_member"
+					+ " where grade = 0 ";
+			
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				MemberVO member = new MemberVO();
+				member.setUserid(rs.getString(1));
+				member.setName(rs.getString(2));
+				member.setEmail(aes.decrypt(rs.getString(3)) );
+				member.setMobile(aes.decrypt(rs.getString(4)) );
+				member.setGender(rs.getString(5));
+				member.setBirthday(rs.getString(6));
+				member.setPoint(rs.getInt(7));
+				
+				memberList.add(member);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close();
+		}
 		return memberList;
+	}
+
+	@Override
+	public int updateMember(MemberVO member) throws SQLException {
+		
+		int n = 0;
+		try {
+			conn = ds.getConnection();
+			String sql = "update tbl_member set pwd = ?, email = ?, mobile = ?, lastpwdchangedate = sysdate "
+						+ "where userid = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, Sha256.encrypt(member.getPwd()) );
+	        pstmt.setString(2, aes.encrypt(member.getEmail()) );
+	        pstmt.setString(3, aes.encrypt(member.getMobile()) );
+	        pstmt.setString(4, member.getUserid() );
+			
+			n = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return n;
 	}
 	
 
