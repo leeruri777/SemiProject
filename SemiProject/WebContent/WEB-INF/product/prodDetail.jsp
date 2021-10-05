@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <!-- 직접 만든 CSS -->
-<%-- <link rel="stylesheet" type="text/css" href="<%= ctxPath %>/css/style.css" /> --%>
+<link rel="stylesheet" type="text/css" href="<%= ctxPath %>/css/style.css" />
 
 <!-- Optional JavaScript -->
 <script type="text/javascript" src="<%= ctxPath %>/js/jquery-3.3.1.min.js"></script>
