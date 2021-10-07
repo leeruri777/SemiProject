@@ -11,7 +11,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>[관리자 메뉴]상품관리</title>
+<title>[관리자메뉴]상품관리</title>
 
 <!-- Required meta tags -->
 <meta charset="utf-8">
@@ -74,7 +74,7 @@
 	          			<p class="row">
 	          				<label class="col-2" for="addMount">입고량</label>
 	          				:&nbsp;&nbsp;
-				    		<input type="text" class="inventory" id="box"/>
+				    		<input type="text" class="inventory" id="box" placeholder="0 이상의 숫자 입력"/>
 				    	</p>
 			      </div>
 			      
@@ -105,7 +105,7 @@
 	          			<p class="row">
 	          				<label class="col-2" for="delMount">폐기량</label>
 				    		:&nbsp;&nbsp;
-				    		<input type="text" class="inventory" id="box"/>
+				    		<input type="text" class="inventory" id="box" placeholder="0 이상의 숫자 입력"/>
 				    	</p>
 				    	<p class="row">
 					    	<label class="col-2" for="delWhy">폐기사유</label>
@@ -137,8 +137,7 @@
 					
 					<div class="col-md-9 mb-2 pl-4">
 						<select id="searchType" name="searchType">						
-							<option value="Category_Large">대분류명</option>
-							<option value="Category_Small">소분류명</option>
+							<option value="Category">카테고리명</option>
 							<option value="ProdName" selected="selected">상품명</option>
 						</select>
 						
@@ -185,18 +184,18 @@
 									</td>
 									<td class="col-sm-2">
 										<p>재고몇개입니다</p>
-										<button type="button" class="btn btn-sm btn-info my-1" data-toggle="modal" data-target="#addModal">입고</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#delModal">폐기</button>
+										<button type="button" class="btn btn-sm btn-info my-1 mx-1 mx-1" data-toggle="modal" data-target="#addModal">입고</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1 mx-1" data-toggle="modal" data-target="#delModal">폐기</button>
 									</td>
-									<td class="col-sm-2 text-left">
+									<td class="col-sm-2">
 										<p>판매상태입니다</p>
-										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매</label>
+										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매&nbsp;&nbsp;&nbsp;</label>
 										<br>
 										<input type="radio" name="sale1" id="notsale" /><label for="notsale">&nbsp;미판매</label>
 									</td>
 									<td class="col-sm-2">
-										<button type="button" class="btn btn-sm btn-dark my-1">수정</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1">삭제</button>
+										<button type="button" class="btn btn-sm btn-dark my-1 mx-1 mx-1">수정</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1 mx-1">삭제</button>
 									</td>
 								</tr>
 								<tr class="row w-100 px-0 mx-0">
@@ -211,18 +210,18 @@
 									</td>
 									<td class="col-sm-2">
 										<p>재고몇개입니다</p>
-										<button type="button" class="btn btn-sm btn-info my-1" data-toggle="modal" data-target="#addModal">입고</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#delModal">폐기</button>
+										<button type="button" class="btn btn-sm btn-info my-1 mx-1" data-toggle="modal" data-target="#addModal">입고</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1" data-toggle="modal" data-target="#delModal">폐기</button>
 									</td>
-									<td class="col-sm-2 text-left">
+									<td class="col-sm-2">
 										<p>판매상태입니다</p>
-										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매</label>
+										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매&nbsp;&nbsp;&nbsp;</label>
 										<br>
 										<input type="radio" name="sale1" id="notsale" /><label for="notsale">&nbsp;미판매</label>
 									</td>
 									<td class="col-sm-2">
-										<button type="button" class="btn btn-sm btn-dark my-1">수정</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1">삭제</button>
+										<button type="button" class="btn btn-sm btn-dark my-1 mx-1">수정</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1">삭제</button>
 									</td>
 								</tr>
 								<tr class="row w-100 px-0 mx-0">
@@ -237,18 +236,18 @@
 									</td>
 									<td class="col-sm-2">
 										<p>재고몇개입니다</p>
-										<button type="button" class="btn btn-sm btn-info my-1" data-toggle="modal" data-target="#addModal">입고</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#delModal">폐기</button>
+										<button type="button" class="btn btn-sm btn-info my-1 mx-1" data-toggle="modal" data-target="#addModal">입고</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1" data-toggle="modal" data-target="#delModal">폐기</button>
 									</td>
-									<td class="col-sm-2 text-left">
+									<td class="col-sm-2">
 										<p>판매상태입니다</p>
-										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매</label>
+										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매&nbsp;&nbsp;&nbsp;</label>
 										<br>
 										<input type="radio" name="sale1" id="notsale" /><label for="notsale">&nbsp;미판매</label>
 									</td>
 									<td class="col-sm-2">
-										<button type="button" class="btn btn-sm btn-dark my-1">수정</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1">삭제</button>
+										<button type="button" class="btn btn-sm btn-dark my-1 mx-1">수정</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1">삭제</button>
 									</td>
 								</tr>
 								<tr class="row w-100 px-0 mx-0">
@@ -263,18 +262,18 @@
 									</td>
 									<td class="col-sm-2">
 										<p>재고몇개입니다</p>
-										<button type="button" class="btn btn-sm btn-info my-1" data-toggle="modal" data-target="#addModal">입고</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#delModal">폐기</button>
+										<button type="button" class="btn btn-sm btn-info my-1 mx-1" data-toggle="modal" data-target="#addModal">입고</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1" data-toggle="modal" data-target="#delModal">폐기</button>
 									</td>
-									<td class="col-sm-2 text-left">
+									<td class="col-sm-2 ">
 										<p>판매상태입니다</p>
-										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매</label>
+										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매&nbsp;&nbsp;&nbsp;</label>
 										<br>
 										<input type="radio" name="sale1" id="notsale" /><label for="notsale">&nbsp;미판매</label>
 									</td>
 									<td class="col-sm-2">
-										<button type="button" class="btn btn-sm btn-dark my-1">수정</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1">삭제</button>
+										<button type="button" class="btn btn-sm btn-dark my-1 mx-1">수정</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1">삭제</button>
 									</td>
 								</tr>
 								<tr class="row w-100 px-0 mx-0">
@@ -289,18 +288,18 @@
 									</td>
 									<td class="col-sm-2">
 										<p>재고몇개입니다</p>
-										<button type="button" class="btn btn-sm btn-info my-1" data-toggle="modal" data-target="#addModal">입고</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#delModal">폐기</button>
+										<button type="button" class="btn btn-sm btn-info my-1 mx-1" data-toggle="modal" data-target="#addModal">입고</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1" data-toggle="modal" data-target="#delModal">폐기</button>
 									</td>
-									<td class="col-sm-2 text-left">
+									<td class="col-sm-2 ">
 										<p>판매상태입니다</p>
-										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매</label>
+										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매&nbsp;&nbsp;&nbsp;</label>
 										<br>
 										<input type="radio" name="sale1" id="notsale" /><label for="notsale">&nbsp;미판매</label>
 									</td>
 									<td class="col-sm-2">
-										<button type="button" class="btn btn-sm btn-dark my-1">수정</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1">삭제</button>
+										<button type="button" class="btn btn-sm btn-dark my-1 mx-1">수정</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1">삭제</button>
 									</td>
 								</tr>
 								<tr class="row w-100 px-0 mx-0">
@@ -315,18 +314,18 @@
 									</td>
 									<td class="col-sm-2">
 										<p>재고몇개입니다</p>
-										<button type="button" class="btn btn-sm btn-info my-1" data-toggle="modal" data-target="#addModal">입고</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#delModal">폐기</button>
+										<button type="button" class="btn btn-sm btn-info my-1 mx-1" data-toggle="modal" data-target="#addModal">입고</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1" data-toggle="modal" data-target="#delModal">폐기</button>
 									</td>
-									<td class="col-sm-2 text-left">
+									<td class="col-sm-2 ">
 										<p>판매상태입니다</p>
-										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매</label>
+										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매&nbsp;&nbsp;&nbsp;</label>
 										<br>
 										<input type="radio" name="sale1" id="notsale" /><label for="notsale">&nbsp;미판매</label>
 									</td>
 									<td class="col-sm-2">
-										<button type="button" class="btn btn-sm btn-dark my-1">수정</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1">삭제</button>
+										<button type="button" class="btn btn-sm btn-dark my-1 mx-1">수정</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1">삭제</button>
 									</td>
 								</tr>
 								<tr class="row w-100 px-0 mx-0">
@@ -341,18 +340,18 @@
 									</td>
 									<td class="col-sm-2">
 										<p>재고몇개입니다</p>
-										<button type="button" class="btn btn-sm btn-info my-1" data-toggle="modal" data-target="#addModal">입고</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#delModal">폐기</button>
+										<button type="button" class="btn btn-sm btn-info my-1 mx-1" data-toggle="modal" data-target="#addModal">입고</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1" data-toggle="modal" data-target="#delModal">폐기</button>
 									</td>
-									<td class="col-sm-2 text-left">
+									<td class="col-sm-2 ">
 										<p>판매상태입니다</p>
-										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매</label>
+										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매&nbsp;&nbsp;&nbsp;</label>
 										<br>
 										<input type="radio" name="sale1" id="notsale" /><label for="notsale">&nbsp;미판매</label>
 									</td>
 									<td class="col-sm-2">
-										<button type="button" class="btn btn-sm btn-dark my-1">수정</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1">삭제</button>
+										<button type="button" class="btn btn-sm btn-dark my-1 mx-1">수정</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1">삭제</button>
 									</td>
 								</tr>
 								<tr class="row w-100 px-0 mx-0">
@@ -367,18 +366,18 @@
 									</td>
 									<td class="col-sm-2">
 										<p>재고몇개입니다</p>
-										<button type="button" class="btn btn-sm btn-info my-1" data-toggle="modal" data-target="#addModal">입고</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#delModal">폐기</button>
+										<button type="button" class="btn btn-sm btn-info my-1 mx-1" data-toggle="modal" data-target="#addModal">입고</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1" data-toggle="modal" data-target="#delModal">폐기</button>
 									</td>
-									<td class="col-sm-2 text-left">
+									<td class="col-sm-2 ">
 										<p>판매상태입니다</p>
-										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매</label>
+										<input type="radio" name="sale1" id="sale" checked /><label for="sale">&nbsp;판매&nbsp;&nbsp;&nbsp;</label>
 										<br>
 										<input type="radio" name="sale1" id="notsale" /><label for="notsale">&nbsp;미판매</label>
 									</td>
 									<td class="col-sm-2">
-										<button type="button" class="btn btn-sm btn-dark my-1">수정</button>						
-										<button type="button" class="btn btn-sm btn-danger my-1">삭제</button>
+										<button type="button" class="btn btn-sm btn-dark my-1 mx-1">수정</button>						
+										<button type="button" class="btn btn-sm btn-danger my-1 mx-1">삭제</button>
 									</td>
 								</tr>
 								
