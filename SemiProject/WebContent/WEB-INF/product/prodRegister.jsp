@@ -422,7 +422,7 @@
 						<label class="title" for="prodName">상품명</label>
 					</div>
 					<div class="col-9 col-md-5 form-group">
-						<input type="text" class="productname form-control" id="box" name="prod_name" maxlength="30">
+						<input type="text" class="productname form-control" id="box" name="prod_name" maxlength="200">
 					</div>
 				</div>
 				
@@ -431,8 +431,8 @@
 						<label class="title" for="expalin">상품설명</label>
 					</div>
 					<div class="col-9 col-md-5 form-group">						
-						<textarea class="form-control form-control-sm" name="prod_exp" maxlength="50"></textarea>						
-						<span class='small' style="color: red;">*상품설명은 50자까지만 가능합니다.</span>
+						<textarea class="form-control form-control-sm" name="prod_exp" maxlength="500"></textarea>						
+						<span class='small' style="color: red;">*상품설명은 500자까지만 가능합니다.</span>
 						<span class='small ml-5' id='howlong'></span>
 					</div>
 				</div>
