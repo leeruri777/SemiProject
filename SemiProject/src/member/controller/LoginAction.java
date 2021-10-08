@@ -71,7 +71,6 @@ public class LoginAction extends AbstractController {
 				         super.setViewPage("/WEB-INF/msg.jsp");
 					} else {
 						// 비밀번호를 변경한지 3개월 이내인 경우
-						super.setRedirect(true);
 						super.setViewPage("/");
 					}
 			        
