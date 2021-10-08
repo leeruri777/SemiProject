@@ -104,7 +104,7 @@
 		<div id="top_image" class="row w-100 mx-0 px-0">
 			<c:if test="${requestScope.adimg != ''}">
 				<div class=" col-lg-12 px-0 mx-0 text-center ">
-					<img src="../img_prod/선물세트/${requestScope.adimg}" class="img-fluid">
+					<img src="../img_prod/${requestScope.adimg}" class="img-fluid">
 				</div>
 			</c:if>
 		</div>
@@ -121,7 +121,7 @@
 		  <c:forEach var="prodmap" items="${productList}">
 			  <div class="card col-sm-3 col-4">
 			    <div class="card-body px-1">
-			       <img src="../img_prod/선물세트/${prodmap.ivo.prod_img_url}" style="width:100%">
+			       <img src="../img_prod/${prodmap.ivo.prod_img_url}" style="width:100%">
 			        <span id="font1" style="text-align: center">${prodmap.pvo.prod_name}<b><br>${prodmap.pvo.prod_price}원</b></span>
 			    	<input id="prod_code" type="hidden" value="${prodmap.pvo.prod_code}" /> <!-- value에 DB연결하고 prod_code 넣을것 -->
 			    </div>
