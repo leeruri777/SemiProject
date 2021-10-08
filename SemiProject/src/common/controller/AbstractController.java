@@ -38,20 +38,19 @@ public abstract class AbstractController implements InterCommand{
       
       return check;
    }
-   
+
    public void checkLoginAuth(HttpServletRequest request, String view) {
-         
-         HttpSession session = request.getSession();
-         MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
-         if(loginuser != null) {      
-            
-            setViewPage(view);
-         } else {      
-            request.setAttribute("message", "로그인이 필요합니다.");
-            request.setAttribute("loc", "/member/login.go");
-            setViewPage("/WEB-INF/msg.jsp");
-         }
+      
+      HttpSession session = request.getSession();
+      MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+      if(loginuser != null) {               
+         setViewPage(view);
+      } else {      
+         request.setAttribute("message", "로그인이 필요합니다.");
+         request.setAttribute("loc", "/member/login.go");
+         setViewPage("/WEB-INF/msg.jsp");
       }
+   }
    
    public void checkAdministration(HttpServletRequest request, String view) {
           
@@ -67,6 +66,7 @@ public abstract class AbstractController implements InterCommand{
             request.setAttribute("message", "관리자 전용 페이지입니다.");
             request.setAttribute("loc", "/");            
             setViewPage("/WEB-INF/msg.jsp");
+            return;
          }
          
       } else {
@@ -74,6 +74,7 @@ public abstract class AbstractController implements InterCommand{
          request.setAttribute("message", "로그인이 필요합니다.");
          request.setAttribute("loc", "/");
          setViewPage("/WEB-INF/msg.jsp");
+         return;
       }
    }
    
@@ -90,4 +91,5 @@ public abstract class AbstractController implements InterCommand{
       
    }
    
+
 }
