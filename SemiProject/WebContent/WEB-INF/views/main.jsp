@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/WEB-INF/include/header.jsp"/>
-<!DOCTYPE html>
+<title>소녀떡집</title>
 	<!-- Header-->
 	<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
 		<ol class="carousel-indicators">
@@ -33,6 +33,8 @@
         <a href="/member/login.go">로그인화면</a>
 		<a href="/member/signUp.go">회원가입 화면</a>
 		<a href="/member/updateMember.go">회원정보 수정 화면</a>
+		<a href="javascript:addAddresForm()">배송지 등록하기</a>
+		<a href="/admin/sendMessage.go">메세지 전송하기</a>
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -235,4 +237,17 @@
                 </div>
             </div>
         </section>
+<script>
+function addAddresForm(){
+	var url = "/member/addAddress.go";
+	// 너비 800, 높이 650인 팝업창을 화면 가운데에 띄우기 
+	var pop_width = 800;
+	var pop_height = 600;
+	var pop_left = Math.ceil((window.screen.width - pop_width)/2 );
+	var pop_top = Math.ceil((window.screen.height - pop_height)/2 );
+	
+	window.open(url, "배송지 추가",
+    "left="+pop_width+", top="+pop_top+", width="+pop_width+", height="+pop_height);
+}
+</script>
 <jsp:include page="/WEB-INF/include/footer.jsp"/>

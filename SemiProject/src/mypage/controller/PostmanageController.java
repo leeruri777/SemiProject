@@ -1,21 +1,17 @@
-package member.controller;
+package mypage.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
 
-public class LogoutAction extends AbstractController {
+public class PostmanageController extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// super.setRedirect(false);
+		super.setViewPage("/WEB-INF/views/mypage/postmanage.jsp");
 		
-		HttpSession session = request.getSession();
-		session.invalidate();
-		
-		super.setRedirect(true);
-		super.setViewPage("/");
 	}
 
 }

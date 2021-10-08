@@ -57,9 +57,7 @@ public class LoginAction extends AbstractController {
 			         
 			         return;
 				} else {
-					
-					System.out.println("로그인 성공!");
-					
+										
 					HttpSession session = request.getSession();
 					session.setAttribute("loginuser", loginuser);
 					

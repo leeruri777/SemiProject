@@ -19,18 +19,7 @@ public class UpdateMemberAction extends AbstractController {
 		
 		if(method.equalsIgnoreCase("GET")) {
 			
-			boolean loginCheck = super.checkLogin(request);
-			if(loginCheck) {		
-					
-//				super.setViewPage("/common/checkPw.go");
-												
-				super.setViewPage("/WEB-INF/views/member/updateMemberForm.jsp");
-			} else {
-				
-				request.setAttribute("message", "로그인이 필요합니다.");
-				request.setAttribute("loc", "/member/login.go");
-				super.setViewPage("/WEB-INF/msg.jsp");
-			}
+			super.checkLoginAuth(request, "/WEB-INF/views/member/updateMemberForm.jsp");
 			
 		} else {
 			

@@ -3,24 +3,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>:::HOMEPAGE:::</title>
-
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" type="text/css" href="/bootstrap-4.6.0-dist/css/bootstrap.min.css" > 
-
 <!-- Font Awesome 5 Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-<!-- 직접 만든 CSS -->
 <link rel="stylesheet" type="text/css" href="/css/style.css" />
-
 <!-- Optional JavaScript -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- jquery UI -->
+<link rel="stylesheet" type="text/css" href="/jquery-ui-1.12.1.custom/jquery-ui.css" />
+<script type="text/javascript" src="/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 </head>
 <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -41,7 +36,7 @@
 								<li class="nav-item"><a class="nav-link" href="/admin/adminMain.go">관리자 모드</a></li>
 							</c:if>
 							<li class="nav-item"><a class="nav-link" href="#">${sessionScope.loginuer.userid}</a></li>
-							<li class="nav-item"><a class="nav-link" href="#">마이페이지</a></li>
+							<li class="nav-item"><a class="nav-link" href="/mypage/orderlist.go">마이페이지</a></li>
 							<li class="nav-item"><a class="nav-link" href="/member/logout.go">로그아웃</a></li>
 						</c:otherwise>
 					</c:choose>

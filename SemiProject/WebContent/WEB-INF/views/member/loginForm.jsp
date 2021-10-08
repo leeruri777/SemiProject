@@ -13,76 +13,192 @@
 <!-- Font Awesome 5 Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<!-- 직접 만든 CSS -->
-<link rel="stylesheet" type="text/css" href="/css/style.css" />
-
 <!-- Optional JavaScript -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script>
 
-    <style>
-    html,
+<style>
 body {
-  height: 100%;
+	 width: 600px;
+	 margin: 0 auto;
+	 font-family: Noto Sans KR,sans-serif!important;
+	 padding: 0 70px;
 }
 
-body {
-  display: flex;
-  align-items: center;
-  padding-top: 10px;
-  padding-bottom: 20px;
-  background-color: #f5f5f5;
+.shopname img{
+    display: block;
+ 	margin : 0 auto;
+ 	margin-top : 50px;
+}
+.contents{
+  	position: relative;
+    width: 100%;
+    padding: 36px 0;
+}
+.title{
+	margin: 0 0 20px;
+    font-size: 24px;
+    font-weight: bold;
+    
+}
+.text{
+	margin-bottom: 24px;
+    font-size: 16px;
+    font-weight: lighter;
+}
+.btn {
+	margin-top: 10px;
+    padding: 0;
+    display: inline-block;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    border: 1px;
+    border-radius: 5px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    
+}
+.btnkakao{
+	margin-top: 12px;
+    padding: 0 0 0 20px;
+    height: 60px;
+    line-height: 60px;
+    background-color: #fee500;
+    font-size: 15px;
+    color: #111;
+    background-image: url(//storage.keepgrow.com/admin/campaign/20200611043456590.svg);
+    background-repeat: no-repeat;
+    background-size: 18px;
+    background-position: 15px;
+}
+  .inputbox{
+  	border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .inputbox input{
+    padding: 0 15px;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    border: none;
+    font-size: 14px;
+    color: #000;
+    box-sizing: border-box;
+  }
+      
+  
+  .logincheckbox{
+  	margin: 15px 0;
+  }
+  .loginBtn{
+  	padding: 0;
+    display: inline-block;
+    line-height: 45px;
+    border: 1px;
+    border-radius: 5px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    
+    background: #31363d;
+    font-size: 15px;
+    color: #fff;
+  }
+  .utilmenu{
+  	float: inherit;
+    margin: 24px 0 0;
+    border: none;
+  }
+  .utilmenu a{
+    font-size: 12px;
+    font-weight: lighter;
+    color: #222;
+  }
+  .after{
+    text-align : center;
+    padding: 0 10px;
+    font-size: 12px;
+    color: #b2b2b2;
+}
+.footer{
+    border: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.ment{
+    padding: 24px 0 10px;
+    border-top: 2px solid #333;
+    font-size: 14px;
 }
 
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
-}
-
-.form-signin .checkbox {
-  font-size : 10;
-  font-weight: 10;
-  text-align : left;
-}
-
-.form-signin .form-floating:focus-within {
-  z-index: 2;
-}
-
-.form-signin input[type="email"] {
-  margin-bottom: 1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
+  
+</style>
 
     
 <!-- Custom styles for this template -->
 </head>
-<body class="text-center">
-    
+<body>
+<div class="main">
+	<div class="header">
+		<h1 class="shopname">
+			<a href="/"><img src="/images/login/logo_main.jpg"></a>
+		</h1>
+	</div>
+	<div class="section">
+		<div class="contents">
+			<h2 class="title">로그인</h2>
+			<p class="text">
+				아이디와 비밀번호 입력하기 귀찮으시죠?
+				<br>
+				카카오로 1초 만에 로그인 하세요.
+			</p>	
+			<a class="btn btnkakao" style="text-align:center;">카카오 1초 로그인/회원가입</a>
+		</div>
+	</div>
+	<p class="after">또는</p>
+	<div class="banner">
+		<img src="/images/login/loginCoupon.jpg" alt="banner">
+	</div>
+		<div id="loginForm" style="margin-bottom: 30px;">
+			<div class="inputbox">
+				<form name="loginFrm">
+					<input type="text" class="form-control" id="userid" name="userid"autocomplete="off" placeholder="Id">
+					<input type="password" class="form-control" id="pwd" name="pwd" placeholder="Password">
+				</form>
+			</div>
+			<div class="logincheckbox">
+				<label style="font-size : 10px;">
+		      	  <input type="checkbox" id="savdid"> 아이디 저장
+		        </label>
+			</div>
+			<button class="btn loginBtn" onclick="goLogin()">로그인</button>
+			<div class="utilmenu">
+				<a href="#" >아이디 찾기</a>
+				<a href="#">비밀번호 찾기</a>
+				<a href="#" style="float: right;">가입하기</a>
+			</div>
+		</div>
+	<div class="footer">
+		<div class="ment">
+          <b>카카오 1초 로그인/회원가입 이란?</b>
+          <br>
+          카카오 싱크를 활용한 간편 로그인/가입 기능입니다.
+        </div>
+	</div>
+</div>
+
+<!-- <div class="backBtn" onclick="history.go(-1);return false;">뒤로가기</div>
 <main class="form-signin">
+	
   <form name="loginFrm">
     <h1 class="h4 mb-3 fw-normal">로그인</h1>
 
@@ -106,8 +222,9 @@ body {
     	<a class="right" style="display:" href="#">회원가입</a>
     </div>
     
+    
   </form>
-</main>
+</main> -->
 <script>
 
 $(function(){
