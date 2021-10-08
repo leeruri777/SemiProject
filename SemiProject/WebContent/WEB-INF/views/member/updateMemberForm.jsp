@@ -1,44 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <jsp:include page="/WEB-INF/include/header.jsp"/>
+<jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
+
+<link rel="stylesheet" type="text/css" href="/css/mypage/mypageStyle.css" />
+
 <style>
-	
-   table#tblMemberUpdate {
-          width: 60%;
-          
-          /* 선을 숨기는 것 */
-          border: hidden;
-          
-          margin: 10px;
-   }  
-   
-   table#tblMemberUpdate #th {
-         height: 30px;
-         text-align: center;
-         font-size: 15pt;
-   }
-   
-   table#tblMemberUpdate td {
-         /* border: solid 1px gray;  */
-         line-height: 30px;
-         padding-top: 8px;
-         padding-bottom: 8px;
-   }
-   
-   .star { color: red;
-           font-weight: bold;
-           font-size: 13pt;
-   }
-   .form-control-sm {
-   		width:200px;
-   		height:30px;
-   		display:inline;
-   }
-   .form-control-sm2 {
-   		width:100px;
-   		height:30px;
-   		display:inline;
-   }
+table#tblMemberUpdate {
+       width: 60%;
+     
+       /* 선을 숨기는 것 */
+       border: hidden;
+       
+       margin: 10px;
+}  
+
+table#tblMemberUpdate #th {
+      height: 30px;
+      text-align: center;
+      font-size: 15pt;
+}
+
+table#tblMemberUpdate td {
+      /* border: solid 1px gray;  */
+      line-height: 30px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+}
+
+.star { color: red;
+        font-weight: bold;
+        font-size: 13pt;
+}
+.form-control-sm {
+		width:200px;
+		height:30px;
+		display:inline;
+}
+.form-control-sm2 {
+		width:100px;
+		height:30px;
+		display:inline;
+}
 </style>
 <div class="row" id="updateFrm">
    <div class="col-md-12" align="center">
@@ -48,7 +52,7 @@
       <thead>
       <tr>
           <%-- 아래의 ${name_scope_request}&nbsp; 은 <c:set var="변수명" value="${값}" scope="" /> 를 테스트 하기 위해서 사용하는 것임. --%> 
-           <th colspan="2" id="th">&nbsp;회원정보 수정></th>
+           <th colspan="2" id="th">&nbsp;회원정보 수정</th>
       </tr>
       </thead>
       <tbody>
@@ -67,7 +71,7 @@
       <tr>
          <td style="width: 20%; font-weight: bold;">비밀번호&nbsp;</td>
          <td style="width: 80%; text-align: left;"><input type="password" name="pwd" id="pwd" class="requiredInfo form-control form-control-sm" />
-            <span class="error">암호는 영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요.</span>
+         	<span>(숫자/문자/특수문자/ 포함 형태의 8~15자리 이내)</span>
          </td>
       </tr>
       <tr>
@@ -191,10 +195,8 @@ $(function(){
 		
 		var bool = regExp.test(pwd);
 		if(!bool){
-			showError($(this));
 			pwdCheck = false;
 		} else{
-			nextStep($(this));
 			pwdCheck = true;
 		}
 		
