@@ -298,6 +298,22 @@
 			
 		});
 		
+		/////////////////////////////////////////////////////////////////////////
+		
+		$("#selectCnt").blur(function() {
+			
+			if(isNaN($(this).val())) {
+				alert("골라담기 개수는 숫자만 입력하셔야 합니다.");
+				$(this).val("");
+			}
+			
+			else if(Number($(this).val()) < 1) {				
+				alert("골라담기 개수는 최소 1개 이상이어야 합니다.");
+				$(this).val("");				
+			}
+			
+		});
+		
 				
 	})// end of $(document).ready(function() {})------------------------------------------
 	
@@ -320,6 +336,10 @@
 				return;
 			}
 			
+			else {
+				frm.add_sort_name.value = frm.add_sort_name.value.trim(); 
+			}
+			
 		}
 		
 		// 2. 상품명 검사		
@@ -328,12 +348,23 @@
 			return;			
 		}
 		
+		else {
+			frm.prod_name.value = frm.prod_name.value.trim();
+		}
+		
 		// 3. 상품설명 검사 --> 얘는 없어도 상관없다
+		if(frm.prod_exp.value.trim().length != 0) {
+			frm.prod_exp.value = frm.prod_exp.value.trim();			
+		}		
 		
 		// 4. 가격 검사
 		if(frm.prod_price.value.trim().length == 0) {
 			alert("가격을 입력하셔야 합니다.");
 			return;			
+		}
+		
+		else {
+			frm.prod_price.value = frm.prod_price.value.trim();
 		}
 		
 		// 4-#. 할인 가격 검사
@@ -345,9 +376,16 @@
 				return;			
 			}
 			
+			else {
+				frm.discount_price.value = frm.discount_price.value.trim();
+			}
+			
 		}
 		
 		// 5. 재고 검사 --> 얘는 없을 경우 재고가 0인 상태로 입력될 것이므로 상관없다
+		if(frm.prod_stock.value.trim().length != 0) {
+			frm.prod_stock.value = frm.prod_stock.value.trim();			
+		}
 		
 		// 6. 타이틀이미지 검사
 		if(frm.titlefile.value.trim().length == 0) {
@@ -373,6 +411,17 @@
 		//	console.log(frm.prod_select_code.value);
 			alert("골라담기상품을 반드시 선택하셔야 합니다.");
 			return;			
+		}
+		
+		if(frm.prod_select.value == 1 && frm.selectCnt.value.trim().length == 0) {
+			
+		//	console.log(frm.prod_select_code.value);
+			alert("골라담기개수를 반드시 입력하셔야 합니다.");
+			return;			
+		}
+		
+		if(frm.prod_select.value == 1 && frm.selectCnt.value.trim().length != 0) {
+			frm.selectCnt.value = frm.selectCnt.value.trim();
 		}
 		
 		frm.titlefile.disabled = false;
@@ -564,10 +613,13 @@
 										<option value="${prod.prod_code}">${prod.prod_name}</option>								
 									</c:forEach>					      
 						 		</select>
-						 		
 						 		<span class='small' style='color: red;'>*[Ctrl]키를 누르고 선택하세요</span>
-				         		 
-				         	</div>			         	
+						 	</div>
+						 	
+						 	<div id="select" class="mx-0 px-0 col-md-4">	
+						 		<input type="text" id="selectCnt" name="selectCnt" class="form-control form-control-sm" placeholder="골라담기 개수를 입력하세요"> 						 		
+				         	</div>	 
+				         				         	
 			         	</c:if>
 			            
 					</div>

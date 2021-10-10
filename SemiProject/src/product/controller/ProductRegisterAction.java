@@ -13,17 +13,24 @@ public class ProductRegisterAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		super.getCategory(request);
+		super.checkAdministration(request, "/WEB-INF/product/prodRegister.jsp");
 		
-		// 모든 상품 가져오기
-		InterProductDAO pdao = new ProductDAO();
+		if("/WEB-INF/product/prodRegister.jsp".equals(super.getViewPage())) {
 		
-		List<ProductVO> prodList = pdao.AllProduct();
+			// 모든 카테고리 가져오기
+			super.getCategory(request);
+			
+			// 모든 상품 가져오기
+			InterProductDAO pdao = new ProductDAO();
+			
+			List<ProductVO> prodList = pdao.AllProduct();
+			
+			request.setAttribute("prodList", prodList);
+			
+		}
 		
-		request.setAttribute("prodList", prodList);
+	//	super.setRedirect(false);
 		
-		super.setRedirect(false);
-		super.setViewPage("/WEB-INF/product/prodRegister.jsp");
 		
 	}
 	

@@ -121,6 +121,8 @@ public class ProductInsertAction extends AbstractController {
 				
 				paraMap.put("prod_select_list", prod_select_list);
 				
+				prod.setProd_select(Integer.parseInt(request.getParameter("selectCnt")));
+								
 			}
 			
 			prod.setProd_sale(Integer.parseInt(request.getParameter("prod_sale")));
