@@ -1,0 +1,217 @@
+@charset "UTF-8";
+
+/*navbar.jsp의 css*/
+	
+	/* 상단 네비게이션바 간격 */
+		 .navbar-nav > li{
+		  	padding-left:30px;
+		  	padding-right:30px;
+		}
+		
+	/* 호버, 클릭, 방문한 링크 굵게하기 */
+	a:visited, a:hover, a:active {
+		font-weight: bold;
+	}
+	
+	table > tbody:nth-child(1) > tr > td {
+			font-weight: bold;
+			color:#616161;
+			font-size: 14px;
+	}
+	
+/*basket.jsp의 css*/
+
+		/* btable표, mtable표 가운데 정렬 , 글자색, 글자크기*/
+		table.table.btable td {
+			text-align: center;
+			
+		}
+		
+		table.table.mtable td {
+			text-align: center;
+			color: black;
+			font-size: 22px;
+			font-weight: bold;
+		}
+		
+		
+		 
+		/* btable표 체크박스 칸 가로넓이 줄이기*/
+		table.table.btable > tbody > tr > td:nth-child(1){
+			width: 4%;
+		}
+		
+		
+		/* 하단 부트스트랩 하단 부트스트랩 버튼 (선택주소록 삭제, 배송지등록)색 변경    */
+		.btn-light {
+		    background-color: #EEEEEE;
+		    border-color: #cccccc;
+		    color: #616161; }
+		.btn-light:hover,
+		.btn-light:focus {
+		    border-color: #cccccc;
+		    background-color: #cccccc;
+		    color: #FFF; }
+		.btn-light:active,
+		.btn-light:visited,
+		.btn-light:active:focus,
+		.btn-light:active:hover {
+		    border-color: #cccccc;
+		    background-color: #cccccc;
+		    color: #FFF; }
+		    
+		    
+		    .btn-dark {
+		    background-color: #555555;
+		    border-color: #555555;
+		    color: #black; }
+		.btn-dark:hover,
+		.btn-dark:focus {
+		    border-color: #cccccc;
+		    background-color: #cccccc;
+		    color: #FFF; }
+		.btn-dark:active,
+		.btn-dark:visited,
+		.btn-dark:active:focus,
+		.btn-dark:active:hover {
+		    border-color: #cccccc;
+		    background-color: #cccccc;
+		    color: #FFF; }
+			
+		
+		 .btn-default {
+		   
+		    border-color: #cccccc;
+		    color: #black; }
+		.btn-default:hover,
+		.btn-default:focus {
+		    border-color: #cccccc;
+		    background-color: #cccccc;
+		    color: #FFF; }
+		.btn-default:active,
+		.btn-default:visited,
+		.btn-default:active:focus,
+		.btn-default:active:hover {
+		    border-color: #cccccc;
+		    background-color: #cccccc;
+		    color: #FFF; }
+		    
+		    
+		#spinner {
+			width: 30px;
+			height: 18px;
+		}    
+
+
+
+/*cancellist.jsp의 css*/
+
+
+		/* 표 가운데 정렬 , 글자색, 글자크기*/
+		table td {
+			text-align: center;
+			color:#616161;
+			font-size: 15px;
+		}
+		
+		
+		/* 페이지네이션 */
+		.pagination {
+		   justify-content: center;
+		}
+		
+		body > div.container.p-5 > nav > ul > li > a{
+			color:#616161;
+			font-size: 13px;
+			padding-bottom: 10px;
+		}
+		
+		body > div.container.p-5 > nav > ul > li > a > span {
+			color:#616161;
+			font-size: 11px;
+		}
+		
+	
+
+/*deliveraddr.jsp의 css*/
+	
+		/* 표 체크박스 칸 가로넓이 줄이기*/
+		table.table.addtable td:nth-child(1) {
+			width: 4%;
+		}
+		
+		
+
+/* deliverModify.jsp, deliverRegister.jsp의 css */
+
+		
+		
+		/* 표 첫번째열 가로넓이, 색, 정렬 등 */
+		table.table.motable  td:nth-child(1),  
+		table.table.regtable td:nth-child(1) {
+			width:15%;
+			background-color: #f9f9f9;
+			text-align: left;
+			font-weight: bold;
+			font-size: 10pt;
+			padding-left: 3%;
+		}
+		
+		
+		/* 폼 입력칸 */
+	   .form-control {
+	   		height: 25px;
+	   		border-radius: 0;
+	   }
+	   
+	    /* 전화번호select */
+	   .selectpicker {
+	   		width: 57px;
+	   		height: 25px;
+	   		border-color: gray;
+	   }
+	   
+
+
+
+
+/*orderlist.jsp, point.jsp의 css*/
+
+
+		/* 페이지네이션 */
+		.pagination {
+		   justify-content: center;
+		}
+		
+		body > div.container.p-5 > nav > ul > li > a{
+			color:#616161;
+			font-size: 13px;
+			padding-bottom: 10px;
+		}
+		
+		body > div.container.p-5 > nav > ul > li > a > span {
+			color:#616161;
+			font-size: 11px;
+		}
+
+
+
+
+/*postmanage.jsp의 css*/
+	   /* 게시판 정렬 , 글자색, 글자크기*/
+		table.table.potable > tbody > tr > td:nth-child(1){
+			width: 6%;
+		}
+		
+		table.table.potable > tbody > tr > td:nth-child(3){
+			width: 10%;
+		}
+		
+		table.table.potable > tbody > tr > td:nth-child(4){
+			width: 10%;
+		}
+		
+		table.table.potable > tbody > tr > td:nth-child(5){
+			width: 10%;
+		}
+	
