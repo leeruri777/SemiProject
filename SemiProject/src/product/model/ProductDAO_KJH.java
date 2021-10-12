@@ -684,7 +684,8 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 		   
 		   String sql = " select sort_code, sort_name, nvl(ad_img_url, -9999) " + 
 				   		" from tbl_sort S LEFT JOIN tbl_prod_ad A " + 
-				   		" ON S.sort_code = A.fk_sort_code ";
+				   		" ON S.sort_code = A.fk_sort_code "+
+				   		" order by sort_code ";
 		   
 		   pstmt = conn.prepareStatement(sql);
 		   
@@ -712,5 +713,93 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 	   
 	   return bannerList;
    }
+
+	
+   /////////////////////////////////////////////////////////////////////////////////////////////////
+   
+   // 신규배너등록
+   @Override	
+   public int insertBanner(Map<String, String> paraMap) throws SQLException {
+	
+	   int result = 0;
+		
+	   try {
+		
+		   conn = ds.getConnection();
+		   
+		   String sql = " insert into tbl_prod_ad(fk_sort_code, ad_img_url) " + 
+		   				" values(?, ?) ";
+		   
+		   pstmt = conn.prepareStatement(sql);
+		   
+		   pstmt.setString(1, paraMap.get("sort_code"));
+		   pstmt.setString(2, paraMap.get("ad_img_url"));
+		   
+		   result = pstmt.executeUpdate();		   
+		   
+	   } finally {
+		   close();
+	   }
+	   
+	   return result;
+	
+   }
+
+   ////////////////////////////////////////////////////////////////////////////////
+   
+   // 배너삭제
+	@Override
+	public int deleteBanner(String this_sort_code) throws SQLException {
+		
+		int result = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_prod_ad where fk_sort_code = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, this_sort_code);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
+	
+	//////////////////////////////////////////////////////////////////////////
+	
+	// 배너수정
+	@Override
+	public int updateBanner(String this_sort_code, String ad_img_url_pick) throws SQLException {
+		
+		int result = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " update tbl_prod_ad set ad_img_url = ? where fk_sort_code = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, ad_img_url_pick);
+			pstmt.setString(2, this_sort_code);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
 
 }

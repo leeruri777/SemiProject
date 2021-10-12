@@ -61,7 +61,7 @@
 	
 </style>
 
-<title>[소녀떡집]상품 상세</title>
+<title>[소녀떡집]상품상세</title>
 
 
 
@@ -578,6 +578,11 @@
 		
 	}
 	
+	// 리뷰 등록하기 버튼 클릭 
+	function registerReview() {
+		location.href = "/product/registerReview.go?prod_code=" + "${prodMap.pvo.prod_code}";
+	}
+	
 </script>
 		
 	<div class="container mt-5">	
@@ -1005,7 +1010,7 @@
 						<table class="w-100 mx-0 px-0">
 							<tr>
 								<td colspan="3"><span style="font-weight: bold; font-size: 15pt;">&nbsp;&nbsp;&nbsp;몇%</span>의 구매자들이 이 상품에 만족하고 있어요!</td>
-								<td><button type="button" class="btn btn-secondary w-100 px-0 mx-0" style="border-radius: 0% 0%;">리뷰 등록하기</button></td>
+								<td><button type="button" class="btn btn-secondary w-100 px-0 mx-0" style="border-radius: 0% 0%;" onclick="registerReview()">리뷰 등록하기</button></td>
 							</tr>
 						</table>						
 					</div>

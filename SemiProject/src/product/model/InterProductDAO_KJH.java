@@ -29,4 +29,13 @@ public interface InterProductDAO_KJH {
 	// 카테고리와 배너 받아오기
 	List<Map<String, Object>> allBanner() throws SQLException;
 
+	// 신규배너등록하기
+	int insertBanner(Map<String, String> paraMap) throws SQLException;
+
+	// 배너삭제하기
+	int deleteBanner(String this_sort_code) throws SQLException;
+
+	// 배너수정하기
+	int updateBanner(String this_sort_code, String ad_img_url_pick) throws SQLException;
+
 }

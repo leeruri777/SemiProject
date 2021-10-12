@@ -2,33 +2,19 @@
     pageEncoding="UTF-8"%>
 
 <%
-	String ctxPath = request.getContextPath();
+   String ctxPath = request.getContextPath();
 %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
+
+<jsp:include page="../include/header_admin.jsp"></jsp:include>
+
 <title>[관리자메뉴]상품등록</title>
 
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" type="text/css" href="<%= ctxPath %>/bootstrap-4.6.0-dist/css/bootstrap.min.css" > 
-
-    
-    <!-- Font Awesome 5 Icons --> <!-- 아이콘을 사용하려면 헤드에서 미리 링크를 걸어줘야한당 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <!-- 직접 만든 CSS -->
 <link rel="stylesheet" type="text/css" href="<%= ctxPath %>/css/style.css" />
-
-<!-- Optional JavaScript -->
-<script type="text/javascript" src="<%= ctxPath %>/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="<%= ctxPath %>/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script>
 
 <style type="text/css">
@@ -37,7 +23,7 @@
       word-break: break-all; /* 공백없이 영어로만 되어질 경우 해당구역을 빠져나가므로 이것을 막기위해서 사용한다. */
     }
 	
-	div.container {	width: 90%;}
+	div.container {	width: 70%;}
 		
 	div#main {margin: 0 auto;}	
 	
@@ -150,7 +136,7 @@
 		            val_detailfilename += $(this)[0].files[i].name;
 		        //  console.log($(this)[0].files[0]);
 		        } else {
-		            val_detailfilename += $(this).val.split('/').pop().split('\\').pop();
+		            val_detailfilename += $(this).val().split('/').pop().split('\\').pop();
 		        }
 				
 			}			
@@ -435,10 +421,9 @@
 	}// end of function goRegister()------------------------------------------------------
 	
 </script>
-</head>
-<body>
+
 		
-	<div class="container mt-5">	
+	   <div class="container mt-5 pt-5 px-0 offset-lg-3 col-lg-9"> 	
 		
 		<h4>상품등록</h4>
 		<hr>
@@ -641,7 +626,7 @@
 						
 					</div>
 					<div class="col">
-						<button type="button" class="btn btn-sm btn-info mb-3 mr-2" onClick="goRegister();">확인</button>
+						<button type="button" class="btn btn-sm btn-success mb-3 mr-2" onClick="goRegister();">등록</button>
 						<input type="reset"  value="취소" class="btn btn-sm btn-danger mb-3" />
 					</div>
 				</div>
@@ -652,6 +637,4 @@
 			
 	</div>
 
-</body>
-</html>
-
+<jsp:include page="../include/footer_admin.jsp"></jsp:include>
