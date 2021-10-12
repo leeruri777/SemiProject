@@ -134,19 +134,19 @@ public class ProductInsertAction extends AbstractController {
 			int result = pdao.insertProd(paraMap);
 			
 			if(result == 0) {
-				message += "SQL구문 오류 발생";
+				message = "SQL구문 오류 발생";
 				loc = "/";
 			}
 			
 			else {
-				message += "상품등록이 완료되었습니다.";
+				message = "상품등록이 완료되었습니다.";
 				loc = "/product/prodRegister.go"; 
 			}
 					
 		}
 		
 		else {
-			message += "비정상적인 접근 경로입니다.";
+			message = "비정상적인 접근 경로입니다.";
 			loc = "/"; 
 		}
 		

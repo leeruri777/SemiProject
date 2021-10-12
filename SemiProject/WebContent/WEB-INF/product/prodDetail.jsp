@@ -94,6 +94,39 @@
 			total_price = Number(price);
 			$("#total_price").html(total_price.toLocaleString('en'));
 		}
+		console.log("${reviewList}".length)
+		// 리뷰 별점 이미지 넣기
+		if("${reviewList}" != null && "${reviewList}".length != 0) {
+			
+			var avg_score = parseInt(Number("${avg_score}"));
+			var html = "";
+			
+			if(4 < avg_score) {
+				html = "<img src='../images_product/starYellow50.png' class='img-fluid' alt='Responsive image'>";
+			}
+						
+			else if(3 < avg_score <= 4) {
+				html = "<img src='../images_product/starYellow40.png' class='img-fluid' alt='Responsive image'>";
+			}
+			
+			else if(2 < avg_score <= 3) {
+				html = "<img src='../images_product/starYellow30.png' class='img-fluid' alt='Responsive image'>";
+			}
+			
+			else if(1 < avg_score <= 2) {
+				html = "<img src='../images_product/starYellow20.png' class='img-fluid' alt='Responsive image'>";
+			}
+			
+			else if(0 < avg_score <= 1) {
+				html = "<img src='../images_product/starYellow10.png' class='img-fluid' alt='Responsive image'>";
+			}
+			
+			else {
+				html = "<img src='../images_product/starYellow00.png' class='img-fluid' alt='Responsive image'>";
+			}
+			
+			$("#starimg").prepend(html);
+		}
 		
 		/* >>> === 클릭한 탭(버튼)만 보이도록 하는 첫번째 방법 === <<< */
 		$("li.tablinks").click(function(event) {
@@ -580,7 +613,7 @@
 	
 	// 리뷰 등록하기 버튼 클릭 
 	function registerReview() {
-		location.href = "/product/registerReview.go?prod_code=" + "${prodMap.pvo.prod_code}";
+		location.href = "/product/registerReview.go?prod_code=" + "${prodMap.pvo.prod_code}" + "&prod_name=" + "${prodMap.pvo.prod_name}";
 	}
 	
 </script>
@@ -676,13 +709,26 @@
 						<c:if test="${prodMap.pvo.discount_price ne '-9999'}">									
 							<tr>
 								<td><span class="ml-1">특별가</span></td>
-								<td class=""><h5><fmt:formatNumber value="${prodMap.pvo.discount_price}" pattern="###,###" />원</h5></td>
+								<fmt:parseNumber var="sale_p" value="${prodMap.pvo.discount_price}" integerOnly="true" />
+								<fmt:parseNumber var="p" value="${prodMap.pvo.prod_price}" integerOnly="true" />
+								<td class=""><h5><fmt:formatNumber value="${prodMap.pvo.discount_price}" pattern="###,###" />원&nbsp;<small style="color:red;">(<fmt:formatNumber value="${100 - (sale_p * 100) / p}" pattern="#"/>% 할인)</small></h5></td>
 							</tr>
 						</c:if>
-		<%-- ★ 리뷰게시판 연결하고 나서 하기 --%>				
+					
 						<tr>
 							<td><span class="ml-1">리뷰평점</span></td>
-							<td class=""><img src="../images_product/starYellow45.png" class="img-fluid" alt="Responsive image">&nbsp;&nbsp;<span class="small">4.69&nbsp;&nbsp;리뷰 개수 : 259</span></td>
+							<td id="starimg">
+								
+								<c:if test="${not empty reviewList}">									
+									&nbsp;&nbsp;<span class="small"><fmt:formatNumber value="${avg_score}" pattern="##.00" />&nbsp;&nbsp;리뷰 개수 : ${fn:length(reviewList)}</span>
+								</c:if>
+						 		
+								<c:if test="${empty reviewList}">
+									<img src='../images_product/starYellow00.png' class='img-fluid' alt='Responsive image'>
+									&nbsp;&nbsp;<span class="small">리뷰없음</span>
+								</c:if>				
+							
+							</td>
 						</tr>
 						
 						<c:if test="${prodMap.pvo.prod_ice eq '1'}">
@@ -876,7 +922,7 @@
 					<ul class="list-group list-group-horizontal row text-center">
 						<li class="list-group-item list-group-item-secondary col tablinks myli">상세정보</li>
 						<li class="list-group-item list-group-item-secondary col tablinks myli">상품정보</li>
-						<li class="list-group-item list-group-item-secondary col tablinks myli">고객리뷰(★몇개?★)</li>
+						<li class="list-group-item list-group-item-secondary col tablinks myli">고객리뷰(${fn:length(reviewList)})</li>
 						<li class="list-group-item list-group-item-secondary col tablinks myli">Q&amp;A</li>
 					</ul>
 				</div>	   
@@ -966,42 +1012,26 @@
 				<div id="review"  class="content my-5 w-100 mx-0">
 					<div id="stars" class="row w-100 py-0 text-center px-0 mx-0" style="border: solid 1px #e6e6e6;">
 						<div class="col-md-3 pl-5 mt-2">
-							<p style="font-weight: bold; font-size: 30pt;">4.7<span style="font-weight: normal; font-size: 20pt;">&nbsp;/5</span></p>
+							<p style="font-weight: bold; font-size: 30pt;"><fmt:formatNumber value="${avg_score}" pattern="##.00" /><span style="font-weight: normal; font-size: 20pt;">&nbsp;/5</span></p>
 									
-							<p>리뷰<span style="font-weight: bold;">&nbsp;256</span></p>
+							<p>리뷰<span style="font-weight: bold;">&nbsp;${fn:length(reviewList)}<sadn></span></p>
 						</div>
 						
 						<div class="col-md-9 mt-2 pr-5" style="font-size: 10pt;">
-							<div class="row mb-1">    
-								<div class="col-2 px-2" style="text-align: right;">5 Stars</div>                		
-								<div class="progress col-10 mx-0 px-0">
-					            	<div class="progress-bar" style="width: 70%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="70" role="progressbar"></div>
-					            </div>
-				            </div>
-				            <div class="row mb-1">    
-								<div class="col-2 px-2" style="text-align: right;">4 Stars</div>                		
-								<div class="progress col-10 mx-0 px-0">
-					            	<div class="progress-bar" style="width: 20%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="20" role="progressbar"></div>
-					            </div>
-				            </div>
-				            <div class="row mb-1">    
-								<div class="col-2 px-2" style="text-align: right;">3 Stars</div>                		
-								<div class="progress col-10 mx-0 px-0">
-					            	<div class="progress-bar" style="width: 5%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="5" role="progressbar"></div>
-					            </div>
-				            </div>
-				            <div class="row mb-1">    
-								<div class="col-2 px-2" style="text-align: right;">2 Stars</div>                		
-								<div class="progress col-10 mx-0 px-0">
-					            	<div class="progress-bar" style="width: 4%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="4" role="progressbar"></div>
-					            </div>
-				            </div>
-				            <div class="row mb-1">    
-								<div class="col-2 px-2" style="text-align: right;">1 Stars</div>                		
-								<div class="progress col-10 mx-0 px-0">
-					            	<div class="progress-bar" style="width: 1%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="1" role="progressbar"></div>
-					            </div>
-				            </div>				            
+							
+							<c:forEach var="scoreCntMap" items="${scoreCntList}">
+								
+								<fmt:parseNumber var="cnt" value="${scoreCntMap.cnt}" integerOnly="true" />
+								<c:set var="percent" value="${cnt/fn:length(reviewList)*100}"/>
+								<div class="row mb-1">    
+									<div class="col-2 px-2" style="text-align: right;">${scoreCntMap.score} Stars</div>                		
+									<div class="progress col-10 mx-0 px-0">
+						            	<div class="progress-bar" style="width: ${percent}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="${percent}" role="progressbar"></div>
+						            </div>
+				            	</div>								
+								
+							</c:forEach>
+								            
 						</div>
 						
 					</div>
@@ -1009,7 +1039,7 @@
 					<div class="row w-100 my-0 py-0 px-0 mx-0" id="btn_review" style="border: solid 1px #e6e6e6; border-top: none;">
 						<table class="w-100 mx-0 px-0">
 							<tr>
-								<td colspan="3"><span style="font-weight: bold; font-size: 15pt;">&nbsp;&nbsp;&nbsp;몇%</span>의 구매자들이 이 상품에 만족하고 있어요!</td>
+								<td colspan="3"><span style="font-weight: bold; font-size: 15pt;">&nbsp;&nbsp;&nbsp;리뷰 작성시</span>&nbsp;&nbsp;일반리뷰 100 POINT, 포토리뷰 200 POINT 적립!</td>
 								<td><button type="button" class="btn btn-secondary w-100 px-0 mx-0" style="border-radius: 0% 0%;" onclick="registerReview()">리뷰 등록하기</button></td>
 							</tr>
 						</table>						
@@ -1020,41 +1050,41 @@
 					
 					<div id="review_card" class="px-0 mx-0">
 						
-						<div id="img_row" class="row w-100 px-0 mx-0">			
-					    	<div class="card col-md-3 col-6 my-2">
-					             <div class="card-body px-1">
-					                 <img src="../../images_product/practiceimg.jpg" class="img-fluid" alt="Responsive image">
-					                 <hr>
-					                 <span id="font1">타이니탄 인기크림떡 4종 선물세트</span>					                 
-					             </div>
-					    	</div>
-					    	
-					        <div class="card col-md-3 col-6 my-2">
-						          <div class="card-body px-1">
-						              <img src="../../images_product/practiceimg.jpg" class="img-fluid" alt="Responsive image">
-						              <hr>
-						              <span id="font1">타이니탄 인기크림떡 4종<br><b>6,900원</b></span>
-						          </div>
-					        </div>
-					        
-					        <div class="card col-md-3 col-6 my-2">
-						          <div class="card-body px-1">
-						              <img src="../../images_product/practiceimg.jpg" class="img-fluid" alt="Responsive image">
-						              <hr>
-						              <span id="font1">윈터페스타크림떡 <br>티케이스 세트 <br><b>16,800원</b></span>
-						          </div>
-					        </div>
-					        
-					        <div class="card col-md-3 col-6 my-2">
-						          <div class="card-body px-1">
-						              <img src="../../images_product/practiceimg.jpg" class="img-fluid" alt="Responsive image">
-						              <hr>
-						              <span id="font1">넥스트레벨 <br>에스파는나야 <br><b>99,800원</b></span>
-						          </div>
-					        </div>				     
+						<div id="img_row" class="row w-100 px-0 mx-0">	
+							<c:forEach var="rvo" items="${reviewList}">
+								<c:choose>
+									<c:when test="${rvo.review_img ne '-9999'}">		
+								    	<div class="card col-md-3 col-6 my-2">
+								             <div class="card-body px-1">
+								                 <img src="../img_review/${rvo.review_img}" class="img-fluid" alt="Responsive image">
+								                 <hr>
+								                 <p class="ml-3">${fn:substring(rvo.content, 0, 50)}..</p>
+								                 <hr>
+								                 <p class="ml-3">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
+								                 <p class="ml-3">평점       : ${rvo.score}</p>								                 
+								                 <p class="ml-3">작성일자 : ${rvo.review_date}</p>				                 
+								             </div>
+								    	</div>
+							    	</c:when>
+							    	<c:otherwise>		
+								    	<div class="card col-md-3 col-6 my-2">
+								             <div class="card-body px-1">
+								             	 <img src="../img_review/리뷰사진이없오.png" class="img-fluid" alt="Responsive image">
+								                 <hr>
+								                 <p class="ml-3">${fn:substring(rvo.content, 0, 50)}..</p>
+								                 <hr>
+								                 <p class="ml-3">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
+								                 <p class="ml-3">평점       : ${rvo.score}</p>								                 
+								                 <p class="ml-3">작성일자 : ${rvo.review_date}</p>				                 
+								             </div>
+								    	</div>
+							    	</c:otherwise>
+						    	</c:choose>
+					    	</c:forEach>
+					        			     
 						</div>
 					</div>
-					
+	<%-- 페이징해야함!!!! --%>				
 					<nav>
 					  <ul class="pagination justify-content-center" style="margin:20px 0">
 					    <li class="page-item disabled"><a class="page-link" href="#">이전</a></li>

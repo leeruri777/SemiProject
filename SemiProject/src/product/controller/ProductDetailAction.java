@@ -23,6 +23,22 @@ public class ProductDetailAction extends AbstractController {
 			
 			request.setAttribute("prodMap", prodMap);
 			
+			List<ReviewVO> reviewList = pdao.getThieReview(prod_code);
+						
+			if(reviewList.size() != 0) {
+				
+				request.setAttribute("reviewList", reviewList);
+				
+				String avg_score = pdao.getAvgScore(prod_code);
+				
+				request.setAttribute("avg_score", avg_score);
+				
+				List<Map<String, String>> scoreCntList = pdao.getScoreCnt(prod_code);
+				
+				request.setAttribute("scoreCntList", scoreCntList);
+			
+			}
+			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/product/prodDetail.jsp");
 			

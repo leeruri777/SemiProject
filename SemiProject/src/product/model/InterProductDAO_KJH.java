@@ -38,4 +38,19 @@ public interface InterProductDAO_KJH {
 	// 배너수정하기
 	int updateBanner(String this_sort_code, String ad_img_url_pick) throws SQLException;
 
+	// 리뷰를 작성할 주문건 가져오기
+	String getOrdernoforReview(String prod_code) throws SQLException;
+
+	// 리뷰테이블 insert
+	int insertReview(Map<String, String> paraMap) throws SQLException;
+	
+	// 상품 리뷰 select	
+	List<ReviewVO> getThieReview(String prod_code) throws SQLException;
+
+	// 상품 평점 select
+	String getAvgScore(String prod_code) throws SQLException;
+
+	// 상품 평점별 갯수 select
+	List<Map<String, String>> getScoreCnt(String prod_code) throws SQLException;
+
 }

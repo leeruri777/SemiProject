@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
+import product.model.InterProductDAO_KJH;
+import product.model.ProductDAO_KJH;
 
 public class RegisterReviewAction extends AbstractController {
 
@@ -11,15 +13,40 @@ public class RegisterReviewAction extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		if(super.checkLogin(request)) { // 로그인 되어 있을 경우
+						
+			String prod_code = request.getParameter("prod_code");
+			String prod_name = request.getParameter("prod_name");
 			
-			// 로그인 되어 있어도 구매목록에 해당 상품이 없으면 안됨!!!!! 구매목록 테이블에서 확인하는 작업 필요
-		//	System.out.println(request.getParameter("prod_code"));
-			// 해당 상품 구매 기록이 있으면 리뷰등록 페이지로 보내준다.
+			InterProductDAO_KJH pdao = new ProductDAO_KJH();
+			
+			String orderno = pdao.getOrdernoforReview(prod_code);
+			
+			// 해당 상품 구매 기록이 있으면 리뷰등록 페이지로 보내준다.			
+			if(!"-9999".equals(orderno)) {
+				
+				request.setAttribute("prod_code", prod_code);
+				request.setAttribute("prod_name", prod_name);
+				request.setAttribute("orderno", orderno);
+				
+				super.setViewPage("/WEB-INF/product/reviewRegister.jsp");
+				
+			}
+			
+			else {
+				
+				request.setAttribute("message", "리뷰 작성이 가능한 주문내역이 존재하지 않습니다");
+		        request.setAttribute("loc", "javascript:history.back()");
+		        
+		        super.setViewPage("/WEB-INF/msg.jsp");
+			}
 			
 		}
 		
 		else { // 로그인 안 되어 있을 경우 --> 로그인 먼저
+			request.setAttribute("message", "로그인이 필요합니다");
+			request.setAttribute("loc", "/member/login.go");
 			
+			setViewPage("/WEB-INF/msg.jsp");
 		}
 		
 	}

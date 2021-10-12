@@ -802,4 +802,239 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 		
 	}
 
+	///////////////////////////////////////////////////////////////////////////////
+	
+	// 리뷰를 작성할 주문건 가져오기
+	@Override
+	public String getOrdernoforReview(String prod_code) throws SQLException {
+		
+		String orderno = "-9999";
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select distinct first_value(orderno) over(partition by reviewno order by orderno) AS orderno " + 
+						 " from " + 
+						 " ( " + 
+						 " select orderno, nvl(reviewno, -9999) AS reviewno " + 
+						 " from (  select orderno " + 
+						 "         from tbl_orderlist " + 
+						 "         where prod_code = ? ) O LEFT JOIN tbl_review R ON O.orderno = R.fk_orderno " + 
+						 " ) " + 
+						 " where reviewno = -9999 ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, prod_code);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				orderno = rs.getString(1);
+			}
+						
+		} finally {
+			close();
+		}
+		
+		return orderno;
+		
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	
+	// 리뷰테이블 insert
+	@Override
+	public int insertReview(Map<String, String> paraMap) throws SQLException {
+		
+		int result = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " insert into tbl_review(reviewno, fk_orderno, fk_prod_code, fk_userid, content, review_img, score)"
+					   + " values(seq_reviewno.nextval, ?, ?, ?, ?, ?, ?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("orderno"));
+			pstmt.setString(2, paraMap.get("prod_code"));
+			pstmt.setString(3, paraMap.get("userid"));
+			pstmt.setString(4, paraMap.get("content"));
+			pstmt.setString(5, paraMap.get("review_img"));
+			pstmt.setString(6, paraMap.get("score"));
+			
+			result = pstmt.executeUpdate();
+			
+			if(result != 0) {
+				
+				sql = " update tbl_member set point = point + ? where userid = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				if(paraMap.get("review_img") == "") {
+					pstmt.setInt(1, 100);
+				}
+				
+				else {
+					pstmt.setInt(1, 200);
+				}
+				
+				pstmt.setString(2, paraMap.get("userid"));
+				
+				result = pstmt.executeUpdate();
+				
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
+
+	///////////////////////////////////////////////////////////////////////
+	
+	// 상품 리뷰 select	
+	@Override
+	public List<ReviewVO> getThieReview(String prod_code) throws SQLException {
+		
+		List<ReviewVO> reviewList = new ArrayList<>();
+	
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select reviewno, name, content, nvl(review_img, '-9999') as review_img, score, to_char(review_date, 'yyyy-mm-dd') as review_date " + 
+						 " from  " + 
+						 " ( " + 
+						 "     select reviewno, fk_userid, content, review_img, score, review_date " + 
+						 "     from tbl_review " + 
+						 "     where fk_prod_code = ? " + 
+						 "     order by review_date desc " + 
+						 " )R  " + 
+						 " JOIN  " + 
+						 " ( " + 
+						 "     select name, userid from tbl_member " + 
+						 " ) M " + 
+						 " ON R.fk_userid = M.userid ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, prod_code);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				ReviewVO rvo = new ReviewVO();
+				
+				rvo.setReviewno(rs.getString(1));
+				rvo.setUsername(rs.getString(2));
+				rvo.setContent(rs.getString(3));
+				rvo.setReview_img(rs.getString(4));
+				rvo.setScore(rs.getString(5));
+				rvo.setReview_date(rs.getString(6));
+				
+				reviewList.add(rvo);
+				
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return reviewList;
+	
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+	
+	// 상품 평점 select
+	@Override
+	public String getAvgScore(String prod_code) throws SQLException {
+		
+		String avg_score = "";
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select avg(to_number(score)) AS avg_score " + 
+						 " from tbl_review " + 
+						 " where fk_prod_code = ? " + 
+						 " group by fk_prod_code ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, prod_code);
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			
+			avg_score = rs.getString(1);
+			
+		} finally {
+			close();
+		}
+		
+		return avg_score;
+		
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+	
+	// 상품 평점별 갯수 select
+	@Override
+	public List<Map<String, String>> getScoreCnt(String prod_code) throws SQLException {
+		
+		List<Map<String, String>> scoreCntList = new ArrayList<>();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			for(int i = 5; i > 0; i--) {
+				
+				String sql = " select count(reviewno) AS count " + 
+						 	 " from tbl_review " + 
+						 	 " where fk_prod_code = ? and (? < score and score <= ?) " + 
+						 	 " group by score ";
+			
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod_code);
+				pstmt.setInt(2, i-1);
+				pstmt.setInt(3, i);
+				
+				rs = pstmt.executeQuery();
+				
+				Map<String, String> scoreCntMap = new HashMap<>();
+				
+				if(rs.next()) {
+					scoreCntMap.put("score", i+"");
+					scoreCntMap.put("cnt", rs.getString(1));
+				}
+				
+				else {
+					scoreCntMap.put("score", i+"");
+					scoreCntMap.put("cnt", "0");
+				}
+				
+				scoreCntList.add(scoreCntMap);
+				
+			}
+						
+		} finally {
+			close();
+		}
+		
+		return scoreCntList;
+		
+	}
+
 }

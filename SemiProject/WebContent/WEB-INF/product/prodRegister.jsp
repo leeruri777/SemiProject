@@ -181,16 +181,27 @@
 			if(isNaN($(this).val())) {
 				alert("가격은 숫자만 입력하셔야 합니다.");
 				$(this).val("");
+				return;
 			}
 			
 			else if(Number($(this).val()) < 0) {				
 				alert("가격은 최소 0원 이상이어야 합니다.");
-				$(this).val("");				
+				$(this).val("");
+				return;
 			}
 			
 			else if($(this).val().trim() == "") {
 				alert("가격을 입력하셔야 합니다.");
 				$(this).val("");
+				return;
+			}
+			
+			var arrVal = $(this).val().split(".");
+			
+			if(arrVal.length != 1) {
+				alert("정수만 입력하셔야 합니다.");
+				$(this).val("");
+				return;
 			}
 			
 		});
@@ -204,26 +215,39 @@
 			if(isNaN($(this).val())) {
 				alert("할인가격은 숫자만 입력하셔야 합니다.");
 				$(this).val("");
+				return;
 			}
 			
 			else if($("input[name=prod_price]").val().trim() == "") {				
 				alert("가격을 먼저 입력하셔야 합니다.");
-				$(this).val("");				
+				$(this).val("");
+				return;
 			}
 			
 			else if(Number($(this).val()) >= Number($("input[name=prod_price]").val())) {				
 				alert("할인가격은 정가 이하이어야 합니다.");
-				$(this).val("");				
+				$(this).val("");	
+				return;
 			}
 			
 			else if(Number($(this).val()) < 0) {				
 				alert("할인가격은 최소 0원 이상이어야 합니다.");
-				$(this).val("");				
+				$(this).val("");
+				return;
 			}
 			
 			else if($(this).val().trim() == "") {
 				alert("할인적용시 할인가격을 입력하셔야 합니다.");
 				$(this).val("");
+				return;
+			}
+			
+			var arrVal = $(this).val().split(".");
+			
+			if(arrVal.length != 1) {
+				alert("정수만 입력하셔야 합니다.");
+				$(this).val("");
+				return;
 			}
 			
 		});
@@ -237,11 +261,26 @@
 			if(isNaN($(this).val())) {
 				alert("재고는 숫자만 입력하셔야 합니다.");
 				$(this).val("");
+				return;
 			}
 			
 			else if(Number($(this).val()) < 0) {				
 				alert("재고는 최소 0개 이상이어야 합니다.");
-				$(this).val("");				
+				$(this).val("");
+				return;
+			}
+			
+			else if($(this).val().trim() == "") {
+				$(this).val("");
+				return;
+			}
+
+			var arrVal = $(this).val().split(".");
+			
+			if(arrVal.length != 1) {
+				alert("정수만 입력하셔야 합니다.");
+				$(this).val("");
+				return;
 			}
 			
 		});
