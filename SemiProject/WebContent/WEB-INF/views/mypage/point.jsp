@@ -14,7 +14,7 @@
 	<div class="pt-2 pb-5">	
 	  <div class="card">
 	    <div class="card-body" style="text-align: center; font-weight: bold; color: black; font-size: 21pt;">
-	     	&nbsp; 총 적립금 <span> 0P </span> 
+	     	&nbsp; 총 적립금 <span> ${requestScope.mvo.point} P </span> 
 	    </div>
 	  </div>
 	</div>

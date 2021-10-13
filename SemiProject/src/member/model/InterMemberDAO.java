@@ -44,5 +44,10 @@ public interface InterMemberDAO {
 		AddressVO getAddress(Long ano, String userid) throws SQLException;
 		// 배송지 정보 수정하기
 		int updateAddress(AddressVO addressVo) throws SQLException;
+		
+		/* 적립금페이지 */
+		// userid 값을 입력받아서 회원1명에 대한 총적립금 알아오기(select)
+		MemberVO memberTotalPoint(String userid) throws SQLException;
+		
 }
 

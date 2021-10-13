@@ -581,6 +581,46 @@ public class MemberDAO implements InterMemberDAO {
 	}
 
 	
+	
+	
+	/* 적립금페이지 */
+	// userid 값을 입력받아서 회원1명에 대한 총적립금 알아오기(select)
+	@Override
+	public MemberVO memberTotalPoint(String userid) throws SQLException {
+	MemberVO mvo = null;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select POINT "+
+						 " from TBL_MEMBER "+
+						 " where userid = ? ";
+			
+			 pstmt = conn.prepareStatement(sql);
+	         pstmt.setString(1, userid);
+	                  
+	         rs = pstmt.executeQuery();
+	         
+	         if(rs.next()) {  
+	               
+	            mvo = new MemberVO();
+	            
+	            mvo.setPoint(rs.getInt(1));
+	           
+	         }
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+	    } finally {
+			close();
+		}
+		
+		
+		
+		return mvo;
+	}
+
+	
 		
 
 	
