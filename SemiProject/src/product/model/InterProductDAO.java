@@ -22,5 +22,9 @@ public interface InterProductDAO {
    
 	// 카테고리 이름(중간 카테고리 이름설정)
 	String categoryName(String sort_code) throws SQLException;
+	
+	
+	// 장바구니 테이블  insert
+	int insertBasket(Map<String, Object> paraMap) throws SQLException;
 
 }
