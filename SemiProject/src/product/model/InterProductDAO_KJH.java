@@ -45,12 +45,15 @@ public interface InterProductDAO_KJH {
 	int insertReview(Map<String, String> paraMap) throws SQLException;
 	
 	// 상품 리뷰 select	
-	List<ReviewVO> getThieReview(String prod_code) throws SQLException;
+	List<ReviewVO> getReviewList(String prod_code, String currentShowPageNo) throws SQLException;
 
 	// 상품 평점 select
 	String getAvgScore(String prod_code) throws SQLException;
 
 	// 상품 평점별 갯수 select
 	List<Map<String, String>> getScoreCnt(String prod_code) throws SQLException;
+
+	// 리뷰 페이징 처리를 위한 페이지바 만들기 & 리뷰 총 개수
+	Map<String, String> getReviewTotal(String prod_code) throws SQLException;
 
 }

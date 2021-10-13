@@ -900,7 +900,7 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 	
 	// 상품 리뷰 select	
 	@Override
-	public List<ReviewVO> getThieReview(String prod_code) throws SQLException {
+	public List<ReviewVO> getReviewList(String prod_code, String currentShowPageNo) throws SQLException {
 		
 		List<ReviewVO> reviewList = new ArrayList<>();
 	
@@ -908,7 +908,10 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 			
 			conn = ds.getConnection();
 			
-			String sql = " select reviewno, name, content, nvl(review_img, '-9999') as review_img, score, to_char(review_date, 'yyyy-mm-dd') as review_date " + 
+			String sql = " select reviewno, name, content, review_img, score, review_date "+
+						 " from  "+
+						 " ( "+
+						 " select rownum AS rno, reviewno, name, content, nvl(review_img, '-9999') as review_img, to_char(score, '0.0') as score, to_char(review_date, 'yyyy-mm-dd') as review_date " + 
 						 " from  " + 
 						 " ( " + 
 						 "     select reviewno, fk_userid, content, review_img, score, review_date " + 
@@ -920,11 +923,18 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 						 " ( " + 
 						 "     select name, userid from tbl_member " + 
 						 " ) M " + 
-						 " ON R.fk_userid = M.userid ";
+						 " ON R.fk_userid = M.userid " +
+						 " ) T " +
+						 " where rno between ? and ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, prod_code);
+			
+			int n_currentShowPageNo = Integer.parseInt(currentShowPageNo);
+			
+			pstmt.setInt(2, (n_currentShowPageNo * 8) - (8 - 1)); // 페이징 공식(start)
+			pstmt.setInt(3, (n_currentShowPageNo * 8)); // 페이징 공식(end)
 			
 			rs = pstmt.executeQuery();
 			
@@ -974,9 +984,14 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 			
 			rs = pstmt.executeQuery();
 			
-			rs.next();
+			if(rs.next()) {
+				avg_score = rs.getString(1);
+			}
 			
-			avg_score = rs.getString(1);
+			else {
+				avg_score = "0.0";
+			}
+			
 			
 		} finally {
 			close();
@@ -1000,11 +1015,20 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 			
 			for(int i = 5; i > 0; i--) {
 				
-				String sql = " select count(reviewno) AS count " + 
+				String sql = " select nvl(sum(count(reviewno)), 0) AS count " + 
 						 	 " from tbl_review " + 
-						 	 " where fk_prod_code = ? and (? < score and score <= ?) " + 
-						 	 " group by score ";
-			
+						 	 " where fk_prod_code = ? and ";
+				
+				if(i != 1) {
+					sql += " (? < score and score <= ?) ";
+				}
+				
+				else {
+					sql += " (? <= score and score <= ?) ";
+				}
+				
+				sql += " group by score order by score ";
+				
 				pstmt = conn.prepareStatement(sql);
 				
 				pstmt.setString(1, prod_code);
@@ -1034,6 +1058,41 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 		}
 		
 		return scoreCntList;
+		
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+	
+	// 리뷰 페이징 처리를 위한 페이지바 만들기
+	@Override
+	public Map<String, String> getReviewTotal(String prod_code) throws SQLException {
+		
+		Map<String, String> reviewTotalMap = new HashMap<>();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select ceil(count(*)/8), count(*) " + 
+						 "from tbl_review " + 
+						 "where fk_prod_code = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, prod_code);
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			
+			reviewTotalMap.put("reviewTotalPage", rs.getString(1));
+			reviewTotalMap.put("reviewTotalCnt", rs.getString(2));
+			
+		} finally {
+			close();
+		}
+		
+		return reviewTotalMap;
 		
 	}
 

@@ -71,7 +71,7 @@ public class ProductVO_KJH {
       this.prod_name = prod_name;
    }
    public String getProd_exp() {
-      return prod_exp;
+	   return prod_exp.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
    }
    public void setProd_exp(String prod_exp) {
       this.prod_exp = prod_exp;

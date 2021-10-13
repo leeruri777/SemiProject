@@ -94,30 +94,30 @@
 			total_price = Number(price);
 			$("#total_price").html(total_price.toLocaleString('en'));
 		}
-		console.log("${reviewList}".length)
+		
 		// 리뷰 별점 이미지 넣기
 		if("${reviewList}" != null && "${reviewList}".length != 0) {
 			
-			var avg_score = parseInt(Number("${avg_score}"));
+			var avg_score = Math.round(Number("${avg_score}"));
 			var html = "";
 			
-			if(4 < avg_score) {
+			if(5 == avg_score) {
 				html = "<img src='../images_product/starYellow50.png' class='img-fluid' alt='Responsive image'>";
 			}
 						
-			else if(3 < avg_score <= 4) {
+			else if(avg_score == 4) {
 				html = "<img src='../images_product/starYellow40.png' class='img-fluid' alt='Responsive image'>";
 			}
 			
-			else if(2 < avg_score <= 3) {
+			else if(avg_score == 3) {
 				html = "<img src='../images_product/starYellow30.png' class='img-fluid' alt='Responsive image'>";
 			}
 			
-			else if(1 < avg_score <= 2) {
+			else if(avg_score == 2) {
 				html = "<img src='../images_product/starYellow20.png' class='img-fluid' alt='Responsive image'>";
 			}
 			
-			else if(0 < avg_score <= 1) {
+			else if(avg_score == 1) {
 				html = "<img src='../images_product/starYellow10.png' class='img-fluid' alt='Responsive image'>";
 			}
 			
@@ -148,7 +148,12 @@
 			
 		});// end of $("button.tablinks").click(function(event) {}-------------------
 		
-		$("li.tablinks:eq(0)").trigger('click');
+				
+		if("${currentShowPageNo}" == "1")		
+			$("li.tablinks:eq(0)").trigger('click');
+		
+		else
+			$("li.tablinks:eq(2)").trigger('click');
 		
 		///////////////////////////////////////////////////////////////////
 		
@@ -505,6 +510,10 @@
 		
 		////////////////////////////////////////////////////////////////////////////////
 		
+		$(".reviewcard").click(function() {
+			
+		});
+		
 		
 	})// end of $(document).ready(function() {})-------------------------------------------
 	
@@ -720,10 +729,10 @@
 							<td id="starimg">
 								
 								<c:if test="${not empty reviewList}">									
-									&nbsp;&nbsp;<span class="small"><fmt:formatNumber value="${avg_score}" pattern="##.00" />&nbsp;&nbsp;리뷰 개수 : ${fn:length(reviewList)}</span>
+									&nbsp;&nbsp;<span class="small"><fmt:formatNumber value="${avg_score}" pattern="#0.00" />&nbsp;&nbsp;리뷰 개수 : ${reviewTotalCnt}</span>
 								</c:if>
 						 		
-								<c:if test="${empty reviewList}">
+								<c:if test="${empty reviewList or reviewList eq null}">
 									<img src='../images_product/starYellow00.png' class='img-fluid' alt='Responsive image'>
 									&nbsp;&nbsp;<span class="small">리뷰없음</span>
 								</c:if>				
@@ -922,7 +931,7 @@
 					<ul class="list-group list-group-horizontal row text-center">
 						<li class="list-group-item list-group-item-secondary col tablinks myli">상세정보</li>
 						<li class="list-group-item list-group-item-secondary col tablinks myli">상품정보</li>
-						<li class="list-group-item list-group-item-secondary col tablinks myli">고객리뷰(${fn:length(reviewList)})</li>
+						<li class="list-group-item list-group-item-secondary col tablinks myli">고객리뷰(${reviewTotalCnt})</li>
 						<li class="list-group-item list-group-item-secondary col tablinks myli">Q&amp;A</li>
 					</ul>
 				</div>	   
@@ -1012,14 +1021,17 @@
 				<div id="review"  class="content my-5 w-100 mx-0">
 					<div id="stars" class="row w-100 py-0 text-center px-0 mx-0" style="border: solid 1px #e6e6e6;">
 						<div class="col-md-3 pl-5 mt-2">
-							<p style="font-weight: bold; font-size: 30pt;"><fmt:formatNumber value="${avg_score}" pattern="##.00" /><span style="font-weight: normal; font-size: 20pt;">&nbsp;/5</span></p>
+							<p style="font-weight: bold; font-size: 30pt;">
+								<c:if test="${reviewList ne null}"><fmt:formatNumber value="${avg_score}" pattern="#0.00" /><span style="font-weight: normal; font-size: 20pt;">&nbsp;/5</span></c:if>
+								<c:if test="${reviewList eq null}">-<span style="font-weight: normal; font-size: 20pt;">&nbsp;/5</span></c:if>
+							</p>
 									
-							<p>리뷰<span style="font-weight: bold;">&nbsp;${fn:length(reviewList)}<sadn></span></p>
+							<p>리뷰<span style="font-weight: bold;">&nbsp;${reviewTotalCnt}</span></p>
 						</div>
 						
 						<div class="col-md-9 mt-2 pr-5" style="font-size: 10pt;">
 							
-							<c:forEach var="scoreCntMap" items="${scoreCntList}">
+							<c:forEach var="scoreCntMap" items="${scoreCntList}" varStatus="status">
 								
 								<fmt:parseNumber var="cnt" value="${scoreCntMap.cnt}" integerOnly="true" />
 								<c:set var="percent" value="${cnt/fn:length(reviewList)*100}"/>
@@ -1039,59 +1051,77 @@
 					<div class="row w-100 my-0 py-0 px-0 mx-0" id="btn_review" style="border: solid 1px #e6e6e6; border-top: none;">
 						<table class="w-100 mx-0 px-0">
 							<tr>
-								<td colspan="3"><span style="font-weight: bold; font-size: 15pt;">&nbsp;&nbsp;&nbsp;리뷰 작성시</span>&nbsp;&nbsp;일반리뷰 100 POINT, 포토리뷰 200 POINT 적립!</td>
+								<td colspan="3" class="row w-100 mx-0 px-0">
+									<div style="font-weight: bold; font-size: 14pt;" class="col-12 col-md-3 col-lg-3 pl-4 pt-1 col-xl-2">리뷰 작성시</div>
+									<div class="col-12 col-md-9 col-lg-9 pt-2 pl-4 col-xl-10">일반리뷰 100 POINT, 포토리뷰 200 POINT 적립!</div>
+								</td>
 								<td><button type="button" class="btn btn-secondary w-100 px-0 mx-0" style="border-radius: 0% 0%;" onclick="registerReview()">리뷰 등록하기</button></td>
 							</tr>
 						</table>						
 					</div>
 					
-					<p class="mt-3 mb-1 px-0 mx-0"style="font-weight: bold;"><br>&nbsp;추천순(리뷰갯수)</p>
+					<p class="mt-3 mb-1 px-0 mx-0"style="font-weight: bold;"><br>&nbsp;최신순(${fn:length(reviewList)})</p>
 					<hr>
 					
 					<div id="review_card" class="px-0 mx-0">
 						
-						<div id="img_row" class="row w-100 px-0 mx-0">	
-							<c:forEach var="rvo" items="${reviewList}">
-								<c:choose>
-									<c:when test="${rvo.review_img ne '-9999'}">		
-								    	<div class="card col-md-3 col-6 my-2">
-								             <div class="card-body px-1">
-								                 <img src="../img_review/${rvo.review_img}" class="img-fluid" alt="Responsive image">
-								                 <hr>
-								                 <p class="ml-3">${fn:substring(rvo.content, 0, 50)}..</p>
-								                 <hr>
-								                 <p class="ml-3">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
-								                 <p class="ml-3">평점       : ${rvo.score}</p>								                 
-								                 <p class="ml-3">작성일자 : ${rvo.review_date}</p>				                 
-								             </div>
-								    	</div>
-							    	</c:when>
-							    	<c:otherwise>		
-								    	<div class="card col-md-3 col-6 my-2">
-								             <div class="card-body px-1">
-								             	 <img src="../img_review/리뷰사진이없오.png" class="img-fluid" alt="Responsive image">
-								                 <hr>
-								                 <p class="ml-3">${fn:substring(rvo.content, 0, 50)}..</p>
-								                 <hr>
-								                 <p class="ml-3">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
-								                 <p class="ml-3">평점       : ${rvo.score}</p>								                 
-								                 <p class="ml-3">작성일자 : ${rvo.review_date}</p>				                 
-								             </div>
-								    	</div>
-							    	</c:otherwise>
-						    	</c:choose>
-					    	</c:forEach>
-					        			     
-						</div>
+						<c:if test="${reviewList ne null}">
+						
+							<div id="img_row" class="row w-100 px-0 mx-0">	
+								<c:forEach var="rvo" items="${reviewList}">
+									<c:choose>
+										<c:when test="${rvo.review_img ne '-9999'}">		
+									    	<div class="card col-md-3 col-6 my-2 reviewcard">
+									             <div class="card-body px-1">
+									                 <div align="center"><img src="../img_review/${rvo.review_img}" class="img-fluid" alt="Responsive image" style="object-fit: cover;"></div>
+									                 <span class="this-img" style="display: none;">${rvo.review_img}</span>
+									                 <hr>
+									                 <p class="ml-3" style="min-height: 100px;">${fn:substring(rvo.content, 0, 50)}
+									                 <span class="this-content" style="display: none;">${rvo.content}</span>
+									                 <c:if test="${fn:length(rvo.content) > 50}">...</c:if></p>
+									                 <hr>
+									                 <p class="ml-3 this-username" style="color: gray; font-size: 8pt;">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
+									                 <p class="ml-3 this-score" style="color: gray; font-size: 8pt;">평점       : ${rvo.score}</p>								                 
+									                 <p class="ml-3 this-date" style="color: gray; font-size: 8pt;">작성일자 : ${rvo.review_date}</p>				                 
+									             </div>
+									    	</div>
+								    	</c:when>
+								    	<c:otherwise>		
+									    	<div class="card col-md-3 col-6 my-2 reviewcard">
+									             <div class="card-body px-1">
+									             	 <img src="../img_review/리뷰사진이없오3.png" class="img-fluid" alt="Responsive image">
+									             	 <span class="this-img" style="display: none;">사진없음</span>
+									                 <hr>
+									                 <p class="ml-3" style="min-height: 100px;">${fn:substring(rvo.content, 0, 50)}
+									                 <c:if test="${fn:length(rvo.content) > 50}">...</c:if></p>
+									                 <span class="this-content" style="display: none;">${rvo.content}</span>
+									                 <hr>
+									                 <p class="ml-3 this-username" style="color: gray; font-size: 8pt;">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
+									                 <p class="ml-3 this-score" style="color: gray; font-size: 8pt;">평점       : ${rvo.score}</p>								                 
+									                 <p class="ml-3 this-date" style="color: gray; font-size: 8pt;">작성일자 : ${rvo.review_date}</p>				                 
+									             </div>
+									    	</div>
+								    	</c:otherwise>
+							    	</c:choose>
+						    	</c:forEach>
+						        			     
+							</div>
+						
+						</c:if>
+						
+						<c:if test="${reviewList eq null}">
+							
+							<div class="row w-100 px-0 mx-0 text-center">
+								<p class="text-center col-8 offset-2">등록된 리뷰가 존재하지 않습니다.</p>
+							</div>
+							
+						</c:if>
+						
 					</div>
-	<%-- 페이징해야함!!!! --%>				
-					<nav>
+			
+					<nav class="nav-light">
 					  <ul class="pagination justify-content-center" style="margin:20px 0">
-					    <li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
-					    <li class="page-item"><a class="page-link" href="#">1</a></li>
-					    <li class="page-item active"><a class="page-link" href="#">2</a></li>
-					    <li class="page-item"><a class="page-link" href="#">3</a></li>
-					    <li class="page-item"><a class="page-link" href="#">다음</a>
+					    ${requestScope.pageBar}
 					  </ul>
 					</nav>
 					
@@ -1173,14 +1203,14 @@
 			<%-- 최상단, 최하단 이동 버튼 시작 --%>
 			<div style="position: fixed; z-index: 5; cursor: pointer; bottom: 30px; right: 15px;">
 				<p>
-				<a href="#" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
-					<i class="fas fa-caret-square-up" style="font-size: 25pt; color: black;"></i>
-				</a>
+					<a href="#" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
+						<i class="fas fa-caret-square-up" style="font-size: 25pt; color: black;"></i>
+					</a>
 				</p>
 				<p>
-				<a href="#pagebottom" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
-					<i class="fas fa-caret-square-down" style="font-size: 25pt; color: black;"></i>
-				</a>
+					<a href="#pagebottom" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
+						<i class="fas fa-caret-square-down" style="font-size: 25pt; color: black;"></i>
+					</a>
 				</p>
 			</div>
 			

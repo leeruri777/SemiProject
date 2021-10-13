@@ -42,7 +42,7 @@ public class ProductInsertAction extends AbstractController {
 			if(request.getParameter("prod_exp") != null &&
 			   request.getParameter("prod_exp").trim() != "") {
 				
-				prod.setProd_exp(request.getParameter("prod_exp"));
+				prod.setProd_exp(request.getParameter("prod_exp").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 			}
 			
 			prod.setProd_price(Integer.parseInt(request.getParameter("prod_price")));

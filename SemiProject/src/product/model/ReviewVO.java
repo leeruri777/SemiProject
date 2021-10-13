@@ -46,7 +46,7 @@ public class ReviewVO {
 	}
 
 	public String getContent() {
-		return content;
+		return content.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 	}
 
 	public void setContent(String content) {
