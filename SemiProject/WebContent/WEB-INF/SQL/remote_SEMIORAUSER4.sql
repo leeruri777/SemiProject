@@ -16,8 +16,9 @@ from ALL_TAB_COLUMNS
 where TABLE_NAME = 'TBL_PROD' ;
 
 
+SELECT * FROM TBL_BASKET
 
-
+/*
 
 create table TBL_BASKET
 (BASKET_NO      number         not null      -- 시퀀스로 입력받음. 기본키
@@ -37,4 +38,4 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
-
+*/
