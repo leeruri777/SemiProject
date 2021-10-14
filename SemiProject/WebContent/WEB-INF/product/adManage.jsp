@@ -30,7 +30,7 @@
       font-weight: bold; 
    }
    
-      li.myli:hover {cursor: pointer;}
+   li.myli:hover {cursor: pointer;}
    
 </style>
 
@@ -230,7 +230,7 @@
 		                               <span class="img" style="display: none;">${bannerMap.img}</span>
 		                            </td>		                            
 		                            <td class="col-md-3">
-		                               <button type="button" class="btn btn-sm btn-primary my-1 mx-1 mx-1 my-md-5 updatethis" data-toggle="modal" data-target="#updateModal">수정</button>                  
+		                               <button type="button" class="btn btn-sm btn-primary my-1 mx-1 mx-1 my-md-5 updatethis" data-toggle="modal" data-target="#updateModal" data-backdrop="static">수정</button>                  
                                  	   <button type="button" class="btn btn-danger btn-sm deletethis" data-toggle="modal" data-target="#deleteModal" data-backdrop="static">삭제</button>	                            	
 		                            </td>                        		
                         		</tr>
@@ -287,8 +287,8 @@
 			      
 			      <!-- Modal footer -->
 			      <div class="modal-footer">
-			      	<button type="button" class="btn btn-success" id="insertBanner">등록</button>
-			      	<button type="button" class="btn btn-danger thisclose" data-dismiss="modal">취소</button>
+			      	<button type="button" class="btn btn-sm btn-success" id="insertBanner">등록</button>
+			      	<button type="button" class="btn btn-sm btn-danger thisclose" data-dismiss="modal">취소</button>
 			      </div>
 			      
 			    </div>
@@ -333,8 +333,8 @@
 			      
 			      <!-- Modal footer -->
 			      <div class="modal-footer">
-			      	<button type="button" class="btn btn-success" id="updateBanner">수정</button>
-			      	<button type="button" class="btn btn-danger thisclose" data-dismiss="modal">취소</button>
+			      	<button type="button" class="btn btn-sm btn-success" id="updateBanner">수정</button>
+			      	<button type="button" class="btn btn-sm btn-danger thisclose" data-dismiss="modal">취소</button>
 			      </div>
 			      
 			    </div>
@@ -357,8 +357,8 @@
 	
 				      	<form name="deleteBanner">
 				      		<input type="hidden" value="" name="del_sort_code">				      		
-				      		<button type="button" class="btn btn-danger deletethis" onclick="deletethis()">삭제</button>
-				      		<button type="button" class="btn btn-success thisclose" data-dismiss="modal">취소</button>
+				      		<button type="button" class="btn btn-sm btn-danger deletethis mx-1" onclick="deletethis()">삭제</button>
+				      		<button type="button" class="btn btn-sm btn-success thisclose mx-1" data-dismiss="modal">취소</button>
 						</form>
 												
 					</div>

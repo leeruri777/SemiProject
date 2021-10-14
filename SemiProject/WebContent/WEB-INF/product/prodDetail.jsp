@@ -50,14 +50,8 @@
  	button#buy {background-color: #4d4d4d; color: #fff;}
  	
  	button#buy:hover {background-color: #a6a6a6;}
-
-	nav.mynavbar {width: 20%; margin: 0 auto; opacity: 0.5; height: 50px;}
 	
-	nav.mynavbar:hover {opacity: 1; cursor: pointer;}
-	
-	a.mynavbar-brand {text-align: center; margin: 0 auto; font-size: 11pt; width:50%;}
-		
-	a.mynavbar-brand:hover {font-weight: bold; text-decoration: underline;}
+	div.reviewcard:hover { /* border: solid 1px #bfbfbf; */ background-color: #f2f2f2;}
 	
 </style>
 
@@ -82,6 +76,10 @@
 		var price = 0;
 		var total_price = 0;
 		var total = 0;
+				
+		if("${cart}" == "y") {			
+			$("#cartModal_btn").trigger('click');
+		}
 		
 		if("${prodMap.pvo.discount_price}" == -9999 ) {
 			price = Number("${prodMap.pvo.prod_price}");
@@ -143,13 +141,12 @@
 			
 			$("li.tablinks:eq(" + i + ")").addClass('myli');
 		
-			if(i != 0) {$("nav.navbar").hide();}
-			else {$("nav.navbar").show();}
-			
+			if(i != 0) {$(".sidenav").hide();}
+			else {$(".sidenav").show();}
+						
 		});// end of $("button.tablinks").click(function(event) {}-------------------
-		
-				
-		if("${currentShowPageNo}" == "1")		
+			
+		if("${currentShowPageNo}" == null || "${currentShowPageNo}" == "")		
 			$("li.tablinks:eq(0)").trigger('click');
 		
 		else
@@ -512,6 +509,25 @@
 		
 		$(".reviewcard").click(function() {
 			
+			var img = $(this).find(".this-img").text();	
+			var content = $(this).find(".this-content").text();
+			var username = $(this).find(".this-username").text();
+			var score = $(this).find(".this-score").text();
+			var date = $(this).find(".this-date").text();
+			
+			if(img != "사진없음")  {
+				$("#re-img").html("<img src='../img_review/"+ img +"' style='object-fit: cover; max-height: 150px;'><hr>")
+			}
+			
+			else {
+				$("#re-img").empty();
+			}
+			
+			$("#re-content").text(content);
+			$("#re-username").text(username);
+			$("#re-score").text(score);
+			$("#re-date").text(date);
+		
 		});
 		
 		
@@ -535,34 +551,34 @@
 				prod_code += $(item).text();
 			});
 			
-			var amount = ""; // 선택한 상품들의 개수
+			var goods_qy = ""; // 선택한 상품들의 개수
 			
-			var n_amount = 0;
+			var n_goods_qy = 0;
 			
 			$(".howmany-p").each(function(index,item) {
 				
-				if(index != 0) {amount += ","}
-				amount += $(item).text();
+				if(index != 0) {goods_qy += ","}
+				goods_qy += $(item).text();
 				
-				n_amount += Number($(item).text());
+				n_goods_qy += Number($(item).text());
 				
 			});
 			
-			// console.log(n_amount);
+			// console.log(n_goods_qy);
 			
 			
-			if(n_amount < Number("${prodMap.pvo.prod_select}")) {
+			if(n_goods_qy < Number("${prodMap.pvo.prod_select}")) {
 				alert("상품을 총 " + "${prodMap.pvo.prod_select}" + "개 선택해주세요.");
 				return;
 			}
 			
 			else {
 				frm.prod_code.value = prod_code;				
-				frm.amount.value = amount;			
+				frm.goods_qy.value = goods_qy;			
 			}
 			
 		//	console.log(frm.prod_code.value);
-		//	console.log(frm.amount.value);
+		//	console.log(frm.goods_qy.value);
 			
 		}
 		
@@ -571,7 +587,7 @@
 			
 			// 추가선택옵션이 없을 경우
 			frm.prod_code.value = $("input[name=my_value]").val();
-			frm.amount.value = $("input[name=howmany]").val();
+			frm.goods_qy.value = $("input[name=howmany]").val();
 			
 			// 추가선택옵션이 있을 경우
 			if("${prodMap.pvo.prod_plus}" != "0") {
@@ -587,21 +603,21 @@
 					prod_code += $(item).text();
 				});
 				
-				var amount = ""; // 선택한 상품들의 개수
+				var goods_qy = ""; // 선택한 상품들의 개수
 				
 				$(".howmany-p").each(function(index,item) {
 					
-					if(index != 0) {amount += ","}
-					amount += $(item).text();
+					if(index != 0) {goods_qy += ","}
+					goods_qy += $(item).text();
 				});
 				
 				frm.prod_code.value = $("input[name=my_value]").val() + "," + prod_code;				
-				frm.amount.value = $("input[name=howmany]").val() + "," + amount;
+				frm.goods_qy.value = $("input[name=howmany]").val() + "," + goods_qy;
 								
 			}
 			
 		//	console.log(frm.prod_code.value);
-		//	console.log(frm.amount.value);
+		//	console.log(frm.goods_qy.value);
 			
 		}
 		
@@ -627,11 +643,75 @@
 	
 </script>
 		
-	<div class="container mt-5">	
+	<div class="container mt-5">
+	
+	<button type="button" id="cartModal_btn" data-toggle="modal" data-target="#cartModal" style="display: none;"></button>
+	
+	<%-- 장바구니 모달 --%>
+		<div class="modal fade" id="cartModal">
+			  <div class="modal-dialog modal-dialog-scrollable modal modal-dialog-centered">
+			  
+			    <div class="modal-content">			      
+			      	
+		      		<!-- Modal body -->
+			      	<div class="modal-body row text-center">
+			        	<h6 class="modal-title text-center col">장바구니로 이동하시겠습니까?</h6>
+			      	</div>
+			      	
+			     	<!-- Modal footer -->
+			      	<div class="modal-footer row">
+			      		<p class="text-center col">		      		
+				      		<button type="button" class="btn btn-sm btn-dark mx-1" onclick="location.href='/mypage/basket.go'"><i class="fas fa-shopping-cart" style="color: white;"></i>&nbsp;이동</button>
+				      		<button type="button" class="btn btn-sm btn-light mx-1" data-dismiss="modal">닫기</button>
+				      	</p>													
+					</div>
+			     				      
+			    </div>
+			  </div>
+		</div>
+	
+	<%-- 리뷰카드 모달 --%>
+		<div class="modal fade" id="reviewModal">
+			  <div class="modal-dialog modal-dialog-scrollable modal modal-dialog-centered">
+			  
+			    <div class="modal-content">			      
+			      	
+			      	<!-- Modal header -->
+			      <div class="modal-header">
+			        	<h5 class="modal-title">리뷰보기</h5>
+			        	<button type="button" class="close thisclose" data-dismiss="modal">&times;</button>
+			      </div>
+			      	
+			     <!-- Modal body -->
+			      <div class="modal-body">
+						
+						<div class="modal-card">
+				             <div class="card-body px-1">
+				                 <div align="center" id="re-img"></div>
+				                 <p class="ml-3" style="min-height: 100px;" id="re-content"></p>
+				                 <hr>
+				                 <p class="ml-3" style="color: gray;" id="re-username"></p>
+				                 <p class="ml-3" style="color: gray;" id="re-score"></p>								                 
+				                 <p class="ml-3" style="color: gray;" id="re-date"></p>				                 
+				             </div>
+				    	</div>
+				      	
+												
+				  </div>
+			     	         							
+			      
+			      <!-- Modal footer -->
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-sm btn-danger thisclose" data-dismiss="modal">닫기</button>
+			      </div>
+			      
+			    </div>
+			  </div>
+		</div>	
 		
 		<div style="position: fixed; z-index: 5; cursor: pointer; bottom: 30px; left: 25px;">
 			<p>
-				<a href="#buypage" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
+				<a class="sidenav" href="#buypage" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
 					<i class="fas fa-shopping-cart" style="font-size: 25pt; color: black;"></i>
 				</a>
 			</p>
@@ -763,10 +843,10 @@
 								<%-- 추가구성상품O --%>
 								<c:if test="${prodMap.pvo.prod_plus eq '1'}">
 									<div class="row mx-0 px-0 pt-3" style="border-top: solid 1px #d9d9d9;">
-										<div class="col-3">
+										<div class="col-6">
 											추가구성상품
 										</div>
-										<div class=" col-9 text-right px-0">
+										<div class=" col-6 text-right px-0">
 											<a class="btn btn-light btn-sm" id="switch_plus" href=".plus_list" data-toggle="collapse" style="color:black;"></a>
 										</div>
 										
@@ -899,7 +979,8 @@
 							
 							<form name="whatbuy">
 								<input type="hidden" name="prod_code"/>
-								<input type="hidden" name="amount"/>
+								<input type="hidden" name="goods_qy"/>
+								<input type="hidden" name="real_prod_code" value="${prodMap.pvo.prod_code}"/>
 							</form>
 													
 						</div>
@@ -907,7 +988,7 @@
 					
 					<c:if test="${prodMap.pvo.prod_stock eq '0'}">
 						<div class="ml-3 px-0">
-							<h1 class="mb-5 text-center" style="color:red;">SOLD OUT</h1>
+							<h1 class="mb-5 text-center" style="color:red;">일시품절</h1>
 							<div class="text-center mb-5">
 								<div class="col-2"></div>
 								<button type="button" class="btn col-3 mx-auto btn_select" id="cart" disabled="disabled">장바구니</button>
@@ -1060,10 +1141,10 @@
 						</table>						
 					</div>
 					
-					<p class="mt-3 mb-1 px-0 mx-0"style="font-weight: bold;"><br>&nbsp;최신순(${fn:length(reviewList)})</p>
+					<p class="mt-3 mb-1 px-0 mx-0"style="font-weight: bold;"><br>&nbsp;최신순(${reviewTotalCnt})</p>
 					<hr>
 					
-					<div id="review_card" class="px-0 mx-0">
+					<div id="review_card" class="px-0 mx-0" data-toggle="modal" data-target="#reviewModal">
 						
 						<c:if test="${reviewList ne null}">
 						
@@ -1073,7 +1154,7 @@
 										<c:when test="${rvo.review_img ne '-9999'}">		
 									    	<div class="card col-md-3 col-6 my-2 reviewcard">
 									             <div class="card-body px-1">
-									                 <div align="center"><img src="../img_review/${rvo.review_img}" class="img-fluid" alt="Responsive image" style="object-fit: cover;"></div>
+									                 <div align="center"><img src="../img_review/${rvo.review_img}" class="img-fluid" alt="Responsive image" style="object-fit: cover; max-height: 150px;"></div>
 									                 <span class="this-img" style="display: none;">${rvo.review_img}</span>
 									                 <hr>
 									                 <p class="ml-3" style="min-height: 100px;">${fn:substring(rvo.content, 0, 50)}
@@ -1181,8 +1262,8 @@
 					</div>
 					
 					<div class="mx-0 px-0 my-2 row justify-content-end">
-						<button type="button" class="btn btn-dark mr-1">문의하기</button>						
-						<button type="button" class="btn btn-light" style="border: solid 1px #d9d9d9">모두보기</button>
+						<button type="button" class="btn btn-sm btn-dark mr-1">문의하기</button>						
+						<button type="button" class="btn btn-sm btn-light" style="border: solid 1px #d9d9d9">모두보기</button>
 					</div>
 					
 					<nav>
@@ -1203,12 +1284,12 @@
 			<%-- 최상단, 최하단 이동 버튼 시작 --%>
 			<div style="position: fixed; z-index: 5; cursor: pointer; bottom: 30px; right: 15px;">
 				<p>
-					<a href="#" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
+					<a class="sidenav" href="#" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
 						<i class="fas fa-caret-square-up" style="font-size: 25pt; color: black;"></i>
 					</a>
 				</p>
 				<p>
-					<a href="#pagebottom" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
+					<a class="sidenav" href="#pagebottom" style="display: scroll;" onfocus="this.blur()" rel="nofollow">
 						<i class="fas fa-caret-square-down" style="font-size: 25pt; color: black;"></i>
 					</a>
 				</p>

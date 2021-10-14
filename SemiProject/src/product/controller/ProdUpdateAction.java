@@ -8,13 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import common.controller.AbstractController;
 import product.model.*;
 
-public class ProductInsertAction extends AbstractController {
+public class ProdUpdateAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-	//	System.out.println("확인용 : 여기는 ProductInsertAction입니다.");
-		
+				
 		String message = "";
 		String loc = "";
 		
@@ -23,6 +21,10 @@ public class ProductInsertAction extends AbstractController {
 			Map<String, Object> paraMap = new HashMap<>();
 			
 			ProductVO prod = new ProductVO();
+			
+			String prod_code = request.getParameter("prod_code");
+			
+			prod.setProd_code(prod_code);
 			
 			// 카테고리 신규 입력 시 map에 따로 넣어주기
 			if(request.getParameter("add_sort_name") != null && 
@@ -54,39 +56,7 @@ public class ProductInsertAction extends AbstractController {
 				prod.setDiscount_price(Integer.parseInt(request.getParameter("discount_price")));
 			}
 			
-			// 재고가 있으면 넣어주기
-			if(request.getParameter("prod_stock") != null &&
-			   request.getParameter("prod_stock").trim() != "") {
-				
-				prod.setProd_stock(Integer.parseInt(request.getParameter("prod_stock")));
-			}
-			
-			// 타이틀이미지가 여러 개일 경우 리스트로 만들어 넣어주기
-			String s_titlefile = request.getParameter("titlefile");
-						
-			String[] arr_titlefile = s_titlefile.split(",");
-			
-			List<String> titleimglist = new ArrayList<>();
-			
-			for(String titlefile : arr_titlefile) {				
-				titleimglist.add(titlefile);				
-			}
-			
-			paraMap.put("titleimglist", titleimglist);
-			
-			// 상세이미지가 여러 개일 경우 리스트로 만들어 넣어주기
-			String s_detailfile = request.getParameter("detailfile");
-			
-			String[] arr_detailfile = s_detailfile.split(",");
-			
-			List<String> detailimglist = new ArrayList<>();
-			
-			for(String detailfile : arr_detailfile) {				
-				detailimglist.add(detailfile);				
-			}
-			
-			paraMap.put("detailimglist", detailimglist);
-			
+
 			prod.setProd_ice(Integer.parseInt(request.getParameter("prod_ice")));
 			
 			prod.setProd_plus(Integer.parseInt(request.getParameter("prod_plus")));
@@ -131,16 +101,52 @@ public class ProductInsertAction extends AbstractController {
 			
 			InterProductDAO pdao = new ProductDAO();
 			
-			int result = pdao.insertProd(paraMap);
+			int result = pdao.updateProd(paraMap);
 			
+		//	System.out.println(request.getParameter("titlefile") + "////" + request.getParameter("detailfile"));
+			
+			if(request.getParameter("titlefile").trim() != "") {
+
+				// 타이틀이미지가 여러 개일 경우 리스트로 만들어 넣어주기
+				String s_titlefile = request.getParameter("titlefile");
+							
+				String[] arr_titlefile = s_titlefile.split(",");
+				
+				List<String> titleimglist = new ArrayList<>();
+				
+				for(String titlefile : arr_titlefile) {				
+					titleimglist.add(titlefile);				
+				}
+				
+				result = pdao.updateTitle(titleimglist, prod_code);
+				
+			}
+			
+			if(request.getParameter("detailfile").trim() != "") {
+				
+				// 상세이미지가 여러 개일 경우 리스트로 만들어 넣어주기
+				String s_detailfile = request.getParameter("detailfile");
+				
+				String[] arr_detailfile = s_detailfile.split(",");
+				
+				List<String> detailimglist = new ArrayList<>();
+				
+				for(String detailfile : arr_detailfile) {				
+					detailimglist.add(detailfile);				
+				}
+				
+				result = pdao.updateDetail(detailimglist, prod_code);
+				
+			}
+						
 			if(result == 0) {
 				message = "SQL구문 오류 발생";
-				loc = "/";
+				loc = "javascript:history.back()";
 			}
 			
 			else {
-				message = "상품등록이 완료되었습니다.";
-				loc = "/product/prodRegister.go"; 
+				message = "변경하신 상품정보가 저장되었습니다.";
+				loc = "/product/adminOneProd.go?one_prod_code=" + prod_code; 
 			}
 					
 		}

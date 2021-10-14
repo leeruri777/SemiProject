@@ -56,4 +56,16 @@ public interface InterProductDAO_KJH {
 	// 리뷰 페이징 처리를 위한 페이지바 만들기 & 리뷰 총 개수
 	Map<String, String> getReviewTotal(String prod_code) throws SQLException;
 
+	// 장바구니 테이블  insert
+	int insertBasket(Map<String, Object> paraMap) throws SQLException;
+
+	// 상품 입고, 폐기 기록 가져오기
+	List<InOutVO> getInOutList(String prod_code) throws SQLException;
+
+	// 상품정보가져오기(관리자버전)
+	Map<String, Object> getAdminProdDetail(String prod_code) throws SQLException;
+
+	// 상품삭제
+	int deleteProduct(String prod_code) throws SQLException;
+
 }

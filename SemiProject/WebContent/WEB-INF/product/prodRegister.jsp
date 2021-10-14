@@ -469,14 +469,14 @@
 							
 		<div id="main" class="w-100 mx-0 px-0">
 		
-		   <form name="registerFrm">
+		   <form name="registerFrm" class="was-validated">
 			   
 				<div class="row w-100 mx-0 px-0 mb-3">
-					<div class="col-3 col-md-2">
+					<div class="col-3 col-md-2 pt-2">
 						<label class="title" for="select1">카테고리</label>
 					</div>
 					<div class="col form-inline form-group">
-						<select class="form-control col-md-5 col-9 mr-2 mt-1" name="sort_code">
+						<select class="form-control col-md-5 col-9 mr-2 mt-1" name="sort_code" required>
 							<option value="0">[신규 카테고리 등록]</option>
 							
 							<c:if test="${not empty requestScope.sortList}">
@@ -491,16 +491,16 @@
 				</div>
 				
 				<div class="row w-100 mx-0 px-0 mb-3">
-					<div class="col-3 col-md-2">
+					<div class="col-3 col-md-2 pt-2">
 						<label class="title" for="prodName">상품명</label>
 					</div>
 					<div class="col-9 col-md-5 form-group">
-						<input type="text" class="productname form-control" id="box" name="prod_name" maxlength="200">
+						<input type="text" class="productname form-control" id="box" name="prod_name" maxlength="200" required>
 					</div>
 				</div>
 				
 				<div class="row w-100 mx-0 px-0 mb-3">
-					<div class="col-3 col-md-2">
+					<div class="col-3 col-md-2 pt-2">
 						<label class="title" for="expalin">상품설명</label>
 					</div>
 					<div class="col-9 col-md-5 form-group">						
@@ -511,26 +511,26 @@
 				</div>
 				
 				<div class="row w-100 mx-0 px-0 mb-3">
-					<div class="col-3 col-md-2">
+					<div class="col-3 col-md-2 pt-2">
 						<label class="title" for="price">가격</label>
 					</div>
 					<div class="col-9 col-md-5 form-group">
-						<input type="text" class="price form-control mb-1" id="price" name="prod_price">				
+						<input type="text" class="price form-control mb-1" id="price" name="prod_price" required>				
 						<input type="checkbox" class="discount" id="discount" name="prod_discount"><label for="discount" class="discount">&nbsp;할인적용</label>
 					</div>
 				</div>
 								
 				<div class="row w-100 mx-0 px-0 mb-3" id="discount">
-					<div class="col-3 col-md-2">
+					<div class="col-3 col-md-2 pt-2">
 						<label class="title" for="price">할인가격</label>
 					</div>
 					<div class="col-9 col-md-5 form-group">
-						<input type="text" class="discount_price form-control" id="discount_price" name="discount_price">				
+						<input type="text" class="discount_price form-control" id="discount_price" name="discount_price" required>				
 					</div>
 				</div>
 				
 				<div class="row w-100 mx-0 px-0 mb-3">
-					<div class="col-3 col-md-2">
+					<div class="col-3 col-md-2 pt-2">
 						<label class="title" for="inventory">재고</label>
 					</div>
 					<div class="col-9 col-md-5 form-group">
@@ -543,8 +543,8 @@
 					<div class="col-3 col-md-2">
 						<label class="title" for="addFile1">타이틀 이미지</label>
 					</div>
-					<div class="col-8 col-md-5 ml-3 form-group mx-0 px-0">
-						<input type="file" class="form-control-file mx-0 px-0" multiple="multiple" id="addTitleFile" name="prod_img_url">       					
+					<div class="col-9 col-md-6 form-group">
+						<input type="file" class="form-control-file mx-0" multiple="multiple" id="addTitleFile" name="prod_img_url">       					
 						<span class='small' style="color: red;">*복수 개의 파일 선택시 반드시 파일명에 넘버링이 되어있어야 합니다</span>
 					</div>
 				</div>
@@ -562,8 +562,8 @@
 					<div class="col-3 col-md-2">
 						<label class="title" for="addFile2">상세 이미지</label>
 					</div>
-					<div class="col-8 col-md-5 ml-3 form-group mx-0 px-0">
-						<input type="file" class="form-control-file mx-0 px-0" multiple="multiple" id="addDetailFile" name="prod_img_detail_url">
+					<div class="col-9 col-md-6 form-group">
+						<input type="file" class="form-control-file mx-0" multiple="multiple" id="addDetailFile" name="prod_img_detail_url">
 						<span class='small' style="color: red;">*복수 개의 파일 선택시 반드시 파일명에 넘버링이 되어있어야 합니다</span>
 					</div>
 				</div>
@@ -600,9 +600,9 @@
 			         	
 			         	<c:if test="${not empty requestScope.prodList}">			            
 				            <input type="radio" value="1" name="prod_plus" id="prod_plus" /><label for="prod_plus">&nbsp;추가구성O</label>							 
-				         	<div id="plus" class="mx-0 px-0 col-md-6">
+				         	<div id="plus" class="mx-0 px-0 col-md-8">
 				         		
-				         		<select class='form-control' name='prod_plus_code' size='3' multiple>
+				         		<select class='form-control' name='prod_plus_code' size='3' multiple required>
 								    <c:forEach var="prod" items="${requestScope.prodList}">	
 										<option value="${prod.prod_code}">${prod.prod_name}</option>								
 									</c:forEach>					      
@@ -630,9 +630,9 @@
 			         	
 			         	<c:if test="${not empty requestScope.prodList}">			            
 				            <input type="radio" value="1" name="prod_select" id="prod_select" /><label for="prod_select">&nbsp;골라담기O</label>							 
-				         	<div id="select" class="mx-0 px-0 col-md-6">
+				         	<div id="select" class="mx-0 px-0 col-md-8">
 				         		
-				         		<select class='form-control' name='prod_select_code' size='3' multiple>
+				         		<select class='form-control' name='prod_select_code' size='3' multiple required>
 								    <c:forEach var="prod" items="${requestScope.prodList}">	
 										<option value="${prod.prod_code}">${prod.prod_name}</option>								
 									</c:forEach>					      
@@ -641,7 +641,7 @@
 						 	</div>
 						 	
 						 	<div id="select" class="mx-0 px-0 col-md-4">	
-						 		<input type="text" id="selectCnt" name="selectCnt" class="form-control form-control-sm" placeholder="골라담기 개수를 입력하세요"> 						 		
+						 		<input type="text" id="selectCnt" name="selectCnt" class="form-control form-control-sm" placeholder="골라담기 개수를 입력하세요" required> 						 		
 				         	</div>	 
 				         				         	
 			         	</c:if>

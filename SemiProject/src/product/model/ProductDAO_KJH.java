@@ -529,10 +529,10 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 			   
 			   rs = pstmt.executeQuery();
 			   
-			   List<String> titleImgList = new ArrayList<String>();
+			   List<String> titleImgList = new ArrayList<>();
 			   
 			   while(rs.next()) {				   
-				   titleImgList.add(rs.getString(1));				   
+				   titleImgList.add(rs.getString(1));			   
 			   }
 			   
 			   prodMap.put("titleImgList", titleImgList);
@@ -1093,6 +1093,322 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 		}
 		
 		return reviewTotalMap;
+		
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+	
+	// 장바구니 테이블  insert
+	@Override
+	public int insertBasket(Map<String, Object> paraMap) throws SQLException {
+		
+		int result = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+						
+			String[] arrProd_code = (String[]) paraMap.get("arrProd_code");
+			String[] arrgoods_qy = (String[]) paraMap.get("arrgoods_qy");
+			String userid = (String) paraMap.get("userid");
+			
+			for(int i=0; i<arrProd_code.length; i++) {				
+
+				String sql = " insert into tbl_basket(BASKET_NO, FK_USER_ID, FK_PROD_CODE, GOODS_QY) " + 
+							 " values(BASKET_NO.nextval, ?, ?, ?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, userid);
+				pstmt.setString(2, arrProd_code[i]);
+				pstmt.setString(3, arrgoods_qy[i]);
+				
+				result = pstmt.executeUpdate();				
+				
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+	
+	// 상품 입고, 폐기 기록 가져오기
+	@Override
+	public List<InOutVO> getInOutList(String prod_code) throws SQLException {
+		
+		List<InOutVO> inoutList = new ArrayList<>();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select inout_code, status, fk_prod_code, inout_qty, nvl(inout_exp, '-9999') as inout_exp " + 
+						 "      , to_char(inout_date, 'yyyy-mm-dd hh24:mi:ss') as inout_date " + 
+						 " from tbl_inout_stock where fk_prod_code = ? " + 
+						 " order by inout_date desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, prod_code);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				InOutVO iovo = new InOutVO();
+				
+				iovo.setInout_code(rs.getInt(1));
+				iovo.setStatus(rs.getInt(2));
+				iovo.setProd_code(rs.getString(3));
+				iovo.setInout_qty(rs.getInt(4));
+				iovo.setInout_exp(rs.getString(5));
+				iovo.setInout_date(rs.getString(6));
+				
+				inoutList.add(iovo);
+				
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return inoutList;
+		
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 상품정보가져오기(관리자버전)
+	@Override
+	public Map<String, Object> getAdminProdDetail(String prod_code) throws SQLException {
+
+		   Map<String, Object> prodMap = new HashMap<>();
+		   
+		   try {
+			   
+			   conn = ds.getConnection();
+			   
+			   // 상품 정보 가져오기(tbl_prod, tbl_prod_info, tbl_stock)
+			   String sql = " select A.sort_code, A.prod_code, prod_name, prod_exp, prod_price, prod_ice, prod_plus, prod_select, discount_price, prod_stock, A.sort_name, prod_sale " + 
+					   		" from " + 
+					   		" ( " + 
+					   		"     select P.sort_name, P.sort_code, P.prod_code, prod_name, prod_exp, prod_price, prod_ice, prod_plus, prod_select, nvl(discount_price,-9999) AS discount_price, prod_sale " + 
+					   		"     from tbl_prod_info I " + 
+					   		"         JOIN " + 
+					   		"             ( " + 
+					   		"                 select sort_name, fk_sort_code AS sort_code, prod_code " + 
+					   		"                 from tbl_prod N JOIN tbl_sort M ON N.fk_sort_code = M.sort_code " + 
+					   		"                 where prod_code = ? " + 
+					   		"             ) P " + 
+					   		"         ON P.prod_code = I.fk_prod_code " +  
+					   		" )A  JOIN tbl_stock S " + 
+					   		"     ON A.prod_code = S.fk_prod_code ";
+			   
+			   pstmt = conn.prepareStatement(sql);
+			   
+			   pstmt.setString(1, prod_code);
+			   
+			   rs = pstmt.executeQuery();
+			   
+			   if(rs.next()) {
+				   
+				   ProductVO pvo = new ProductVO();
+				   
+				   pvo.setSort_code(rs.getInt(1));
+				   pvo.setProd_code(rs.getString(2));
+				   pvo.setProd_name(rs.getString(3));
+				   pvo.setProd_exp(rs.getString(4));
+				   pvo.setProd_price(rs.getInt(5));
+				   pvo.setProd_ice(rs.getInt(6));
+				   pvo.setProd_plus(rs.getInt(7));
+				   pvo.setProd_select(rs.getInt(8));
+				   pvo.setDiscount_price(rs.getInt(9));
+				   pvo.setProd_stock(rs.getInt(10));
+				   pvo.setSort_name(rs.getString(11));
+				   pvo.setProd_sale(rs.getInt(12));
+				   
+				   prodMap.put("pvo", pvo);
+				   
+				   // 타이틀 이미지 가져오기			   
+				   sql = " select prod_img_url from tbl_prod_img where fk_prod_code = ? order by prod_img_code ";
+				   
+				   pstmt = conn.prepareStatement(sql);
+				   
+				   pstmt.setString(1, prod_code);
+				   
+				   rs = pstmt.executeQuery();
+				   
+				   List<String> titleImgList = new ArrayList<>();
+				   
+				   while(rs.next()) {				   
+					   titleImgList.add(rs.getString(1));			   
+				   }
+				   
+				   prodMap.put("titleImgList", titleImgList);
+				   
+				   // 상세 이미지 가져오기			   
+				   sql = " select prod_img_detail_url from tbl_prod_img_detail where fk_prod_code = ? order by prod_img_detail_code ";
+				   
+				   pstmt = conn.prepareStatement(sql);
+				   
+				   pstmt.setString(1, prod_code);
+				   
+				   rs = pstmt.executeQuery();
+				   
+				   List<String> detailImgList = new ArrayList<>();
+				   
+				   while(rs.next()) {				   
+					   detailImgList.add(rs.getString(1));				   
+				   }
+				   
+				   prodMap.put("detailImgList", detailImgList);
+				   
+				   // 추가구성상품이 있을 경우 추가구성상품 목록 가져오기
+				   if(pvo.getProd_plus() == 1) {
+					   
+					   sql = " select I.fk_prod_code, prod_name, prod_price, discount_price, prod_stock, prod_img_url " + 
+					   		 " from " + 
+					   		 "     ( " + 
+					   		 "         select A.fk_prod_code, prod_name, prod_price, nvl(discount_price,-9999) AS discount_price, prod_stock " + 
+					   		 "         from tbl_prod_info A JOIN tbl_stock S ON A.fk_prod_code = S.fk_prod_code " + 
+					   		 "         where A.fk_prod_code in ( " + 
+					   		 "                                     select fk_prod_plus_code AS prod_plus_code " + 
+					   		 "                                     from tbl_prod_plus " + 
+					   		 "                                     where fk_prod_code = ? " + 
+					   		 "                                  ) and prod_sale = 1 " + 
+					   		 "      ) I " + 
+					   		 " JOIN ( " + 
+					   		 "        select distinct first_value(prod_img_url) over(partition by fk_prod_code order by prod_img_code) AS prod_img_url " + 
+					   		 "             , fk_prod_code " + 
+					   		 "        from tbl_prod_img " + 
+					   		 "       ) T " + 
+					   		 " ON I.fk_prod_code = T.fk_prod_code order by 1 ";
+					   
+					   pstmt = conn.prepareStatement(sql);
+					   
+					   pstmt.setString(1, prod_code);
+					   
+					   rs = pstmt.executeQuery();
+					   
+					   List<ProductVO_KJH> plusList = new ArrayList<>();
+					   
+					   while(rs.next()) {
+						   
+						   ProductVO_KJH plusvo = new ProductVO_KJH();
+						   
+						   plusvo.setProd_code(rs.getString(1));
+						   plusvo.setProd_name(rs.getString(2));
+						   plusvo.setProd_price(rs.getInt(3));
+						   plusvo.setDiscount_price(rs.getInt(4));
+						   plusvo.setProd_stock(rs.getInt(5));
+						   
+						   ImageVO imgvo = new ImageVO();
+						   
+						   imgvo.setProd_img_url(rs.getString(6));
+						   
+						   plusvo.setImgvo(imgvo);
+						   
+						   plusList.add(plusvo);					   
+						   
+					   }// end of while---------------------------
+					   
+					   prodMap.put("plusList", plusList);
+					   
+				   }  
+				   
+				   // 골라담기 상품일 경우 골라담기구성상품 목록 가져오기
+				   if(pvo.getProd_select() != 0) {
+						   
+					   sql = " select I.fk_prod_code, prod_name, prod_price, discount_price, prod_stock, prod_img_url " + 
+					   		 " from " + 
+					   		 "     ( " + 
+					   		 "         select A.fk_prod_code, prod_name, prod_price, nvl(discount_price,-9999) AS discount_price, prod_stock " + 
+					   		 "         from tbl_prod_info A JOIN tbl_stock S ON A.fk_prod_code = S.fk_prod_code " + 
+					   		 "         where A.fk_prod_code in ( " + 
+					   		 "                                     select fk_prod_select_code AS prod_select_code " + 
+					   		 "                                     from tbl_prod_select " + 
+					   		 "                                     where fk_prod_code = ? " + 
+					   		 "                                  ) AND prod_sale = 1 " + 
+					   		 "      ) I " + 
+					   		 " JOIN ( " + 
+					   		 "        select distinct first_value(prod_img_url) over(partition by fk_prod_code order by prod_img_code) AS prod_img_url " + 
+					   		 "             , fk_prod_code " + 
+					   		 "        from tbl_prod_img " + 
+					   		 "       ) T " + 
+					   		 " ON I.fk_prod_code = T.fk_prod_code order by 1 ";
+					   
+					   pstmt = conn.prepareStatement(sql);
+					   
+					   pstmt.setString(1, prod_code);
+					   
+					   rs = pstmt.executeQuery();
+					   
+					   List<ProductVO_KJH> selectList = new ArrayList<>();
+					   
+					   while(rs.next()) {
+						   
+						   ProductVO_KJH selectvo = new ProductVO_KJH();
+						   
+						   selectvo.setProd_code(rs.getString(1));
+						   selectvo.setProd_name(rs.getString(2));
+						   selectvo.setProd_price(rs.getInt(3));
+						   selectvo.setDiscount_price(rs.getInt(4));
+						   selectvo.setProd_stock(rs.getInt(5));
+						   
+						   ImageVO imgvo = new ImageVO();
+						   
+						   imgvo.setProd_img_url(rs.getString(6));
+						   
+						   selectvo.setImgvo(imgvo);
+						   
+						   selectList.add(selectvo);					   
+						   
+					   }// end of while---------------------------
+					   
+					   prodMap.put("selectList", selectList);
+					   			   
+				   }	
+				   
+			   }
+			   	
+		   } finally {
+			   close();
+		   }	
+		   
+		   return prodMap;
+		   
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	// 상품 삭제
+	@Override
+	public int deleteProduct(String prod_code) throws SQLException {
+		
+		int result = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_prod where prod_code = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, prod_code);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return result;
 		
 	}
 

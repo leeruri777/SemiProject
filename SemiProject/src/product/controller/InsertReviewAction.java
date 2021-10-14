@@ -17,7 +17,7 @@ public class InsertReviewAction extends AbstractController {
 		String orderno = request.getParameter("orderno");
 		String prod_code = request.getParameter("prod_code");
 		String userid = request.getParameter("userid");
-		String content = request.getParameter("content").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		String content = request.getParameter("content").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br>");
 		String review_img = request.getParameter("review_img");
 		String score = request.getParameter("score");
 		
