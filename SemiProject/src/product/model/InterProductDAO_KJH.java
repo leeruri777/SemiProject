@@ -68,4 +68,16 @@ public interface InterProductDAO_KJH {
 	// 상품삭제
 	int deleteProduct(String prod_code) throws SQLException;
 
+	// 배너리스트 파일명 select
+	List<Map<String, String>> getBannerList() throws SQLException;
+	
+	// NEW 상품 4개 select
+	List<ProductVO_KJH> getNewList() throws SQLException;
+
+	// HIT 상품 4개 select
+	List<ProductVO_KJH> getHitList() throws SQLException;
+
+	// BEST 상품 4개 select
+	List<ProductVO_KJH> getBestList() throws SQLException;
+
 }

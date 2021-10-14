@@ -9,7 +9,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%-- ★탑부분에 리뷰평점부분 수정 필요, 탭 중에 리뷰랑 Q&A 아직 못했음!!! 구매하기 버튼 클릭 시 폼 작성할 것!! (결제페이지랑 연동시키기) --%>
+
 
 <jsp:include page="../include/header.jsp"/>
 
