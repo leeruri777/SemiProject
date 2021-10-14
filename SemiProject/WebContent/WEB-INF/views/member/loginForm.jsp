@@ -16,7 +16,7 @@
 <!-- Optional JavaScript -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script>
-
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <style>
 body {
 	 width: 600px;
@@ -150,7 +150,7 @@ body {
 <div class="main">
 	<div class="header">
 		<h1 class="shopname">
-			<a href="/"><img src="/images/login/logo_main.jpg"></a>
+			<a href="/"><img src="/images/tteok_logo.png"></a>
 		</h1>
 	</div>
 	<div class="section">
@@ -161,7 +161,7 @@ body {
 				<br>
 				카카오로 1초 만에 로그인 하세요.
 			</p>	
-			<a class="btn btnkakao" style="text-align:center;">카카오 1초 로그인/회원가입</a>
+			<a class="btn btnkakao" id="kakao-login-btn" style="text-align:center;" href="javascript:kakaoLogin()">카카오 1초 로그인/회원가입</a>
 		</div>
 	</div>
 	<p class="after">또는</p>
@@ -177,14 +177,14 @@ body {
 			</div>
 			<div class="logincheckbox">
 				<label style="font-size : 10px;">
-		      	  <input type="checkbox" id="savdid"> 아이디 저장
+		      	  <input type="checkbox" id="saveid"> 아이디 저장
 		        </label>
 			</div>
 			<button class="btn loginBtn" onclick="goLogin()">로그인</button>
 			<div class="utilmenu">
-				<a href="#" >아이디 찾기</a>
-				<a href="#">비밀번호 찾기</a>
-				<a href="#" style="float: right;">가입하기</a>
+				<a style="cursor: pointer;" data-toggle="modal" data-target="#userIdfind" data-dismiss="modal">아이디 찾기</a> /
+                <a style="cursor: pointer;" data-toggle="modal" data-target="#passwdFind" data-dismiss="modal" data-backdrop="static">비밀번호 찾기</a>
+				<a href="/member/signUp.go" style="float: right;">가입하기</a>
 			</div>
 		</div>
 	<div class="footer">
@@ -196,35 +196,61 @@ body {
 	</div>
 </div>
 
-<!-- <div class="backBtn" onclick="history.go(-1);return false;">뒤로가기</div>
-<main class="form-signin">
-	
-  <form name="loginFrm">
-    <h1 class="h4 mb-3 fw-normal">로그인</h1>
+<%-- ****** 아이디 찾기 Modal ****** --%>
+  <div class="modal fade" id="userIdfind">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h4 class="modal-title">아이디 찾기</h4>
+          <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="idFind">
+             <iframe style="border: none; width: 100%; height: 350px;" src="/member/findId.go">
+             </iframe>
+          </div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger myclose" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
-    <div class="form-floating">
-      <input type="text" class="form-control" id="userid" name="userid"autocomplete="off" placeholder="Id">
+  <%-- ****** 비밀번호 찾기 Modal ****** --%>
+  <div class="modal fade" id="passwdFind">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h4 class="modal-title">비밀번호 찾기</h4>
+          <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="pwFind">
+             <iframe style="border: none; width: 100%; height: 350px;" src="/member/findPw.go">  
+             </iframe>
+          </div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger myclose" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
     </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Password">
-    </div>
-
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" id="savdid"> 아이디 기억
-      </label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" id = "btnSubmit" onClick="goLogin()">로그인</button>
-    <img src="/images/login/kakao_login_medium_wide.png" alt="카카오로그인이미지"/>
-    <div class="utilMenu" style="display:block">
-    	<a href="#">아이디 찾기</a>
-    	<a href="#">비밀번호 찾기</a>
-    	<a class="right" style="display:" href="#">회원가입</a>
-    </div>
-    
-    
-  </form>
-</main> -->
+  </div>
 <script>
 
 $(function(){
@@ -232,16 +258,54 @@ $(function(){
 	// 아이디저장 체크 유무
 	const saveid = localStorage.getItem("saveid");
 	if(saveid != null){
-		$("input#loginUserid").val(saveid);
+		$("input#userid").val(saveid);
 		$("input:checkbox[id=saveid]").prop('checked', true);
 	}
-		
-	$("input#loginPwd").bind("keyup", function(event){
+			
+	$("input#pwd").bind("keyup", function(event){
 		if(event.keyCode == 13) { // 키보드로 엔터를 입력했을 경우
 			goLogin();
 		}
 	});
+	
+	// 카카오 초기화
+	Kakao.init('825e56e17bd334ca86670e481b45954e');
+	console.log(Kakao.isInitialized());
 });
+
+//카카오 로그인
+
+/* function loginWithKakao() {
+  Kakao.Auth.authorize({
+    redirectUri: 'http://localhost:1217'
+  })
+} */
+
+   
+
+function kakaoLogin() {
+	
+    Kakao.Auth.login({
+        scope: 'profile_nickname, account_email, gender, birthday', //동의항목 페이지에 있는 개인정보 보호 테이블의 활성화된 ID값을 넣습니다.
+        success: function(response) {
+            console.log(response) // 로그인 성공하면 받아오는 데이터
+            Kakao.API.request({ // 사용자 정보 가져오기 
+                url: '/v2/user/me',
+                /* data: {
+                    property_keys: ["kakao_profile_nickname","kakao_account.email","kakao_account.gender","kakao_birthday"]
+                }, */
+            	
+                success: (response) => {
+                    alert(response)
+                }
+            });
+            // window.location.href='/ex/kakao_login.html' //리다이렉트 되는 코드
+        },
+        fail: function(error) {
+            alert(error);
+        }
+    });
+}
 
 function goLogin(){
 	
@@ -263,8 +327,8 @@ function goLogin(){
 	
 	var frm = document.loginFrm;
 	
-	if($("input:checkbox[id=savdid]").prop("checked")){
-		localStorage.setItem("savdid", loginUserid);
+	if($("input:checkbox[id=saveid]").prop("checked")){
+		localStorage.setItem("saveid", loginUserid);
 	} else {
 		localStorage.clear();
 	}
@@ -273,6 +337,11 @@ function goLogin(){
 	frm.submit();
 	
 }
+
+
+
+	
+
 </script>
 </body>
 </html>

@@ -579,9 +579,127 @@ public class MemberDAO implements InterMemberDAO {
 		}
 		return n;
 	}
+	
+	@Override
+	public AddressVO getAddressL(String userid) throws SQLException {
+		
+		AddressVO addressVo = new AddressVO();
+		try {
+			conn = ds.getConnection();
+			String sql = "SELECT USERID, POSTCODE, ADDRESS, DETAILADDRESS, EXTRAADDRESS, DEFAULT_YN, HOMETEL, MOBILE, ANO, DELIVERNAME, NAME "
+						+"FROM TBL_ADDRESS_LIST "
+						+ "WHERE userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, userid);
+	        
+	        rs = pstmt.executeQuery();
+			rs.next();
+			
+			addressVo.setUserid(rs.getString(1));
+			addressVo.setPostcode(rs.getString(2));
+			addressVo.setAddress(rs.getString(3));
+			addressVo.setDetailaddress(rs.getString(4));
+			addressVo.setExtraaddress(rs.getString(5));
+			addressVo.setDefault_yn(rs.getString(6));
+			addressVo.setHometel(rs.getString(7));
+			addressVo.setMobile(rs.getString(8));
+			addressVo.setAno(rs.getLong(9));
+			addressVo.setDelivername(rs.getString(10));
+			addressVo.setName(rs.getString(11));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return addressVo;
+	}
+	
+	/////////////// end 배송지 /////////////////////////////////////////
+
+	@Override
+	public String findId(Map<String, String> paraMap) throws SQLException {
+		
+		String userid = "";
+		try {
+			conn = ds.getConnection();
+			String sql = "SELECT userid "
+						+"FROM TBL_MEMBER "
+						+ "WHERE name = ? and email = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, paraMap.get("name"));
+	        pstmt.setString(2, aes.encrypt(paraMap.get("email")) );
+	        
+	        rs = pstmt.executeQuery();
+	        if(rs.next()) {
+	        	userid = rs.getString(1);
+	        }
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return userid;
+	}
+
+	@Override
+	public int isExistId(Map<String, String> paraMap) throws SQLException {
+		
+		int result = 0;
+		try {
+			conn = ds.getConnection();
+			String sql = "SELECT count(*) "
+						+"FROM TBL_MEMBER "
+						+ "WHERE userid = ? and email = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, paraMap.get("userid"));
+	        pstmt.setString(2, aes.encrypt(paraMap.get("email")) );
+	        
+	        rs = pstmt.executeQuery();
+	        while(rs.next()) {
+	        	result = rs.getInt(1);
+	        }
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return result;
+	}
+
+	@Override
+	public int updatePw(Map<String, String> paraMap) throws SQLException {
+	
+		int success = 0;
+		try {
+			conn = ds.getConnection();
+			String sql = "UPDATE tbl_member set pwd = ? "
+					+ ", lastpwdchangedate = sysdate "
+					+ "where userid = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, Sha256.encrypt(paraMap.get("pwd")));
+			pstmt.setString(2, paraMap.get("userid"));
+			
+			success = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return success;
+		
+	}
 
 	
-		
+	
 
 	
 

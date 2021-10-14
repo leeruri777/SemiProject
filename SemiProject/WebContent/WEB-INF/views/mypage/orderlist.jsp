@@ -67,31 +67,15 @@ table td {
 		  </thead>
 		  <tbody>
 		    <tr>
-		      <td>1</td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		     
-		    </tr>
-		    <tr>
-		      <td>2</td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      
-		    </tr>
-		    <tr>
-		      <td>3</td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		    </tr>
+		    	<c:forEach items="${requestScope.orderList}" var ="orderList">
+		    		 <td>${orderList.orderDate}[${orderList.orderno}]</td>
+				     <td><img src="" alt=""/>${orderList.img}</td>
+				     <td>${orderList.productInfo}</td>
+				     <td>${orderList.count}</td>
+				     <td>${orderList.price}</td>
+				     <td>${orderList.status}</td>	
+		    	</c:forEach>		           
+		    </tr>		    
 		  </tbody>
 		</table>
 		

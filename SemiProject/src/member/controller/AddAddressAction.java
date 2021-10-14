@@ -50,14 +50,18 @@ public class AddAddressAction extends AbstractController {
 			}
 			
 			if(result == 1) {
-				super.setRedirect(true);
-				super.setViewPage("/mypage/deliveraddr.go");
+				
+				super.setRedirect(true);			
+				String type = request.getParameter("type");
+				super.setViewPage("/mypage/deliveraddr.go?type="+type);			
+				
 			} else {
 				request.setAttribute("message", "배송지 등록이 실패하였습니다.");
 				request.setAttribute("loc", "/mypage/deliveraddr.go");
 				
 				super.setViewPage("/WEB-INF/msg.jsp");
 			}
+			
 		}
 	}
 

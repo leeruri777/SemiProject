@@ -1,9 +1,15 @@
 package common.controller;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import member.model.MemberVO;
+import product.model.InterProductDAO;
+import product.model.ProductDAO;
+import product.model.SortVO;
 
 public abstract class AbstractController implements InterCommand{
 
@@ -69,5 +75,17 @@ public abstract class AbstractController implements InterCommand{
 			setViewPage("/WEB-INF/msg.jsp");
 			return;
 		}
+	}
+	public void getCategory(HttpServletRequest request) throws SQLException {
+		
+		InterProductDAO pdao = new ProductDAO();
+		
+		// 모든 카테고리 가져오기
+		List<SortVO> sortList = pdao.AllSort();
+		
+		request.setAttribute("sortList", sortList);
+		
+	//	System.out.println(sortList);
+		
 	}
 }

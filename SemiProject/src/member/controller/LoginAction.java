@@ -21,11 +21,10 @@ public class LoginAction extends AbstractController {
 		
 		if(method.equalsIgnoreCase("GET")) {
 			if(super.checkLogin(request)) {
-				
-				request.setAttribute("message", "이미 로그인을 하셨습니다.");
-		        request.setAttribute("loc", "/");
+				// 로그인이 되어있는 경우
+		        request.setAttribute("loc", request.getHeader("referer"));
 		         
-		        super.setViewPage("/WEB-INF/msg.jsp");
+		        super.setViewPage("/WEB-INF/msgNoAlert.jsp");
 			} else {
 				super.setViewPage("/WEB-INF/views/member/loginForm.jsp");
 			}
@@ -71,7 +70,10 @@ public class LoginAction extends AbstractController {
 				         super.setViewPage("/WEB-INF/msg.jsp");
 					} else {
 						// 비밀번호를 변경한지 3개월 이내인 경우
-						super.setViewPage("/");
+						
+						request.setAttribute("loc", "javascript:history.back()");
+						super.setViewPage("/WEB-INF/msgNoAlert.jsp");
+						
 					}
 			        
 				}

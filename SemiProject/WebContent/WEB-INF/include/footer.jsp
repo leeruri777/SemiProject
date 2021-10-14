@@ -10,6 +10,6 @@
             <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
         </footer>
         <!-- Bootstrap core JS-->
-        <script src="/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script>	
+        <script src="/bootstrap-4.6.0-dist/js/bootstrap.bundle.js"></script>
 </body>
 </html>
