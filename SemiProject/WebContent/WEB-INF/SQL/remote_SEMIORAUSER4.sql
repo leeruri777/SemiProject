@@ -6,6 +6,8 @@ SELECT * FROM tabs
 SELECT * FROM TBL_MEMBER
 SELECT * FROM TBL_LOGINHISTORY
 SELECT * FROM TBL_PROD
+SELECT * FROM TBL_STOCK
+
 
 select *
 from ALL_TAB_COLUMNS
@@ -46,22 +48,22 @@ nocache;
 
 create table ORDER_SETLE
 (ORDER_NO		VARCHAR2(8)      not null         -- 시퀀스로 입력받음. 기본키
-FK_USER_ID 	    VARCHAR2(40)     not null         -- 아이디 (foreign key) -- TBL_MEMBER
-USER_NAME		VARCHAR2(30)     not null         -- 회원명
-FK_PROD_CODE	VARCHAR2(20)     not null         -- 상품코드(foreign key) -- TBL_PROD(상품)
-PROD_NAME		VARCHAR2(3000)                    -- 상품명
-PROD_PRICE		NUMBER  (22)                      -- 상품가격
-GOODS_QY		NUMBER           not null         -- 주문량
-DSCNT_AMOUNT	NUMBER                            -- 할인금액
-TOT_AMOUNT		NUMBER                            -- 총 결제 금액  
-ORDER_DT		date default     sysdate          -- 주문날짜
-USER_REQ		VARCHAR2(4000)                    -- 배송 메세지
-PAYMENT_TYPE	VARCHAR2(200)                     -- 결제방식
+,FK_USER_ID 	VARCHAR2(40)     not null         -- 아이디 (foreign key) -- TBL_MEMBER
+,USER_NAME		VARCHAR2(30)     not null         -- 회원명
+,FK_PROD_CODE	VARCHAR2(20)     not null         -- 상품코드(foreign key) -- TBL_PROD(상품)
+,PROD_NAME		VARCHAR2(3000)                    -- 상품명
+,PROD_PRICE		NUMBER  (22)                      -- 상품가격
+,GOODS_QY		NUMBER                            -- 주문량
+,DSCNT_AMOUNT	NUMBER                            -- 할인금액
+,TOT_AMOUNT		NUMBER                            -- 총 결제 금액  
+,ORDER_DT		date default     sysdate          -- 주문날짜
+,USER_REQ		VARCHAR2(4000)                    -- 배송 메세지
+,PAYMENT_TYPE	VARCHAR2(200)                     -- 결제방식
 ,constraint PK_ORDER_SETLE primary key(ORDER_NO)
 ,constraint FK_ORDER_SETLE_FK_USER_ID foreign key(FK_USER_ID) references TBL_MEMBER(USERID) on delete cascade 
 ,constraint FK_ORDER_SETLE_FK_PROD_CODE foreign key(FK_PROD_CODE) references  TBL_PROD(PROD_CODE) on delete cascade 
 );
-
+-- Table ORDER_SETLE이(가) 생성되었습니다.
 
 create sequence ORDER_NO
 start with 1
@@ -70,6 +72,11 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+-- Sequence ORDER_NO이(가) 생성되었습니다.
+
+
+
+
 
 --OrderSetleVO.java
 

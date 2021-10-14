@@ -1095,5 +1095,52 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 		return reviewTotalMap;
 		
 	}
+	
+	
+	
+	
+	// 장바구니 테이블  insert
+	   @Override
+	   public int insertBasket(Map<String, Object> paraMap) throws SQLException {
+	      
+	      int result = 0;
+	      
+	      try {
+	         
+	         conn = ds.getConnection();
+	                  
+	         String[] arrProd_code = (String[]) paraMap.get("arrProd_code");
+	         String[] arrAmount = (String[]) paraMap.get("arrAmount");
+	         String userid = (String) paraMap.get("userid");
+	         
+	         for(int i=0; i<arrProd_code.length; i++) {            
+
+	            String sql = " insert into tbl_basket(BASKET_NO, FK_USER_ID, FK_PROD_CODE, GOODS_QY) " + 
+	                      " values(BASKET_NO.nextval, ?, ?, ?) ";
+	            
+	            pstmt = conn.prepareStatement(sql);
+	            
+	            pstmt.setString(1, userid);
+	            pstmt.setString(2, arrProd_code[i]);
+	            pstmt.setString(3, arrAmount[i]);
+	            
+	            result = pstmt.executeUpdate();            
+	            
+	         }
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return result;
+	      
+	   }
+	
+	
+	
+	
+	
+	
+	
 
 }
