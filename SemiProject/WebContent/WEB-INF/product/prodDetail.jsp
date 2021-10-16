@@ -678,7 +678,7 @@
 			      	
 			      	<!-- Modal header -->
 			      <div class="modal-header">
-			        	<h5 class="modal-title">리뷰보기</h5>
+			        	<h5 class="modal-title">고객리뷰</h5>
 			        	<button type="button" class="close thisclose" data-dismiss="modal">&times;</button>
 			      </div>
 			      	
@@ -1143,50 +1143,47 @@
 					
 					<p class="mt-3 mb-1 px-0 mx-0"style="font-weight: bold;"><br>&nbsp;최신순(${reviewTotalCnt})</p>
 					<hr>
+<%-- --%>					
 					
-					<div id="review_card" class="px-0 mx-0" data-toggle="modal" data-target="#reviewModal">
 						
 						<c:if test="${reviewList ne null}">
 						
-							<div id="img_row" class="row w-100 px-0 mx-0">	
-								<c:forEach var="rvo" items="${reviewList}">
-									<c:choose>
-										<c:when test="${rvo.review_img ne '-9999'}">		
-									    	<div class="card col-md-3 col-6 my-2 reviewcard">
-									             <div class="card-body px-1">
-									                 <div align="center"><img src="../img_review/${rvo.review_img}" class="img-fluid" alt="Responsive image" style="object-fit: cover; max-height: 150px;"></div>
-									                 <span class="this-img" style="display: none;">${rvo.review_img}</span>
-									                 <hr>
-									                 <p class="ml-3" style="min-height: 100px;">${fn:substring(rvo.content, 0, 50)}
-									                 <span class="this-content" style="display: none;">${rvo.content}</span>
-									                 <c:if test="${fn:length(rvo.content) > 50}">...</c:if></p>
-									                 <hr>
-									                 <p class="ml-3 this-username" style="color: gray; font-size: 8pt;">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
-									                 <p class="ml-3 this-score" style="color: gray; font-size: 8pt;">평점       : ${rvo.score}</p>								                 
-									                 <p class="ml-3 this-date" style="color: gray; font-size: 8pt;">작성일자 : ${rvo.review_date}</p>				                 
-									             </div>
-									    	</div>
-								    	</c:when>
-								    	<c:otherwise>		
-									    	<div class="card col-md-3 col-6 my-2 reviewcard">
-									             <div class="card-body px-1">
-									             	 <img src="../img_review/리뷰사진이없오3.png" class="img-fluid" alt="Responsive image">
-									             	 <span class="this-img" style="display: none;">사진없음</span>
-									                 <hr>
-									                 <p class="ml-3" style="min-height: 100px;">${fn:substring(rvo.content, 0, 50)}
-									                 <c:if test="${fn:length(rvo.content) > 50}">...</c:if></p>
-									                 <span class="this-content" style="display: none;">${rvo.content}</span>
-									                 <hr>
-									                 <p class="ml-3 this-username" style="color: gray; font-size: 8pt;">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
-									                 <p class="ml-3 this-score" style="color: gray; font-size: 8pt;">평점       : ${rvo.score}</p>								                 
-									                 <p class="ml-3 this-date" style="color: gray; font-size: 8pt;">작성일자 : ${rvo.review_date}</p>				                 
-									             </div>
-									    	</div>
-								    	</c:otherwise>
-							    	</c:choose>
-						    	</c:forEach>
-						        			     
-							</div>
+							<div id="img_row" class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4">                	
+	                	
+			                	<c:forEach var="rvo" items="${reviewList}">
+			                		
+				                    <div class="col mb-5">
+				                        <div class="card h-100 reviewcard" data-toggle="modal" data-target="#reviewModal">
+				                            <%-- Review image--%>
+				                            <c:choose>
+												<c:when test="${rvo.review_img ne '-9999'}">
+													<img class="card-img-top" src="../img_review/${rvo.review_img}" alt="..." style="height: 180px;"/>
+													<span class="this-img" style="display: none;">${rvo.review_img}</span>
+												</c:when>
+										    	<c:otherwise>
+										    		<img class="card-img-top" src="../img_review/리뷰사진이없오3.png" alt="..." style="height: 180px;"/>
+										    		<span class="this-img" style="display: none;">사진없음</span>
+										    	</c:otherwise>
+									    	</c:choose>
+				                            
+				                            <%-- Review details--%>
+				                            <div class="card-body p-4">
+				                                <div class="text-center">	  
+													<p class="ml-3" style="min-height: 100px;">${fn:substring(rvo.content, 0, 50)}
+									                	<span class="this-content" style="display: none;">${rvo.content}</span>
+									                	<c:if test="${fn:length(rvo.content) > 50}">...</c:if>
+									                </p>
+													<br>
+													<p class="ml-3 this-username text-left" style="color: gray; font-size: 8pt;">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
+									                <p class="ml-3 this-score text-left" style="color: gray; font-size: 8pt;">평점       : ${rvo.score}</p>								                 
+									                <p class="ml-3 this-date text-left" style="color: gray; font-size: 8pt;">작성일자 : ${rvo.review_date}</p>																				
+				                                </div>
+				                            </div>	                               
+				                        </div>
+				                    </div>
+			                    </c:forEach>
+			                    
+			             	</div>  						
 						
 						</c:if>
 						
@@ -1198,8 +1195,8 @@
 							
 						</c:if>
 						
-					</div>
-			
+					
+<%-- --%>			
 					<nav class="nav-light">
 					  <ul class="pagination justify-content-center" style="margin:20px 0">
 					    ${requestScope.pageBar}

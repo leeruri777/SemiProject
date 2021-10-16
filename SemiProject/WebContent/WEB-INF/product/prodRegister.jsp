@@ -602,7 +602,7 @@
 				            <input type="radio" value="1" name="prod_plus" id="prod_plus" /><label for="prod_plus">&nbsp;추가구성O</label>							 
 				         	<div id="plus" class="mx-0 px-0 col-md-8">
 				         		
-				         		<select class='form-control' name='prod_plus_code' size='3' multiple required>
+				         		<select class='form-control' name='prod_plus_code' size='5' multiple required>
 								    <c:forEach var="prod" items="${requestScope.prodList}">	
 										<option value="${prod.prod_code}">${prod.prod_name}</option>								
 									</c:forEach>					      
@@ -632,7 +632,7 @@
 				            <input type="radio" value="1" name="prod_select" id="prod_select" /><label for="prod_select">&nbsp;골라담기O</label>							 
 				         	<div id="select" class="mx-0 px-0 col-md-8">
 				         		
-				         		<select class='form-control' name='prod_select_code' size='3' multiple required>
+				         		<select class='form-control' name='prod_select_code' size='5' multiple required>
 								    <c:forEach var="prod" items="${requestScope.prodList}">	
 										<option value="${prod.prod_code}">${prod.prod_name}</option>								
 									</c:forEach>					      

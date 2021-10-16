@@ -732,7 +732,7 @@
 					            <input type="radio" value="1" name="prod_plus" id="prod_plus"  /><label for="prod_plus">&nbsp;추가구성O</label>							 
 					         	<div id="plus" class="mx-0 px-0 col-md-6 div_plus" style="display: none;"> 		
 					         		
-					         		<select class='form-control' name='prod_plus_code' size='3' multiple disabled required>
+					         		<select class='form-control' name='prod_plus_code' size='5' multiple disabled required>
 									    <c:forEach var="prod" items="${requestScope.prodList}">	
 									    	<c:if test="${prod.prod_code ne prodMap.pvo.prod_code}">
 												<option value="${prod.prod_code}">${prod.prod_name}</option>
@@ -757,7 +757,7 @@
 					            <input type="radio" value="1" name="prod_plus" id="prod_plus" checked  /><label for="prod_plus">&nbsp;추가구성O</label>							 
 					         	<div id="plus" class="mx-0 px-0 col-md-6 div_plus">
 					         		
-					         		<select class='form-control' name='prod_plus_code' size='3' multiple disabled required>
+					         		<select class='form-control' name='prod_plus_code' size='5' multiple disabled required>
 									    <c:forEach var="prod" items="${requestScope.prodList}">
 									    	<c:forEach var="plusvo" items="${prodMap.plusList}">
 									    		<c:if test="${prod.prod_code ne prodMap.pvo.prod_code}">
@@ -795,7 +795,7 @@
 					            <input type="radio" value="1" name="prod_select" id="prod_select"  /><label for="prod_select">&nbsp;골라담기O</label>							 
 					         	<div id="select" class="mx-0 px-0 col-md-6 div_select" style="display: none;"> 			
 					         		
-					         		<select class='form-control' name='prod_select_code' size='3' multiple disabled required>
+					         		<select class='form-control' name='prod_select_code' size='5' multiple disabled required>
 									    <c:forEach var="prod" items="${requestScope.prodList}">	
 											<option value="${prod.prod_code}">${prod.prod_name}</option>								
 										</c:forEach>					      
@@ -823,7 +823,7 @@
 					            <input type="radio" value="1" name="prod_select" id="prod_select" checked  /><label for="prod_select">&nbsp;골라담기O</label>							 
 					         	<div id="select" class="mx-0 px-0 col-md-6 div_select">
 					         		
-					         		<select class='form-control' name='prod_select_code' size='3' multiple disabled required>
+					         		<select class='form-control' name='prod_select_code' size='5' multiple disabled required>
 									    <c:forEach var="prod" items="${requestScope.prodList}">
 									    	<c:forEach var="selectvo" items="${prodMap.selectList}">
 									    		<c:if test="${prod.prod_code eq selectvo.prod_code}">

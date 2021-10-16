@@ -10,7 +10,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <jsp:include page="/WEB-INF/include/header.jsp"/>
-<title>[소녀떡집]</title>
+<title>[소녀떡집]MAIN</title>
 
 <!-- Font Awesome 5 Icons --> <!-- 아이콘을 사용하려면 헤드에서 미리 링크를 걸어줘야한당 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -25,6 +25,14 @@
 		cursor: pointer;
 	}
 		
+	.goP:link {	color: gray; }
+	
+	.goP:visited { color: gray; }
+	
+	.goP:hover { font-weight: bold; color: black; }
+	
+	.goP:active { color: gray; }
+			
 </style>
  
 <script>
@@ -43,12 +51,43 @@ function addAddresForm(){
 
 $(document).ready(function(){
 	
-	$(".card").click(function() {
+	$(".pcard").click(function() {
 		
 		var prod_code = $(this).find(".prod_code").text();
 		
 		location.href = "/product/prodDetail.go?prod_code=" + prod_code;
 		
+	});
+	
+	///////////////////////////////////////////////////////////
+	
+	
+	$(".reviewcard").click(function() {
+		
+		var img = $(this).find(".this-img").text();	
+		var content = $(this).find(".this-content").text();
+		var username = $(this).find(".this-username").text();
+		var score = $(this).find(".this-score").text();
+		var date = $(this).find(".this-date").text();
+		var prodname = $(this).find(".this-prodname").text();
+		var prodcode = $(this).find(".this-prodcode").text();
+		
+		if(img != "사진없음")  {
+			$("#re-img").html("<img src='../img_review/"+ img +"' style='object-fit: cover; max-height: 150px;'><hr>")
+		}
+		
+		else {
+			$("#re-img").empty();
+		}
+		
+		var html = "<a class='goP' data-toggle='tooltip' title='Show Info!' href='/product/prodDetail.go?prod_code="+prodcode+"'>" + prodname + "</a>"
+		
+		$("#re-prodname").html(html);
+		$("#re-content").text(content);
+		$("#re-username").text(username);
+		$("#re-score").text(score);
+		$("#re-date").text(date);
+	
 	});
 	
  });
@@ -86,12 +125,12 @@ $(document).ready(function(){
 					<c:choose>
 						<c:when test="${status.index eq 0}">
 							<div class="carousel-item active">
-								<img src="../img_prod/${bannerMap.img}" class="d-block w-100" alt="..." style="max-height: 450px;" onclick="location.href='/product/prodList.go?sort_code=${bannerMap.sort_code}'">
+								<img src="../img_prod/${bannerMap.img}" class="d-block w-100" alt="..." style="max-height: 500px;" onclick="location.href='/product/prodList.go?sort_code=${bannerMap.sort_code}'">
 							</div>
 						</c:when>
 						<c:otherwise>
 							<div class="carousel-item">
-								<img src="../img_prod/${bannerMap.img}" class="d-block w-100" alt="..." style="max-height: 450px;" onclick="location.href='/product/prodList.go?sort_code=${bannerMap.sort_code}'">
+								<img src="../img_prod/${bannerMap.img}" class="d-block w-100" alt="..." style="max-height: 500px;" onclick="location.href='/product/prodList.go?sort_code=${bannerMap.sort_code}'">
 							</div>
 						</c:otherwise>
 					</c:choose>
@@ -134,14 +173,14 @@ $(document).ready(function(){
             	<h4 class="text-center">NEW ARRIVAL</h4>
             	<hr>
             	
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4 justify-content-center">                	
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4">                	
                 	
                 	<c:forEach var="newpvo" items="${newList}">
                 		
 	                    <div class="col mb-5">
-	                        <div class="card h-100">
+	                        <div class="card h-100 pcard">
 	                        	<span style="display: none;" class="prod_code">${newpvo.prod_code}</span>
-	                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">NEW</div>
+	                            <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem">NEW</div>
 	                            <%-- Product image--%>
 	                            <img class="card-img-top" src="../img_prod/${newpvo.imgvo.prod_img_url}" alt="..." />
 	                            <%-- Product details--%>
@@ -170,18 +209,20 @@ $(document).ready(function(){
                     </c:forEach>
                     
              	</div>
+             
+             <c:if test="${not empty hitList}">
              	
-            	<h4 class="text-center">WEEKLY HIT</h4>
+            	<h4 class="text-center">WEEKLY HOT</h4>
             	<hr>
             	
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4 justify-content-center">                	
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4">                	
                 	
                 	<c:forEach var="hitpvo" items="${hitList}">
                 		
 	                    <div class="col mb-5">
-	                        <div class="card h-100">
+	                        <div class="card h-100 pcard">
 	                        	<span style="display: none;" class="prod_code">${hitpvo.prod_code}</span>
-	                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">HIT</div>
+	                            <div class="badge bg-primary text-white position-absolute" style="top: 0.5rem; right: 0.5rem">HOT</div>
 	                            <%-- Product image--%>
 	                            <img class="card-img-top" src="../img_prod/${hitpvo.imgvo.prod_img_url}" alt="..." />
 	                            <%-- Product details--%>
@@ -210,18 +251,21 @@ $(document).ready(function(){
                     </c:forEach>
                     
              	</div>
+             </c:if>
+             
+             <c:if test="${not empty bestList}">
              	 
             	<h4 class="text-center">BEST</h4>
             	<hr>
             	
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4 justify-content-center">                	
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4">                	
                 	
                 	<c:forEach var="bestpvo" items="${bestList}">
                 		
 	                    <div class="col mb-5">
-	                        <div class="card h-100">
+	                        <div class="card h-100 pcard">
 	                        	<span style="display: none;" class="prod_code">${bestpvo.prod_code}</span>
-	                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">BEST</div>
+	                            <div class="badge bg-warning text-white position-absolute" style="top: 0.5rem; right: 0.5rem">BEST</div>
 	                            <%-- Product image--%>
 	                            <img class="card-img-top" src="../img_prod/${bestpvo.imgvo.prod_img_url}" alt="..." />
 	                            <%-- Product details--%>
@@ -249,191 +293,131 @@ $(document).ready(function(){
 	                    </div>
                     </c:forEach>
                     
-             	</div>       
-                    
-        <%--            
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Special Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$20.00</span>
-                                    $18.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Sale Item</h5>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$50.00</span>
-                                    $25.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Popular Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    $40.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Sale Item</h5>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$50.00</span>
-                                    $25.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Fancy Product</h5>
-                                    <!-- Product price-->
-                                    $120.00 - $280.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Special Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$20.00</span>
-                                    $18.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Popular Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    $40.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                           
-                        </div>
-                    </div>
-                 --%> 
+             	</div> 
+             	      
+              </c:if>
                 
+            	<h4 class="text-center">SALE</h4>
+            	<hr>
+            	
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4">                	
+                	
+                	<c:forEach var="salepvo" items="${saleList}">
+                		
+	                    <div class="col mb-5">
+	                        <div class="card h-100 pcard">
+	                        	<span style="display: none;" class="prod_code">${salepvo.prod_code}</span>
+	                            <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">SALE</div>
+	                            <%-- Product image--%>
+	                            <img class="card-img-top" src="../img_prod/${salepvo.imgvo.prod_img_url}" alt="..." />
+	                            <%-- Product details--%>
+	                            <div class="card-body p-4">
+	                                <div class="text-center">
+	                                    <%-- Product name--%>
+	                                    <h6 class="fw-bolder">${salepvo.prod_name}</h6>
+	                                    <%-- Product price--%>
+	                                    <fmt:parseNumber var="prod_price" value="${salepvo.prod_price}" integerOnly="true" />																		
+										<span style="text-decoration: line-through;"><fmt:formatNumber value="${prod_price}" pattern="###,###" />원</span>
+										<br>
+										<fmt:parseNumber var="sale_p" value="${salepvo.discount_price}" integerOnly="true" />
+										<span><fmt:formatNumber value="${sale_p}" pattern="###,###" />원</span>
+										<br>
+										<small style="color:red;">(<fmt:formatNumber value="${100 - (sale_p * 100) / prod_price}" pattern="#"/>% 할인)</small>																			
+	                                </div>
+	                            </div>	                               
+	                        </div>
+	                    </div>
+                    </c:forEach>
+                    
+             	</div>
+             
+             <c:if test="${not empty reviewList}">
+             	
+            	<h4 class="text-center">REVIEW</h4>
+            	<hr>
+            	
+                <div id="img_row" class="row gx-4 gx-lg-5 row-cols-2 row-cols-lg-4">                	
+                	
+                	<c:forEach var="rvo" items="${reviewList}">
+                		
+	                    <div class="col mb-5">
+	                        <div class="card h-100 reviewcard" data-toggle="modal" data-target="#reviewModal">
+	                        	<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">REVIEW</div>
+	                            <%-- Review image--%>
+	                            <c:choose>
+									<c:when test="${rvo.review_img ne '-9999'}">
+										<img class="card-img-top" src="../img_review/${rvo.review_img}" alt="..." style="height: 180px;"/>
+										<span class="this-img" style="display: none;">${rvo.review_img}</span>
+									</c:when>
+							    	<c:otherwise>
+							    		<img class="card-img-top" src="../img_review/리뷰사진이없오3.png" alt="..." style="height: 180px;"/>
+							    		<span class="this-img" style="display: none;">사진없음</span>
+							    	</c:otherwise>
+						    	</c:choose>
+	                            
+	                            <%-- Review details--%>
+	                            <div class="card-body p-4">
+	                                <div class="text-center">										
+					                	<span class="this-content" style="display: none;">${rvo.content}</span>
+					                	<span class="this-prodname" style="display: none;">상품명    : ${rvo.prod_name}</span>	
+					                	<span class="this-prodcode" style="display: none;">${rvo.prod_code}</span>					                
+										<br>
+										<p class="ml-3 this-username text-left" style="color: gray; font-size: 8pt;">작성자    : ${fn:substring(rvo.username, 0, 1)}<c:forEach begin="1" end="${fn:length(rvo.username) - 1}">*</c:forEach>&nbsp;님</p>
+						                <p class="ml-3 this-score text-left" style="color: gray; font-size: 8pt;">평점       : ${rvo.score}</p>								                 
+						                <p class="ml-3 this-date text-left" style="color: gray; font-size: 8pt;">작성일자 : ${rvo.review_date}</p>																				
+	                                </div>
+	                            </div>	                               
+	                        </div>
+	                    </div>
+                    </c:forEach>
+                    
+             	</div>
+             	
+             </c:if>
+             	                
             </div>
         </section>
+        
+        	
+	<%-- 리뷰카드 모달 --%>
+		<div class="modal fade" id="reviewModal">
+			  <div class="modal-dialog modal-dialog-scrollable modal modal-dialog-centered">
+			  
+			    <div class="modal-content">			      
+			      	
+			      	<!-- Modal header -->
+			      <div class="modal-header">
+			        	<h5 class="modal-title">고객리뷰</h5>
+			        	<button type="button" class="close thisclose" data-dismiss="modal">&times;</button>
+			      </div>
+			      	
+			     <!-- Modal body -->
+			      <div class="modal-body">
+						
+						<div class="modal-card">
+				             <div class="card-body px-1">
+				                 <div align="center" id="re-img"></div>
+				                 <p class="ml-3" style="min-height: 100px;" id="re-content"></p>
+				                 <hr>
+				                 <p class="ml-3" style="color: gray;" id="re-prodname"></p>
+				                 <p class="ml-3" style="color: gray;" id="re-username"></p>
+				                 <p class="ml-3" style="color: gray;" id="re-score"></p>								                 
+				                 <p class="ml-3" style="color: gray;" id="re-date"></p>				                 
+				             </div>
+				    	</div>
+				      	
+												
+				  </div>
+			     	         							
+			      
+			      <!-- Modal footer -->
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-sm btn-danger thisclose" data-dismiss="modal">닫기</button>
+			      </div>
+			      
+			    </div>
+			  </div>
+		</div>	
         
 
 <jsp:include page="/WEB-INF/include/footer.jsp"/>

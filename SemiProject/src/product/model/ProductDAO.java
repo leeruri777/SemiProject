@@ -285,6 +285,21 @@ public class ProductDAO implements InterProductDAO {
 			
 			result = pstmt.executeUpdate();
 			
+			// 재고가 0이 아닐 경우 입고폐기테이블에 insert
+			if(prod.getProd_stock() != 0) {
+				
+				sql = " insert into tbl_inout_stock(inout_code,status,fk_prod_code,inout_qty) " + 
+					  " values(seq_inout_code.nextval, 1, ?, ?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod_code);
+				pstmt.setInt(2, prod.getProd_stock());
+				
+				result = pstmt.executeUpdate();
+				
+			}
+			
 			// 추가상품이 있을 경우 추가상품 테이블에 insert
 			if(paraMap.get("prod_plus_list") != null) {
 				

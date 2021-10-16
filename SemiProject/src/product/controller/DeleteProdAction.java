@@ -12,22 +12,30 @@ public class DeleteProdAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		String prod_code = request.getParameter("del_prod_code");
+		String view = "checkAdmin";
 		
-		InterProductDAO_KJH pdao = new ProductDAO_KJH();
+		super.checkAdministration(request, view);
 		
-		int result = pdao.deleteProduct(prod_code);
+		if(view.equals(super.getViewPage())) {
 		
-		if(result == 0) {
-			request.setAttribute("message", "상품삭제에 실패하였습니다. 다시 진행해주세요.");
-			request.setAttribute("loc", "javascript:history.back()");
-			setViewPage("/WEB-INF/msg.jsp");
-		}
+			String prod_code = request.getParameter("del_prod_code");
+			
+			InterProductDAO_KJH pdao = new ProductDAO_KJH();
+			
+			int result = pdao.deleteProduct(prod_code);
+			
+			if(result == 0) {
+				request.setAttribute("message", "상품삭제에 실패하였습니다. 다시 진행해주세요.");
+				request.setAttribute("loc", "javascript:history.back()");
+				super.setViewPage("/WEB-INF/msg.jsp");
+			}
+			
+			else {			
+				request.setAttribute("message", "상품삭제가 완료되었습니다.");
+				request.setAttribute("loc", "/product/prodManage.go");
+				super.setViewPage("/WEB-INF/msg.jsp");
+			}
 		
-		else {			
-			request.setAttribute("message", "상품삭제가 완료되었습니다.");
-			request.setAttribute("loc", "/product/prodManage.go");
-			setViewPage("/WEB-INF/msg.jsp");
 		}
 		
 	}

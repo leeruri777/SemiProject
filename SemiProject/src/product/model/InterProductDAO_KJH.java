@@ -39,7 +39,7 @@ public interface InterProductDAO_KJH {
 	int updateBanner(String this_sort_code, String ad_img_url_pick) throws SQLException;
 
 	// 리뷰를 작성할 주문건 가져오기
-	String getOrdernoforReview(String prod_code) throws SQLException;
+	String getOrdernoforReview(String prod_code, String userid) throws SQLException;
 
 	// 리뷰테이블 insert
 	int insertReview(Map<String, String> paraMap) throws SQLException;
@@ -79,5 +79,14 @@ public interface InterProductDAO_KJH {
 
 	// BEST 상품 4개 select
 	List<ProductVO_KJH> getBestList() throws SQLException;
+
+	// SALE 상품 4개 select
+	List<ProductVO_KJH> getSaleList() throws SQLException;
+
+	// 최신 리뷰 4개 select
+	List<ReviewVO> getReviewList() throws SQLException;
+
+	// 상품 검색 결과 select
+	List<ProductVO_KJH> getSearchResult(String searchWord) throws SQLException;
 
 }
