@@ -1,7 +1,8 @@
 show user;
 -- USER이(가) "SEMIORAUSER4"입니다.
+SELECT * FROM tabs;
 
-SELECT * FROM tabs
+
 
 SELECT * FROM TBL_MEMBER
 SELECT * FROM TBL_LOGINHISTORY
@@ -79,9 +80,15 @@ nocache;
 
 
 --OrderSetleVO.java
+SELECT * FROM ORDER_SETLE;
+
+
 
 /*
- insert into ORDER_SETLE(panmaedate, jepumname, panmaesu)
+ insert into ORDER_SETLE(ORDER_NO, ,FK_USER_ID , USER_NAME
+                       , FK_PROD_CODE, PROD_NAME, PROD_PRICE 
+                       , GOODS_QY, DSCNT_AMOUNT , TOT_AMOUNT
+                       , ORDER_DT, USER_REQ, PAYMENT_TYPE)
  values( sysdate, '허니버터칩', 30);
  
  */

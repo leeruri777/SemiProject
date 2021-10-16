@@ -17,6 +17,30 @@ public class OrderSetleVO {
 	   private String payment_type;			// 결제방식
 	   
 	   
+	   public OrderSetleVO() {}
+	   
+	   public OrderSetleVO(String order_no, String fk_user_id, String user_name,
+			   			   String fk_prod_code, String prod_name, int prod_price,
+			   			   int goods_qy, int dscnt_amount, int tot_amount,
+			   			   String order_dt, String user_req, String payment_type) {
+		   
+		   this.order_no = order_no;
+		   this.fk_user_id = fk_user_id;
+		   this.user_name = user_name;
+		   this.fk_prod_code = fk_prod_code;
+		   this.prod_name = prod_name;
+		   this.prod_price = prod_price;
+		   this.goods_qy = goods_qy;
+		   this.dscnt_amount = dscnt_amount;
+		   this.tot_amount = tot_amount;
+		   this.order_dt = order_dt;
+		   this.user_req = user_req;
+		   this.payment_type = payment_type;
+		   
+	   }
+	   
+	   
+	   
 	public String getOrder_no() {
 		return order_no;
 	}

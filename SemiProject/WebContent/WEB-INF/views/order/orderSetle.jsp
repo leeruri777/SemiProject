@@ -39,454 +39,17 @@
    }
 </style>
 
-<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 
 <script type="text/javascript">
 	
-	var b_flagIdDuplicateClick = false;
-	// 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
-	
-	var b_flagEmailDuplicateClick = false;
-   // 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
-   
+
    
 	$(document).ready(function() {
 		
-		$("span.error").hide();
-		$("input#name").focus();
-		
-		$("input#name").blur(function() { //포커스잡다가 다른데 클릭할때임 포커스 없어짐
-			
-			var name = $(this).val().trim();
-			if(name == ""){
-				// 입력하지 않고나 공백만 입력한 경우
-				$("table#tblMemberRegister :input").prop("disabled", true);// 아이디가 tblMemberRegister인 곳 속에 있는 모든 인풋태그인 곳들을 disabled비활성화 함. 입력창이 다 막힌다.
-				$(this).prop("disabled", false);//다 비활성화되는데 자기것 this 즉, input#name만 활성화 시키게 한 것.
-				
-				//$(this).next().show(); //인풋바로 다음에 적힌 스팬태그를 가리킨다 그래서 input태그와 같은 형제인 span태그에 적은 오류메시지가 보이게 된다
-				// 또는
-				$(this).parent().find(".error").show();
-				$(this).focus(); // 다시 네임에 포커스를 맞춰준다
-			
-			}
-			else {
-				//공백이 아닌 글자를 입력했을 경우
-				$("table#tblMemberRegister :input").prop("disabled", false);
-				//$(this).next().hide(); 
-				// 또는
-				$(this).parent().find(".error").hide(); //에러표시는 감춘다
-			}
-			
-		});// 아이디가 name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-		
-		
-		
-		$("input#userid").blur(function() { //포커스잡다가 다른데 클릭할때임 포커스 없어짐
-			
-			var userid = $(this).val().trim();
-			if(userid == ""){
-				// 입력하지 않고나 공백만 입력한 경우
-				$("table#tblMemberRegister :input").prop("disabled", true);// 아이디가 tblMemberRegister인 곳 속에 있는 모든 인풋태그인 곳들을 disabled비활성화 함. 입력창이 다 막힌다.
-				$(this).prop("disabled", false);//다 비활성화되는데 자기것 this 즉, input#name만 활성화 시키게 한 것.
-				
-				//$(this).next().next().next().show(); //형제들만 보여라는 것이다. 그래서 input태그와 같은 형제인 span태그에 적은 오류메시지가 보이게 된다
-				// 또는
-				$(this).parent().find(".error").show();
-				$(this).focus(); // 다시 네임에 포커스를 맞춰준다
-			
-			}
-			else {
-				//공백이 아닌 글자를 입력했을 경우
-				$("table#tblMemberRegister :input").prop("disabled", false);
-				//$(this).next().next().next().hide(); 
-				// 또는
-				$(this).parent().find(".error").hide(); //에러표시는 감춘다
-			}
-			
-		});// 아이디가 userid 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-		
-		
-		$("input#pwd").blur(function() { //비밀번호와 비밀번호 확인 두가지 칸이 있으나 id는 비밀번호에는 pwd를 줬다. 데이터베이스에는 둘중하나만 보내면 되는데 비밀번호만 보낼 것이다.
-			// var regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
-			// 또는 아래는 똑같지만 길어서 그냥 위처럼 적자
-			var regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
-			// 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
-		
-			var pwd = $(this).val();
-			
-			var bool =regExp.test(pwd);
-			
-			
-			if(!bool){
-				// 암호가 정규표현식에 위배된 경우
-				$("table#tblMemberRegister :input").prop("disabled", true);// 아이디가 tblMemberRegister인 곳 속에 있는 모든 인풋태그인 곳들을 disabled비활성화 함. 입력창이 다 막힌다.
-				$(this).prop("disabled", false);
-				
-				$(this).parent().find(".error").show();
-				$(this).focus(); 
-			
-			}
-			else {
-				//암호가 정규표현식에 맞는 경우
-				$("table#tblMemberRegister :input").prop("disabled", false);
-				
-				$(this).parent().find(".error").hide();
-			}
-			
-		});// 아이디가 pwd 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-		
-		
-		
-		
-		$("input#pwdcheck").blur(function() { //비밀번호 확인칸이다
-			
-			var pwd = $("input#pwd").val();
-			var pwdcheck = $("input#pwdcheck").val();
-		
-			if(pwd != pwdcheck){
-				// 암호와 암호확인값이 틀린 경우
-				$("table#tblMemberRegister :input").prop("disabled", true);// 아이디가 tblMemberRegister인 곳 속에 있는 모든 인풋태그인 곳들을 disabled비활성화 함. 입력창이 다 막힌다.
-				
-				$(this).prop("disabled", false);//다 비활성화되는데 자기것 this 즉, input#pwdcheck를 활성화 시키게 한 것.
-				$("input#pwd").prop("disabled", false);//비밀번호 칸도 열어준다
-				
-				$(this).parent().find(".error").show();
-				$("input#pwd").focus(); // 암호에 포커스 줌
-			
-			}
-			else {
-				//공백이 아닌 글자를 입력했을 경우
-				$("table#tblMemberRegister :input").prop("disabled", false);
-				
-				$(this).parent().find(".error").hide(); //에러표시는 감춘다
-			}
-			
-		});// 아이디가 pwdcheck 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-		
-
-		
-		
-		$("input#email").blur(function() { //email입력칸 블러
-			var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-			// 이메일 정규표현식 객체 생성
-		
-			var email = $(this).val();
-			
-			var bool =regExp.test(email);
-			
-			
-			if(!bool){
-				// 이메일이 정규표현식에 위배된 경우
-				$("table#tblMemberRegister :input").prop("disabled", true);// 다 비활성화
-				$(this).prop("disabled", false);
-				
-				$(this).parent().find(".error").show();
-				$(this).focus(); 
-			
-			}
-			else {
-				//이메일이 정규표현식에 맞는 경우
-				$("table#tblMemberRegister :input").prop("disabled", false);//다 활성화
-				
-				$(this).parent().find(".error").hide();//에러 감추기
-			}
-			
-		});// 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.		
-		
-		
-		
-		
-		$("input#hp2").blur(function() { //hp2입력칸 블러
-			var regExp = /^[1-9][0-9]{3}$/i;
-			// 숫자 4자리만 들어오도록 검사해주는 정규표현식 객체 생성
-		
-			var hp2 = $(this).val();
-			
-			var bool =regExp.test(hp2);
-			
-			
-			if(!bool){
-				// 국번이 정규표현식에 위배된 경우
-				$("table#tblMemberRegister :input").prop("disabled", true);// 다 비활성화
-				$(this).prop("disabled", false);
-				
-				$(this).parent().find(".error").show();
-				$(this).focus(); 
-			
-			}
-			else {
-				//국번이  정규표현식에 맞는 경우
-				$("table#tblMemberRegister :input").prop("disabled", false);//다 활성화
-				
-				$(this).parent().find(".error").hide();//에러 감추기
-			}
-			
-		});// 아이디가 hp2 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.	
-		
-		
-		
-		
-		
-		$("input#hp3").blur(function() { //hp3입력칸 블러
-			
-			// var regExp = /^[1-9][0-9]{4}$/i;
-			// 또는
-			var regExp = /^\d{4}$/i;
-			// 숫자 4자리만 들어오도록 검사해주는 정규표현식 객체 생성
-		
-			var hp3 = $(this).val();
-			
-			var bool =regExp.test(hp3);
-			
-			
-			if(!bool){
-				// 마지막 전화번호 4자리가 정규표현식에 위배된 경우
-				$("table#tblMemberRegister :input").prop("disabled", true);// 다 비활성화
-				$(this).prop("disabled", false);
-				
-				$(this).parent().find(".error").show();
-				$(this).focus(); 
-			
-			}
-			else {
-				// 마지막 전화번호 4자리가 정규표현식에 맞는 경우
-				$("table#tblMemberRegister :input").prop("disabled", false);//다 활성화
-				
-				$(this).parent().find(".error").hide();//에러 감추기
-			}
-			
-		});// 아이디가 hp3 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.	
-		
-		
-		$("img#zipcodeSearch").click(function(){ //넣은 이미지를 클릭할때이다
-	         new daum.Postcode({
-	               oncomplete: function(data) {
-	                   // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-	                   // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-	                   // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-	                   var addr = ''; // 주소 변수
-	                   var extraAddr = ''; // 참고항목 변수
-
-	                   //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-	                   if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-	                       addr = data.roadAddress;
-	                   } else { // 사용자가 지번 주소를 선택했을 경우(J)
-	                       addr = data.jibunAddress;
-	                   }
-
-	                   // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-	                   if(data.userSelectedType === 'R'){
-	                       // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-	                       // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-	                       if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-	                           extraAddr += data.bname;
-	                       }
-	                       // 건물명이 있고, 공동주택일 경우 추가한다.
-	                       if(data.buildingName !== '' && data.apartment === 'Y'){
-	                           extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-	                       }
-	                       // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-	                       if(extraAddr !== ''){
-	                           extraAddr = ' (' + extraAddr + ')';
-	                       }
-	                       // 조합된 참고항목을 해당 필드에 넣는다.
-	                       document.getElementById("extraAddress").value = extraAddr;
-	                   
-	                   } else {
-	                       document.getElementById("extraAddress").value = '';
-	                   }
-
-	                   // 우편번호와 주소 정보를 해당 필드에 넣는다.
-	                   document.getElementById('postcode').value = data.zonecode;
-	                   document.getElementById("address").value = addr;
-	                   // 커서를 상세주소 필드로 이동한다.
-	                   document.getElementById("detailAddress").focus();
-	               }
-	           }).open();               
-	      });
-		
-		//////////////////////////////////////////////////////////////////////////
-		//생년월일
-		var mmhtml = "";
-		for(var i=1; i<=12; i++){
-			if(i<10){
-				mmhtml += "<option>0"+i+"</option>"; //01 02 03이런식으로 나오도록 0을 붙임 mmhtml += "<option>0"+i+"</option>";가 value값이다
-			}
-			else{
-				mmhtml += "<option>"+i+"</option>";
-			}
-			
-		  }// end of for--------------------------
-        
-        $("select#birthmm").html(mmhtml);
-        
-        var ddhtml = "";
-        for(var i=1; i<=31; i++) {
-           if(i<10) {
-              ddhtml += "<option>0"+i+"</option>";
-           }
-           else {
-              ddhtml += "<option>"+i+"</option>";
-           }
-        }// end of for--------------------------
-        
-        $("select#birthdd").html(ddhtml);
-        
-        
-        
-        
-        
-        
-        //생년월일 달력 선택
-     // === jQuery UI 의 datepicker === //
-        $("input#datepicker").datepicker({
-                   dateFormat: 'yy-mm-dd'  //Input Display Format 변경
-                  ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-                  ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-                  ,changeYear: true        //콤보박스에서 년 선택 가능
-                  ,changeMonth: true       //콤보박스에서 월 선택 가능                
-                  ,showOn: "both"          //button:버튼을 표시하고,버튼을 눌러야만 달력 표시 ^ both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시  
-                  ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-                  ,buttonImageOnly: true   //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-                  ,buttonText: "선택"       //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-                  ,yearSuffix: "년"         //달력의 년도 부분 뒤에 붙는 텍스트
-                  ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-                  ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-                  ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-                  ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-                //,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-                //,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
-              });                    
-              
-              //초기값을 오늘 날짜로 설정
-              $('#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후) //디폴트로 today오늘날짜넣어준것이다
-        /////////////////////////////////////////////////////
-        
-        
-        
-        
-        //재직기간 보통 숙박 며칠머무를지 입력할때 쓴다
-        
-           // === 전체 datepicker 옵션 일괄 설정하기 ===  
-              //     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
-                $(function() {
-                    //모든 datepicker에 대한 공통 옵션 설정
-                    $.datepicker.setDefaults({
-                        dateFormat: 'yy-mm-dd' //Input Display Format 변경
-                        ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-                        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-                        ,changeYear: true //콤보박스에서 년 선택 가능
-                        ,changeMonth: true //콤보박스에서 월 선택 가능                
-                     // ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시 ^ both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시  
-                     // ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-                     // ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-                     // ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-                        ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
-                        ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-                        ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-                        ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-                        ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-                     // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-                     // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
-                    });
-         
-                    //input을 datepicker로 선언
-                    $("input#fromDate").datepicker();                    
-                    $("input#toDate").datepicker();
-                    
-                    //From의 초기값을 오늘 날짜로 설정
-                    $('input#fromDate').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-                    
-                    //To의 초기값을 3일후로 설정
-                    $('input#toDate').datepicker('setDate', '+3D'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-                });
-        
-        
-              
-              
-              
-        //// ============ 아이디 중복검사하기 ============ ////	
-        $("img#idcheck").click(function() {
-        	
-        	b_flagIdDuplicateClick = true;
-        	// 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
-        	
-        	// 첫번째 방법
-               $.ajax({
-                  url:"<%= ctxPath%>/member/idDuplicateCheck.up",
-                  type:"post",
-                  data:{"userid":$("input#userid").val()},//dataType:json이라고 쓰지않았지만 보낼때 제이슨 타입으로 보낼 것이다.
-               //   dataType:"json",
-                  success:function(text) {
-                     // text ==> "{"isExists":false}" 문자열
-                     // text ==> "{"isExists":true}" 문자열
-                    // alert("확인용 typeof(text) : " + typeof(text));
-                     //    확인용 typeof(text) : object   <== dataType:"json", 을 명기한 경우 
-                     //    확인용 typeof(text) : string   <== dataType:"json", 을 명기하지 않은 경우  
-                     
-                     var jsonObj = JSON.parse(text); //문자열을 자바스크립트 객체로 바꿔준다. 반대로 JSON.stringify은 자바스크립트 객체를 스트링타입으로 바꿔준다
-                  	 // JSON.parse(text); 은 JSON 형식으로 되어진 문자열을 자바스크립트 객체로 변환해주는 것이다.
-                     // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
-                     
-                    // alert("확인용 typeof(jsonObj) : " + typeof(jsonObj));
-                  	 // 확인용 typeof(jsonObj) : object // JSON.parse(text)를 했기때문에 string에서 object로 바뀌었다. dataType:"json"를 쓰지 않아도 object라고 나온다
-                     
-                  	 if(jsonObj.isExists) {
-                  		 // 입력한 userid 가 이미 사용중 이라면 
-                  		 $("span#idcheckResult").html( $("input#userid").val()+" 은 이미 사용중이므로 사용불가합니다." ).css("color","orange");
-                  		 $("input#userid").val("");
-                  		
-                  	 }
-                  	 else {
-                  		 // 입력한 userid 가 DB 테이블에 존재하지 않는 경우라면
-                  		$("span#idcheckResult").html( $("input#userid").val()+" 은 사용가능합니다").css("color","green");
-                  	 }
-                  	 
-                  },
-                  error: function(request, status, error){
-                   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-                }
-               });
-        	
-        	// 두번째 방법
-          <%--     $.ajax({
-                   url:"<%= ctxPath%>/member/idDuplicateCheck.up",
-                   type:"post",
-                   data:{"userid":$("input#userid").val()},//dataType:json이라고 쓰지않았지만 보낼때 제이슨 타입으로 보낼 것이다.
-                //   dataType:"json",
-                   success:function(json) {
-                      // json ==> {"isExists":true}
-                      // json ==> {"isExists":false}
-                   	 if(jsonObj.isExists) {
-                   		 // 입력한 userid 가 이미 사용중 이라면 
-                   		 $("span#idcheckResult").html( $("input#userid").val()+" 은 이미 사용중이므로 사용불가합니다." ).css("color","orange");
-                   		 $("input#userid").val("");
-                   	 }
-                   	 else {
-                   		 // 입력한 userid 가 DB 테이블에 존재하지 않는 경우라면
-                   		$("span#idcheckResult").html( $("input#userid").val()+" 은 사용가능합니다").css("color","green");
-                   	 }
-                   	 
-                   },
-                   error: function(request, status, error){
-                    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-                 }
-                });
-        	--%>
-			
-		})// end of  $("img#idcheck").click(function(){}) ----------------------
-        
-		// 아이디값이 변경되면 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
-		$("input#userid").bind("change", function() {
-			b_flagIdDuplicateClick = false;	
-		});
 		
         
-     	// 이메일값이 변경되면 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
-        $("input#email").bind("change", function() {
-        	 b_flagEmailDuplicateClick = false; 
-		});
+        
 		
 	});//end of $(document).ready(function(){}---------------------------
 			
@@ -494,70 +57,12 @@
 	
 	
 	
-	
-	
-	//이메일 중복여부 검사하기
-	function isExistEmailCheck() {
-		
-		b_flagEmailDuplicateClick = true;
-    	// 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
-    	
-    	// 첫번째 방법
-           $.ajax({
-              url:"<%= ctxPath%>/member/emailDuplicateCheck.up",
-              type:"post",
-              data:{"email":$("input#email").val()},//dataType:json이라고 쓰지않았지만 보낼때 제이슨 타입으로 보낼 것이다.
-           	  dataType:"json",
-              success:function(json) {
-                
-              	 if(json.isExists) { //json자체가 객체. json.isExists 값이 true이면 중복된게 있다는 것이고 false이면 중복이 없다는 것
-              		 // 입력한 email 이 이미 사용중 이라면 
-              		 $("span#emailCheckResult").html( $("input#email").val()+" 은 이미 사용중이므로 사용불가합니다." ).css("color","orange");
-              		 $("input#email").val("");
-              		 
-             	 }
-              	 else {
-              		 // 입력한 email 이 DB 테이블에 존재하지 않는 경우라면
-              		$("span#emailCheckResult").html($("input#email").val()+" 은 사용가능합니다").css("color","green");
-              	 }
-              	 
-              },
-              error: function(request, status, error){
-               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-           });
-		
-	}//end of function isExistEmailCheck()
-	
-	
-	
-	
-	
-	
-	//가입하기
-	function goRegister() {
+	//결제 내역 
+	function orderRegister() {
 		
 		
 		// *** 필수입력사항에 모두 입력이 되었는지 검사한다. ***//
 		var boolFlag = false;
-		
-		// 자바스크립트로 했다		
-/*
- 	 var arr_requiredInfo = document.getElementsByClassName("requiredInfo");
- 	 
- 	 for(var i=0; i<arr_requiredInfo.length; i++){
-			
-			var val = arr_requiredInfo[i].value.trim(); //인풋태그라서.value를 쓴다
-			if(val == ""){
-				alert("*로 표시된 필수입력사항은 모두 입력하셔야 합니다.");
-				boolFlag = true;
-				break;
-			}
-		}// end of for--------------------------------------
-		
-*/
-		//여기까지 자바스크립트. 아래 $().each()처럼 제이쿼리로 할 수 도 있다.
-		// 또는
 		
 		$("input.requiredInfo").each(function() {
 			var data = $(this).val().trim();
@@ -569,11 +74,9 @@
 		});
 		
 		
-		if(boolFlag) { //수정필요
+		if(boolFlag) { 
 			return; // 리턴은 종료.  goRegister함수를 종료시킨다. boolFlag가 true이면 더이상  진행할 필요가 없기떄문에 끝낸다
 		}
-		
-		
 		
 		var radioCheckedLength = $("input:radio[name=gender]:checked").length;
 		
@@ -592,7 +95,6 @@
 		
 		
 		
-		
 		if(!b_flagIdDuplicateClick){//b_flagIdDuplicateClick가 false일 경우는 중복확인 버튼을 클릭을 안했을때이다
 			//  "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도임.
 			alert("아이디중복확인 클릭하여 이메일중복검사를 하세요!!");
@@ -608,13 +110,12 @@
 		}
 		
 		
-		
 		var frm = document.orderSetleFrm;
 		frm.action = "orderSetle.go";
 		frm.method = "post";
 		frm.submit();
 		
-	}// end of function goRegister() {}--------------------------------
+	}// end of function orderRegister() {}--------------------------------
 	
 </script>
 
@@ -796,7 +297,7 @@
             <button type="button" id="btnRegister" style="background-image:url('/MyMVC/images/join.png'); border:none; width: 135px; height: 34px;" onClick="goRegister();"></button> 
          --%>
               
-            <button type="button" id="btnRegister" class="btn btn-dark btn-lg" onClick="goRegister();">가입하기</button> 
+            <button type="button" id="btnRegister" class="btn btn-dark btn-lg" onClick="orderRegister();">결제하기</button> 
         	
          </td>
       </tr>
