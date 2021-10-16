@@ -52,7 +52,7 @@ public class OrderDAO implements InterOrderDAO {
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	
-	//주문목록 테이블에 insert하는 메소드
+	//결제 후 결제내역 ORDER_SETLE테이블에 insert하기
 	@Override
 	public int insertOrderSetle(OrderSetleVO ovo) throws SQLException {
 		int n = 0;
@@ -92,6 +92,34 @@ public class OrderDAO implements InterOrderDAO {
 
 	
 	
+	
+	//결제 후 TBL_MEMBER 회원 테이블에 적립금 update하기
+	
+	   @Override
+	   public int pointUpdate(Map<String, String> paraMap) throws SQLException {
+	      
+	      int result = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " update tbl_member set point = point + ? "
+	                    + " where userid = ? ";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         
+	       
+	         pstmt.setInt(1, (int)(Integer.parseInt(paraMap.get("totalPoint"))) );
+	         pstmt.setString(2, paraMap.get("fk_user_id"));
+	         
+	         result = pstmt.executeUpdate();
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return result;
+	   }// end of public int coinUpdate(Map<String, String> paraMap)---------------------
 	
 	
 	

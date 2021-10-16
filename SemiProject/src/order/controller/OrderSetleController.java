@@ -1,6 +1,8 @@
 package order.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,11 +58,23 @@ public class OrderSetleController extends AbstractController {
 	         
 	         
 	         InterOrderDAO odao = new OrderDAO(); 
-	         int n = odao.insertOrderSetle(ovo); // 메소드
+	         int n = odao.insertOrderSetle(ovo); //결제내역 ORDER_SETLE테이블에 insert하기
 		         
 		     
+	        ////////////////////////////////////////////////////////////////////
+	        
+	 		String totalPoint = request.getParameter("totalPoint");
+	 		
+	 		Map<String, String> paraMap = new HashMap<>(); 
+	 		paraMap.put("fk_user_id", fk_user_id); 
+	 		paraMap.put("totalPoint", totalPoint);
+	 		
+	 		
+	 		int result = odao.pointUpdate(paraMap); //결제 후 TBL_MEMBER 회원 테이블에 적립금 update하기
+	 		
+	 		
 		
-		    if(n==1) { // 결제내역 테이블에 담기가 성공하면 주문내역페이지로 이동할 것이다.
+		    if(n==1 && result==1) { // 결제내역 테이블 insert와 적립금 업데이트가 성공하면 주문내역페이지로 이동할 것이다.
    			   request.setAttribute("message", "결제가 성공되었습니다.");
                request.setAttribute("loc", "/mypage/orderlist.go");
                
@@ -91,6 +105,9 @@ public class OrderSetleController extends AbstractController {
     		
     		
     	}
+		
+		
+		
 		
 		
 		
