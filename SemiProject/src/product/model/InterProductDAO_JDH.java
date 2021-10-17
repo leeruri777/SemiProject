@@ -14,7 +14,7 @@ public interface InterProductDAO_JDH {
 	List<HashMap<String, Object>> productList(String sort_code) throws SQLException;
 	
 	// 상품관리 리스트 가져오기
-	List<HashMap<String, Object>> mProductList(Map<String,String>searchMap, Map<String,String>orderbyMap) throws SQLException;
+	List<HashMap<String, Object>> mProductList(Map<String,String>searchMap) throws SQLException;
 
 	// 상품 입고하기
 	int PlusProduct(Map<String, String> pmMap) throws SQLException;
@@ -24,6 +24,12 @@ public interface InterProductDAO_JDH {
 
 	// 상품 결과 검색
 	List<HashMap<String, Object>> cProductList(Map<String,String> cSearchMap) throws SQLException;
+
+	// 상품관리 정렬방식
+	List<HashMap<String, Object>> selectOrderbyProd(Map<String, String> searchMap) throws SQLException;
+
+	// 카테고리 삭제
+	int deleteCategory(Map<String, String> sortMap) throws SQLException;
 
 	
 

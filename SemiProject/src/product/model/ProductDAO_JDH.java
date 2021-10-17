@@ -127,7 +127,7 @@ public class ProductDAO_JDH implements InterProductDAO_JDH {
 	
 	// 상품관리 리스트 가져오기(검색어 처리)
 	@Override
-	public List<HashMap<String, Object>> mProductList(Map<String,String> searchMap, Map<String,String>orderbyMap) throws SQLException{
+	public List<HashMap<String, Object>> mProductList(Map<String,String> searchMap) throws SQLException{
 		
 		List<HashMap<String, Object>> mProductList = new ArrayList<>();
 		
@@ -153,7 +153,6 @@ public class ProductDAO_JDH implements InterProductDAO_JDH {
 			
 			String colname = searchMap.get("searchType");
 			String searchWord = searchMap.get("searchWord");
-			String orderbyname = orderbyMap.get("orderbyType");
 			
 			if(searchWord != null && !searchWord.trim().isEmpty()) {
 				sql += " where " +colname+" like '%'||?||'%' ";
@@ -168,13 +167,8 @@ public class ProductDAO_JDH implements InterProductDAO_JDH {
 					"    ) G " + 
 					"    on A.fk_prod_code = G.fk_prod_code) M "
 					+ "  join tbl_prod N "
-					+ "  on M.fk_prod_code = N.prod_code "
-					+ " order by "+orderbyname+" ";
-			
-			
-			
-					
-			
+					+ "  on M.fk_prod_code = N.prod_code ";
+	
 			pstmt = conn.prepareStatement(sql);
 			
 			// System.out.println(searchWord);
@@ -395,6 +389,129 @@ public class ProductDAO_JDH implements InterProductDAO_JDH {
 		
 		
 		
+	}
+
+	// 상품관리 정렬방식 보여주기
+	@Override
+	public List<HashMap<String, Object>> selectOrderbyProd(Map<String, String> searchMap) throws SQLException {
+		
+		List<HashMap<String, Object>> sProductList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select M.fk_prod_code AS fk_prod_code, prod_name, prod_img_url, prod_stock, prod_sale, fk_sort_code, prod_date "
+					+ " from "
+					+ " ("
+					+ "	 select A.fk_prod_code, prod_name, prod_img_url, prod_stock, prod_sale, prod_date " + 
+					"    from " + 
+					"    ( " + 
+					"        select S.fk_prod_code, prod_name, prod_sale, prod_stock, prod_date " + 
+					"        from " + 
+					"        ( " + 
+					"            select fk_prod_code, prod_stock " + 
+					"            from tbl_stock " + 
+					"        ) S " + 
+					"        join tbl_prod_info I " + 
+					"        on S.fk_prod_code = I.fk_prod_code "; 
+					
+			
+			String colname = searchMap.get("searchType");
+			String searchWord = searchMap.get("searchWord");
+			String colname2 = searchMap.get("orderbyType");
+			
+			if(searchWord != null && searchWord.trim() != "") {				
+				
+				if("fk_prod_code".equalsIgnoreCase(colname))
+					colname = "S." + colname;
+				
+				sql += " where " +colname+" like '%'||?||'%' ";	
+			}
+			
+			sql +=  "        order by fk_prod_code desc " + 
+					"    ) A " + 
+					"    join " + 
+					"    ( " + 
+					"        select distinct fk_prod_code, first_value(prod_img_url) over(partition by fk_prod_code order by prod_img_code) AS prod_img_url " + 
+					"        from tbl_prod_img " + 
+					"    ) G " + 
+					"    on A.fk_prod_code = G.fk_prod_code) M "
+					+ "  join tbl_prod N "
+					+ "  on M.fk_prod_code = N.prod_code "
+					+ " order by "+colname2+" ";
+					
+			
+		
+					
+			pstmt = conn.prepareStatement(sql);
+			
+			// System.out.println(searchWord);
+			
+			if(searchWord != null && !searchWord.trim().isEmpty()) {
+				pstmt.setString(1, searchWord);
+			}
+			
+			// System.out.println(colname);
+			// System.out.println(searchWord);
+			// System.out.println("colname2");
+            
+			rs = pstmt.executeQuery();
+            
+            while(rs.next()) {   
+                
+                HashMap<String, Object> cprodmap = new HashMap<>();
+                ProductVO cpvo = new ProductVO();
+                
+                cpvo.setProd_code(rs.getString(1));
+                cpvo.setProd_name(rs.getString(2));
+                cpvo.setProd_stock(rs.getInt(4));
+                cpvo.setProd_sale(rs.getInt(5));
+                cpvo.setSort_code(rs.getInt(6));
+                
+                cprodmap.put("mpvo", cpvo);
+                
+                ImageVO civo = new ImageVO();
+                civo.setProd_img_url(rs.getString(3));
+                
+                cprodmap.put("mivo", civo);
+                
+                sProductList.add(cprodmap);
+            }
+            
+			
+		} finally {
+			close();
+		}
+		
+		// System.out.println("내용물 확인");
+		
+		
+		return sProductList;
+	}
+
+	// 카테고리 삭제
+	@Override
+	public int deleteCategory(Map<String, String> sortMap) throws SQLException {
+
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_sort where sort_code = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, sortMap.get("sort_code"));
+						
+			result = pstmt.executeUpdate();
+			
+			
+		} finally {
+			close();
+		}
+		
+		return result;
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////

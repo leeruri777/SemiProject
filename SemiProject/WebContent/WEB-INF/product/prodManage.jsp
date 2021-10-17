@@ -37,26 +37,26 @@
 <script type="text/javascript">
 	
 	$(document).ready(function() {
-		
+						
 		/* >>> === 클릭한 탭(버튼)만 보이도록 하는 첫번째 방법 === <<< */
 		$("li.tablinks").click(function(event) {
 			
 			var $target = $(event.target);
-		
-			var i = $("li.tablinks").index($target);
-		
-			$("div.content").css("display","none"); 
 			
-			$("div.content:eq(" + i + ")").css('display','block'); 
+			var i = $("li.tablinks").index($target); // alert(i);
+		
+			$("div.mycontent").css("display","none"); 
+			
+			$("div.mycontent:eq(" + i + ")").css('display','block');
 			
 			$("li.tablinks").removeClass("myli");
 			
 			$("li.tablinks:eq(" + i + ")").addClass('myli');
 		
-			if(i != 0) {$("nav.navbar").hide();}
-			else {$("nav.navbar").show();}
-			
+					
 		});
+		
+		// console.log(orderby);
 		
 		$("li.tablinks:eq(0)").trigger('click');
 		
@@ -66,7 +66,7 @@
 			
 		
 		$("select#orderby").bind("change", function(){
-			goSearch;
+			goSearch();
 		});
 	
 		
@@ -75,10 +75,18 @@
 				goSearch();
 			}
 		});
-		
-		
+/*		
+		$("button#delThis").bind("click", function(event){
+			delete_category();
+			
+			console.log(sort_name);
+			console.log($("sort_name"));
+			console.log($("sort.sort_name"));
+			console.log(sort.sort_name);
+		});
+*/		
 		// --------------------------모달------------------------------//
-		
+		  
 		  $("button.stock_plus").click(function() {
 			  
 			   var prod_code = $(this).parent().parent().find(".prod_code").text();
@@ -119,7 +127,10 @@
 			   
 			   $("input#minusqty").val("");
 			   
-		   });
+		});
+		
+		
+		
 			
 		$("input#plusqty").blur(function(){
 			if(isNaN($(this).val())) {
@@ -187,6 +198,8 @@
 		
 		
 		
+		
+		
 		$("button.one_prod").click(function() {
 			
 			//	alert($(this).find(".prod_code").text());
@@ -201,9 +214,8 @@
 				frm.method = "POST";
 				frm.submit();			
 				
-			}); 
-		
-		
+		});
+				
 	})// end of $(document).ready(function() {})-------------------------------------------
 	
 	// function Declaration
@@ -214,7 +226,7 @@
 	//	alert(frm.searchWord.value);
 		
 		frm.action = "prodManage.go";
-		frm.method = "GET";
+		frm.method = "POST";
 		frm.submit();
 	}
 	
@@ -250,6 +262,48 @@
 </script>
 		
 	<div class="container mt-5 pt-5 px-0 offset-lg-3 col-lg-9">	
+		
+		<div class="modal fade" id="delCateModal">
+			  <div class="modal-dialog modal-dialog-scrollable modal modal-dialog-centered">
+			  
+			    <div class="modal-content">			      
+			      <form name="deleteCateory" action="/product/deleteCategory.go" method="POST">	
+			      <!-- 카테고리 삭제 Modal header -->
+			      <div class="modal-header">
+			        	<h5 class="modal-title">카테고리 삭제</h5>
+			        	<button type="button" class="close thisclose" data-dismiss="modal">&times;</button>
+			      </div>
+			      	
+			      <!-- 카테고리 삭제  Modal body -->
+			      <div class="modal-body row">
+	
+				      	
+				      		
+				      		<label class="col-4" for="delCate" id="del">삭제할 카테고리 :</label>
+							    	<select id="delCate" class="mx-0 px-0" name="sort_code">
+							    		<c:forEach var="sort" items="${sortList}">
+							    			<option value="${sort.sort_code}">${sort.sort_name}</option>
+							    		</c:forEach>
+							    	</select>
+							    	<br>
+							    	<p style="color: red; font-size: 8pt;">*카테고리 삭제 시 해당 카테고리에 속한 상품도 삭제됩니다</p>
+								
+					</div>			     	         							
+			      
+			      <!-- 카테고리 삭제 Modal footer -->
+			      <div class="modal-footer">
+			      	<button type="submit"  class="btn btn-success"  id="delThis">삭제</button>
+			      	<button type="button" class="btn btn-danger thisclose" data-dismiss="modal">취소</button>
+			      </div>
+			      </form>	
+			   </div>
+			</div>
+			      		
+		</div>	
+	
+		
+		<!-----------------------------------  -->
+		
 			
         <%-- 입고모달--%>
         <div class="modal fade" id="plusModal">
@@ -369,13 +423,23 @@
 				
 				<form name="productFrm" class="row w-100 my-3">
 					
-					<div class="col-md-9 mb-2 pl-4">
-						<select id="searchType" name="searchType">						
-							<option value="sort_name">카테고리명</option>
-							<option value="prod_name" selected="selected">상품명</option>
+					<div class="col-md-2 mb-2 pl-4">
+						<button type="button" class="btn categoryDelete btn-sm btn-warning " data-toggle="modal" data-target="#delCateModal">카테고리삭제</button>
+					</div>
+					
+					<div class="col-md-7 mb-2 pl-4" align="center">
+						<select id="searchType" name="searchType">
+							<c:if test="${'fk_prod_code' eq searchType}">	
+								<option value="prod_name">상품명</option>					
+								<option value="fk_prod_code" selected>상품코드</option>								
+							</c:if>
+							<c:if test="${'fk_prod_code' ne searchType}">
+								<option value="prod_name" selected>상품명</option>						
+								<option value="fk_prod_code">상품코드</option>								
+							</c:if>
 						</select>
 						
-						<input type="text" id="searchWord" name="searchWord" />
+						<input type="text" id="searchWord" name="searchWord" value="${searchWord}"/>
 						
 						
 						<button type="button" id="searchbtn" class="btn btn-light btn-sm" style="border: solid 1px #d9d9d9" onclick="goSearch();" style="margin-right: 30px;">검색</button>
@@ -384,10 +448,15 @@
 					<div class="col-md-3 text-right mb-2 px-0 mx-0">
 						<span style="font-size: 12pt;">정렬방법 : </span>
 				
-						<select id="orderby" name="orderby">
-							<option value="addDate">등록일순</option>
-							<option value="prodName">상품명순</option>
-							<option value="jaego">재고량순</option>
+						<select id="orderby" name="orderbyType">
+							<c:if test="${'prod_date' eq orderbyType}">
+								<option value="prod_date" selected>등록일순</option>
+								<option value="prod_name">상품명순</option>
+							</c:if>
+							<c:if test="${'prod_date' ne orderbyType}">
+								<option value="prod_date">등록일순</option>
+								<option value="prod_name" selected>상품명순</option>
+							</c:if>
 						</select>
 					</div>	
 					
@@ -414,16 +483,16 @@
 			
 			<div id="main" class="w-100 row">
 				
-				<div class="table-responsive content">
+				<div class="table-responsive content mycontent">
 					
 					<table class="table table-hover text-center">							
 													
 						<tbody>
 						
-							<c:forEach var="mprodmap" items="${mProductList}">
+							<c:forEach var="mprodmap" items="${sProductList}">
 								
 									<tr class="row w-100 px-0 mx-0 one_prod">
-									<form>	
+										<form>	
 											<td class="col-sm-2 mx-0 px-0">
 												<img src="../img_prod/${mprodmap.mivo.prod_img_url}" class="img-fluid mx-0 px-0">
 											</td>
@@ -449,8 +518,9 @@
 													<input class="mt-sm-4" type="radio" name="sale1" id="notsale" checked="checked"  disabled="disabled"/><label for="notsale">&nbsp;미판매</label>
 												</c:if>
 											</td>
-											<td class="col-sm-2">	
-											<button type="button" class="btn one_prod btn-sm btn-success my-1 mx-1 mx-1" >상세정보</button>
+											<td class="col-sm-2 pt-sm-4">	
+												<button type="button" class="btn one_prod btn-sm btn-info my-1 mx-1 mx-1" >상세정보</button>
+											</td>
 										</form>	
 										
 																		
@@ -462,28 +532,27 @@
 						
 					</table>
 				</div>	
-				
-				<form name="one_prod_frm"><input type="hidden" name="one_prod_code"></form>
-				
-				
-				
-				<div id="category" class="w-100 row">
-				<c:forEach var="categorylist" items="${sortList}">
-				<div class="table-responsive content">
-					<table class="table table-hover text-center">							
-						
 							
-							<tbody>						
-								<c:forEach var="mprodmap" items="${mProductList}">
+				
+				<c:forEach var="categorylist" items="${sortList}">
+				
+				<div class="table-responsive content mycontent">
+					
+					<table class="table table-hover text-center">							
+													
+						<tbody>
+									
+								<c:forEach var="mprodmap" items="${sProductList}">
+									<c:if test="${categorylist.sort_code eq mprodmap.mpvo.sort_code}">
 										<tr class="row w-100 px-0 mx-0 one_prod">
-										<form>	
+											<form>	
 												<td class="col-sm-2 mx-0 px-0">
 													<img src="../img_prod/${mprodmap.mivo.prod_img_url}" class="img-fluid mx-0 px-0">
 												</td>
 												<td class="col-sm-2">
 													<p class="prod_code mt-sm-4">${mprodmap.mpvo.prod_code}</p>
 												</td>
-												<td class="col-sm-4">
+												<td class="col-sm-2">
 													<p class="prod_name mt-sm-4">${mprodmap.mpvo.prod_name}</p>
 												</td>
 												<td class="col-sm-2">
@@ -502,24 +571,25 @@
 														<input class="mt-sm-4" type="radio" name="sale1" id="notsale" checked="checked"  disabled="disabled"/><label for="notsale">&nbsp;미판매</label>
 													</c:if>
 												</td>
+												<td class="col-sm-2 pt-sm-4">	
+													<button type="button" class="btn one_prod btn-sm btn-info my-1 mx-1 mx-1" >상세정보</button>
+												</td>
 											</form>									
 										</tr>
-									
-								</c:forEach>
-									
-							</tbody>
+									</c:if>
+								</c:forEach>	
+								
+						</tbody>
 									
 						
 					</table>
 				</div>	
-				</c:forEach>	
-				</div>											
-				
-				
+			</c:forEach>	
 				
 			   	</div>
 			</div>			
 	
 	
+				<form name="one_prod_frm"><input type="hidden" name="one_prod_code"></form>
 
 <jsp:include page="../include/footer_admin.jsp"></jsp:include>
