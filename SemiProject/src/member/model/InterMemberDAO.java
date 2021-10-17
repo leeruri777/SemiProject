@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import order.model.OrderSetleVO;
 import util.paging.Pagination;
 
 public interface InterMemberDAO {
@@ -45,9 +46,19 @@ public interface InterMemberDAO {
 		// 배송지 정보 수정하기
 		int updateAddress(AddressVO addressVo) throws SQLException;
 		
+		
+		///////////////////////////////////////////////////////////////
 		/* 적립금페이지 */
 		// userid 값을 입력받아서 회원1명에 대한 총적립금 알아오기(select)
 		MemberVO memberTotalPoint(String userid) throws SQLException;
+		
+		// 페이징 처리를 한 회원 한명의 적립금 내역 보여주기
+		List<OrderSetleVO> selectPointList(Map<String, String> paraMap) throws SQLException;
+		
+		// 페이징 처리를 위한 회원 한명의 적립금 내역 총페이지 수(totalPage) 알아오기
+		int getPointTotalPage(String fk_user_id) throws SQLException;
+		///////////////////////////////////////////////////////////////
+		
 		
 }
 

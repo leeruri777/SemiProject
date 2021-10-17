@@ -97,3 +97,46 @@ select order_dt, 적립금, prod_name
 from order_settle
 where userid = " and 상태 ="완료";
 order by order_d desc;
+
+/*
+ceil(prod_price/to_number('100'))
+floor(prod_price/100*100)
+ceil(prod_price/to_number('1000')*100)
+
+*/
+
+
+
+select order_dt, prod_name, prod_price, floor(prod_price/10000)*100 as addpoint
+from
+(
+    select row_number() over(order by ORDER_NO asc) AS RNO 
+          , order_no, order_dt, prod_name, prod_price, floor(prod_price/10000)*100 as addpoint
+    from ORDER_SETLE
+    where fk_user_id = 'admin'
+) V
+where RNO between 1 and 8; 
+
+
+
+
+select order_dt, floor(prod_price/10000)*100 as addpoint, prod_name
+from
+(
+    select row_number() over(order by ORDER_NO asc) AS RNO 
+          , order_no, order_dt, prod_name, floor(prod_price/10000)*100 as addpoint, prod_price
+    from ORDER_SETLE
+    where fk_user_id = 'admin' --로그인한 유저 ?
+) V
+where RNO between 1 and 8; -- ? ?
+
+
+select order_dt, floor(prod_price/10000)*100 as addpoint, prod_name
+from
+(
+    select row_number() over(order by ORDER_NO asc) AS RNO 
+          , order_no, order_dt, prod_name, floor(prod_price/10000)*100 as addpoint, prod_price
+    from ORDER_SETLE
+    where fk_user_id = ?
+) V
+where RNO between ? and ?; 

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:include page="/WEB-INF/include/header.jsp"/>
 <jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
@@ -26,30 +27,29 @@
 		      <td>내용</td>
 		    </tr>		 
 		  <tbody>
-		    <tr>
-		      <td>2021-09-27</td>
-		      <td>200P</td>
-		      <td>구매감사 적립금</td>	     
-		    </tr>
-		    <tr>
-		      <td>2021-09-28</td>
-		      <td>-200P</td>
-		      <td>구매취소</td>	      
-		    </tr>	  
+		     <c:forEach var="opvo" items="${requestScope.pointList}"> 
+	      	   		<tr>
+	      	   			<td class="userid">${opvo.order_dt}</td> 
+	      	   			<td>${opvo.addpoint}</td>
+	      	   			<td>${opvo.prod_name}</td>
+	      	   		</tr>
+	      	 </c:forEach>	  
 		  </tbody>
 		</table>
 
 	<%-- 페이지네이션 --%>	
-	<nav>
-	  <ul class="pagination pt-5" >
-	    <li class="page-item"><a class="page-link" href="#"><span aria-hidden="true"> << </span></a></li>
-	    <li class="page-item"><a class="page-link" href="#"><span aria-hidden="true"> < </span></a></li>
-	    	<li class="page-item"><a class="page-link" href="#">1</a></li>
-	    <li class="page-item"><a class="page-link" href="#"><span aria-hidden="true"> > </span></a></li>
-	    <li class="page-item"><a class="page-link" href="#"><span aria-hidden="true"> >> </span></a></li>
-	  </ul>
+
+ 
+	<nav class="pagination pt-5" >
+	     	
+	     <ul class="pagination">${requestScope.pageBar}</ul>
+	     	
 	</nav>
+	
 </div>
+
+
+
 <%-- ////내용 끝//// --%>
 <script type="text/javascript">
 </script
