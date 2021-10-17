@@ -2,50 +2,21 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-    
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <%
    String ctxPath = request.getContextPath();
-%>        
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>상품</title>
+%>  
 
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<jsp:include page="../include/header.jsp"></jsp:include>
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" type="text/css" href="<%= ctxPath %>/bootstrap-4.6.0-dist/css/bootstrap.min.css" > 
+<title>상품목록[소녀떡집]</title>
+
 
 <!-- 직접 만든 CSS -->
 <link rel="stylesheet" type="text/css" href="<%= ctxPath %>/css/style.css" />
 
-<!-- Optional JavaScript -->
-<script type="text/javascript" src="<%= ctxPath %>/js/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="<%= ctxPath %>/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script>
-
-<script type="text/javascript">
-
-	$(document).ready(function(){
-		
-		$("div.card").click(function(event){
-			
-			//	var prod_name = $(this).(".card-body").html();
-				console.log($(this).find("#prod_code").val());
-			//	location.href="<%= ctxPath%>/product/prodDetail.go?prod_code="+prod_code;
-				
-		}); // end of $("div.card").click(function(event){
-			
-		
-		
-	});
-
-	// Function Delclaration
-	
-	
-</script>
 
 <style type="text/css">
 	div.container{
@@ -93,12 +64,54 @@
 		margin: 0;
 	}
 	
+	img.img_prod {
+		-webkit-transform: scale(1);
+		transform: scale(1);
+		-webkit-transition: .3s ease-in-out;
+		transition: .3s ease-in-out;
+	}
+	
+	img.img_prod_hover {
+		-webkit-transform: scale(1.1);
+		transform: scale(1.1);
+		margin-bottom: 15px;
+	}
+	
+	
 </style>
 
-</head>
-<body>
+<script type="text/javascript">
 
-<div class="container mt-5 ">
+	$(document).ready(function() {
+		
+		$("div.card-body").hover(function() {				 
+				$(this).find(".img_prod").addClass("img_prod_hover");
+			}, function() {
+				$(this).find(".img_prod").removeClass("img_prod_hover");
+			}
+		);
+		
+			
+		$("div.card").click(function(event){
+			
+			//	var prod_name = $(this).(".card-body").html();
+				// console.log($(this).find("#prod_code").val());
+				
+				
+			var prod_code = $(this).children("#prod_code").html();
+			
+			location.href="/product/prodDetail.go?prod_code="+$(prod_code).val();
+			
+		}); // end of $("div.card").click(function(event){
+					
+		
+	})//------------------------------------------------------------
+	
+
+</script>
+
+
+<div class="container my-5 ">
 	<c:if test="${not empty productList}">
 	
 		<div id="top_image" class="row w-100 mx-0 px-0">
@@ -117,12 +130,22 @@
 	
 		<hr class="my-1">
 				
-		<div id="img_list" class="product row w-100 mx-0 px-0">    
+		<div id="img_list" class="product row w-100 mx-0 px-0"> 
+		   
 		  <c:forEach var="prodmap" items="${productList}">
 			  <div class="card col-sm-3 col-4">
 			    <div class="card-body px-1">
-			       <img src="../img_prod/${prodmap.ivo.prod_img_url}" style="width:100%">
-			        <span id="font1" style="text-align: center">${prodmap.pvo.prod_name}<b><br>${prodmap.pvo.prod_price}원</b></span>
+			       <img src="../img_prod/${prodmap.ivo.prod_img_url}" style="width:100%" class="img_prod img-fluid">
+			        <span id="font1" style="text-align: center">${prodmap.pvo.prod_name}
+			        	
+				        <c:if test="${prodmap.pvo.discount_price == -9999}">
+				        	<b><br><span><fmt:formatNumber value="${prodmap.pvo.prod_price}" pattern="###,###"/>원 </span></b>
+				        </c:if>	
+				        <c:if test="${prodmap.pvo.discount_price != -9999}">
+				        		<b><br><span style="text-decoration: line-through;"><fmt:formatNumber value="${prodmap.pvo.prod_price}" pattern="###,###"/>원</span></b>
+				        		<br><span><fmt:formatNumber value="${prodmap.pvo.discount_price}" pattern="###,###"/>원</span>	
+				        </c:if>
+				    </span>
 			    	<input id="prod_code" type="hidden" value="${prodmap.pvo.prod_code}" /> <!-- value에 DB연결하고 prod_code 넣을것 -->
 			    </div>
 			  </div>
@@ -132,13 +155,4 @@
 	</c:if>
 </div>
 
-
-
-
-
-
-
-
-
-</body>
-</html>
+<jsp:include page="../include/footer.jsp"></jsp:include>
