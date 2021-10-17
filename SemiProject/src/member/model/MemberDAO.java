@@ -588,7 +588,7 @@ public class MemberDAO implements InterMemberDAO {
 			conn = ds.getConnection();
 			String sql = "SELECT USERID, POSTCODE, ADDRESS, DETAILADDRESS, EXTRAADDRESS, DEFAULT_YN, HOMETEL, MOBILE, ANO, DELIVERNAME, NAME "
 						+"FROM TBL_ADDRESS_LIST "
-						+ "WHERE userid = ? ";
+						+ "WHERE userid = ? and DEFAULT_YN ='y'";
 			
 			pstmt = conn.prepareStatement(sql);
 	        pstmt.setString(1, userid);

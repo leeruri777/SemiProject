@@ -7,7 +7,7 @@ public class BasketVO {
 	private int basketNo;
 	private String userid;
 	private String prod_code;
-	private int count;
+	private int goods_qy;
 	
 	private ProductVO productVo;
 	
@@ -29,11 +29,11 @@ public class BasketVO {
 	public void setProd_code(String prod_code) {
 		this.prod_code = prod_code;
 	}
-	public int getCount() {
-		return count;
+	public int getGoods_qy() {
+		return goods_qy;
 	}
-	public void setCount(int count) {
-		this.count = count;
+	public void setGoods_qy(int goods_qy) {
+		this.goods_qy = goods_qy;
 	}
 	
 	

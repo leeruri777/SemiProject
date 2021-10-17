@@ -42,7 +42,7 @@ public class ProductInsertAction extends AbstractController {
 			if(request.getParameter("prod_exp") != null &&
 			   request.getParameter("prod_exp").trim() != "") {
 				
-				prod.setProd_exp(request.getParameter("prod_exp"));
+				prod.setProd_exp(request.getParameter("prod_exp").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 			}
 			
 			prod.setProd_price(Integer.parseInt(request.getParameter("prod_price")));
@@ -121,6 +121,8 @@ public class ProductInsertAction extends AbstractController {
 				
 				paraMap.put("prod_select_list", prod_select_list);
 				
+				prod.setProd_select(Integer.parseInt(request.getParameter("selectCnt")));
+								
 			}
 			
 			prod.setProd_sale(Integer.parseInt(request.getParameter("prod_sale")));
@@ -132,19 +134,19 @@ public class ProductInsertAction extends AbstractController {
 			int result = pdao.insertProd(paraMap);
 			
 			if(result == 0) {
-				message += "SQL구문 오류 발생";
+				message = "SQL구문 오류 발생";
 				loc = "/";
 			}
 			
 			else {
-				message += "상품등록이 완료되었습니다.";
+				message = "상품등록이 완료되었습니다.";
 				loc = "/product/prodRegister.go"; 
 			}
 					
 		}
 		
 		else {
-			message += "비정상적인 접근 경로입니다.";
+			message = "비정상적인 접근 경로입니다.";
 			loc = "/"; 
 		}
 		

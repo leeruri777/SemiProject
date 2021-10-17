@@ -467,33 +467,4 @@ public class ProductDAO implements InterProductDAO {
       return categoryName;
    }
 
-	@Override
-	public ProductVO getProductInfo(String prod_code) throws SQLException {
-		
-		ProductVO productVo = null;
-	      
-//	      try {
-//	         
-//	         conn = ds.getConnection();
-//	         
-//	         String sql = "SELECT " + 
-//	               " from tbl_sort " + 
-//	               " where sort_code = ? ";
-//	         
-//	         pstmt = conn.prepareStatement(sql);
-//	          pstmt.setString(1, sort_code);
-//	          
-//	          rs = pstmt.executeQuery();
-//	          
-//	          if(rs.next()) {
-//	             categoryName = rs.getString(1);
-//	          }
-//	         
-//	      } finally {
-//	         close();
-//	      }	     
-	      return productVo;	      
-	}
-
-	
 }

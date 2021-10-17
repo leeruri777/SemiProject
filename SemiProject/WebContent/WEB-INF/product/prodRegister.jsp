@@ -1,18 +1,29 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 
 <%
-	String ctxPath = request.getContextPath();
+   String ctxPath = request.getContextPath();
 %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:include page="/WEB-INF/include/header_admin.jsp"/>
+
+
+<jsp:include page="../include/header_admin.jsp"></jsp:include>
+
+<title>[관리자메뉴]상품등록</title>
+
+
+<!-- 직접 만든 CSS -->
+<link rel="stylesheet" type="text/css" href="<%= ctxPath %>/css/style.css" />
+<script type="text/javascript" src="<%= ctxPath %>/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js" ></script>
+
 <style type="text/css">
 
 	body {
       word-break: break-all; /* 공백없이 영어로만 되어질 경우 해당구역을 빠져나가므로 이것을 막기위해서 사용한다. */
     }
 	
-	div.container {	width: 90%;}
+	div.container {	width: 70%;}
 		
 	div#main {margin: 0 auto;}	
 	
@@ -125,7 +136,7 @@
 		            val_detailfilename += $(this)[0].files[i].name;
 		        //  console.log($(this)[0].files[0]);
 		        } else {
-		            val_detailfilename += $(this).val.split('/').pop().split('\\').pop();
+		            val_detailfilename += $(this).val().split('/').pop().split('\\').pop();
 		        }
 				
 			}			
@@ -170,16 +181,27 @@
 			if(isNaN($(this).val())) {
 				alert("가격은 숫자만 입력하셔야 합니다.");
 				$(this).val("");
+				return;
 			}
 			
 			else if(Number($(this).val()) < 0) {				
 				alert("가격은 최소 0원 이상이어야 합니다.");
-				$(this).val("");				
+				$(this).val("");
+				return;
 			}
 			
 			else if($(this).val().trim() == "") {
 				alert("가격을 입력하셔야 합니다.");
 				$(this).val("");
+				return;
+			}
+			
+			var arrVal = $(this).val().split(".");
+			
+			if(arrVal.length != 1) {
+				alert("정수만 입력하셔야 합니다.");
+				$(this).val("");
+				return;
 			}
 			
 		});
@@ -193,26 +215,39 @@
 			if(isNaN($(this).val())) {
 				alert("할인가격은 숫자만 입력하셔야 합니다.");
 				$(this).val("");
+				return;
 			}
 			
 			else if($("input[name=prod_price]").val().trim() == "") {				
 				alert("가격을 먼저 입력하셔야 합니다.");
-				$(this).val("");				
+				$(this).val("");
+				return;
 			}
 			
 			else if(Number($(this).val()) >= Number($("input[name=prod_price]").val())) {				
 				alert("할인가격은 정가 이하이어야 합니다.");
-				$(this).val("");				
+				$(this).val("");	
+				return;
 			}
 			
 			else if(Number($(this).val()) < 0) {				
 				alert("할인가격은 최소 0원 이상이어야 합니다.");
-				$(this).val("");				
+				$(this).val("");
+				return;
 			}
 			
 			else if($(this).val().trim() == "") {
 				alert("할인적용시 할인가격을 입력하셔야 합니다.");
 				$(this).val("");
+				return;
+			}
+			
+			var arrVal = $(this).val().split(".");
+			
+			if(arrVal.length != 1) {
+				alert("정수만 입력하셔야 합니다.");
+				$(this).val("");
+				return;
 			}
 			
 		});
@@ -226,11 +261,26 @@
 			if(isNaN($(this).val())) {
 				alert("재고는 숫자만 입력하셔야 합니다.");
 				$(this).val("");
+				return;
 			}
 			
 			else if(Number($(this).val()) < 0) {				
 				alert("재고는 최소 0개 이상이어야 합니다.");
-				$(this).val("");				
+				$(this).val("");
+				return;
+			}
+			
+			else if($(this).val().trim() == "") {
+				$(this).val("");
+				return;
+			}
+
+			var arrVal = $(this).val().split(".");
+			
+			if(arrVal.length != 1) {
+				alert("정수만 입력하셔야 합니다.");
+				$(this).val("");
+				return;
 			}
 			
 		});
@@ -273,6 +323,22 @@
 			
 		});
 		
+		/////////////////////////////////////////////////////////////////////////
+		
+		$("#selectCnt").blur(function() {
+			
+			if(isNaN($(this).val())) {
+				alert("골라담기 개수는 숫자만 입력하셔야 합니다.");
+				$(this).val("");
+			}
+			
+			else if(Number($(this).val()) < 1) {				
+				alert("골라담기 개수는 최소 1개 이상이어야 합니다.");
+				$(this).val("");				
+			}
+			
+		});
+		
 				
 	})// end of $(document).ready(function() {})------------------------------------------
 	
@@ -295,6 +361,10 @@
 				return;
 			}
 			
+			else {
+				frm.add_sort_name.value = frm.add_sort_name.value.trim(); 
+			}
+			
 		}
 		
 		// 2. 상품명 검사		
@@ -303,12 +373,23 @@
 			return;			
 		}
 		
+		else {
+			frm.prod_name.value = frm.prod_name.value.trim();
+		}
+		
 		// 3. 상품설명 검사 --> 얘는 없어도 상관없다
+		if(frm.prod_exp.value.trim().length != 0) {
+			frm.prod_exp.value = frm.prod_exp.value.trim();			
+		}		
 		
 		// 4. 가격 검사
 		if(frm.prod_price.value.trim().length == 0) {
 			alert("가격을 입력하셔야 합니다.");
 			return;			
+		}
+		
+		else {
+			frm.prod_price.value = frm.prod_price.value.trim();
 		}
 		
 		// 4-#. 할인 가격 검사
@@ -320,9 +401,16 @@
 				return;			
 			}
 			
+			else {
+				frm.discount_price.value = frm.discount_price.value.trim();
+			}
+			
 		}
 		
 		// 5. 재고 검사 --> 얘는 없을 경우 재고가 0인 상태로 입력될 것이므로 상관없다
+		if(frm.prod_stock.value.trim().length != 0) {
+			frm.prod_stock.value = frm.prod_stock.value.trim();			
+		}
 		
 		// 6. 타이틀이미지 검사
 		if(frm.titlefile.value.trim().length == 0) {
@@ -350,6 +438,17 @@
 			return;			
 		}
 		
+		if(frm.prod_select.value == 1 && frm.selectCnt.value.trim().length == 0) {
+			
+		//	console.log(frm.prod_select_code.value);
+			alert("골라담기개수를 반드시 입력하셔야 합니다.");
+			return;			
+		}
+		
+		if(frm.prod_select.value == 1 && frm.selectCnt.value.trim().length != 0) {
+			frm.selectCnt.value = frm.selectCnt.value.trim();
+		}
+		
 		frm.titlefile.disabled = false;
 		frm.detailfile.disabled = false;
 		
@@ -361,10 +460,9 @@
 	}// end of function goRegister()------------------------------------------------------
 	
 </script>
-</head>
-<body>
+
 		
-	<div class="container mt-5">	
+	   <div class="container mt-5 pt-5 px-0 offset-lg-3 col-lg-9"> 	
 		
 		<h4>상품등록</h4>
 		<hr>
@@ -539,10 +637,13 @@
 										<option value="${prod.prod_code}">${prod.prod_name}</option>								
 									</c:forEach>					      
 						 		</select>
-						 		
 						 		<span class='small' style='color: red;'>*[Ctrl]키를 누르고 선택하세요</span>
-				         		 
-				         	</div>			         	
+						 	</div>
+						 	
+						 	<div id="select" class="mx-0 px-0 col-md-4">	
+						 		<input type="text" id="selectCnt" name="selectCnt" class="form-control form-control-sm" placeholder="골라담기 개수를 입력하세요"> 						 		
+				         	</div>	 
+				         				         	
 			         	</c:if>
 			            
 					</div>
@@ -564,7 +665,7 @@
 						
 					</div>
 					<div class="col">
-						<button type="button" class="btn btn-sm btn-info mb-3 mr-2" onClick="goRegister();">확인</button>
+						<button type="button" class="btn btn-sm btn-success mb-3 mr-2" onClick="goRegister();">등록</button>
 						<input type="reset"  value="취소" class="btn btn-sm btn-danger mb-3" />
 					</div>
 				</div>
@@ -574,4 +675,5 @@
 		</div>	
 			
 	</div>
-<jsp:include page="/WEB-INF/include/footer_admin.jsp"/>
+
+<jsp:include page="../include/footer_admin.jsp"></jsp:include>

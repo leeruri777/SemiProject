@@ -24,8 +24,7 @@ public class EmailDuplicateCheckAction extends AbstractController {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("emailExists", emailExists);
 			
-			String json = jsonObj.toString(); 
-			System.out.println(json);
+			String json = jsonObj.toString(); 	
 			
 			request.setAttribute("json", json);
 			super.setViewPage("/WEB-INF/jsonview.jsp");

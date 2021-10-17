@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
@@ -9,15 +9,18 @@
 <link rel="stylesheet" type="text/css" href="/css/mypage/mypageStyle.css" />
 <title>마이페이지 - 배송지 등록</title>
 <style type="text/css">
-/* 표 가운데 정렬 , 글자색, 글자크기*/
-table td {
-	text-align: left;
-	color:#616161;
-	font-size: 15px;
-}
-
 /* 표 첫번째열 가로넓이, 색, 정렬 등 */
 table td:nth-child(1) {
+	width:15%;
+	background-color: #f9f9f9;
+	text-align: left;
+	font-weight: bold;
+	font-size: 10pt;
+	padding-left: 3%;
+}
+
+/* 표 항목 */
+.tdTitle{
 	width:15%;
 	background-color: #f9f9f9;
 	text-align: left;
@@ -71,68 +74,75 @@ table.table.btable > tbody > tr > td:nth-child(1){
 	font-size:8px; 
 	padding:2px 2px;
 }
-.payTable td:nth-child(3) {
-	width:15%;
-	background-color: #f9f9f9;
-	text-align: left;
-	font-weight: bold;
-	font-size: 10pt;
-	padding-left: 3%;
-}   
 </style>
 <div style="width:100%; height:10px; text-align:center; padding-top:10px;"></div>
+
 <%-- ////내용 시작//// --%>	
-<div class="container p-5">	
+<section>
+    <div class="container p-5">
+    <form id="orderForm">
+    	<input type="hidden" id="order_totalAmount" value="">
+    </form>
 	<p style="margin-bottom:8px; font-weight: bold; color: black; text-align: center; font-size: 14pt;">주문서 작성</p>
-	<p class="text-secondary" style="margin-bottom:25px; text-align: center; font-size: 9pt;">*상품의 옵션 및 수량 변경은 상품상세 또는 장바구니에서 가능합니다.</p>
-	
+	<p class="text-secondary" style="margin-bottom:2px; text-align: center; font-size: 9pt;">*상품의 옵션 및 수량 변경은 상품상세 또는 장바구니에서 가능합니다.</p>
+	<p class="text-secondary" style="margin-bottom:25px; text-align: center; font-size: 9pt;">*할인된 제품은 적립금이 없습니다.</p>
 	<%-- 장바구니 표 --%>
-		<table class="table btable">	
+		<table class="table btable" id="table">			
 		    <tr style="background-color: #f9f9f9;">
-		      <td><input type='checkbox'name='select'value='selectall'onclick='selectAll(this)'/></td>
+		      <td></td>
 		      <td>이미지</td>
 		      <td>상품정보</td>
 		      <td>판매가</td>
 		      <td>수량</td>
 		      <td>적립금</td>
-		      <td>선택</td>
 		      <td>합계</td>
 		    </tr>	 
-		  <tbody>		  	
-		    <tr>
-		      <td><input type='checkbox'name='select'value='select'/></td>
-		      <td>상품이미지</td>
-		      <td>상품정보</td>
-		      <td><input type="hidden" name="price" id="price1" class="price" value="20000"><fmt:formatNumber value="20000" pattern="#,###"/>원</td>
-		      <td>	      
-  				<input type="text" class="spinner" id="spinner" name="count" class="count" maxlength='2' value=3 style="border:0 solid black;" readonly/> 				
-			  </td>
-		      <td>적립금</td>
-		      <td>[조건]</td>
-		      <td><span id="totalAmount">원</span></td>		      
-		    </tr>		   
-		   <tr>
-		      <td><input type='checkbox'name='select'value='select'/></td>
-		      <td>상품이미지</td>
-		      <td>상품정보</td>
-		      <td><input type="hidden" name="price" id="price2" class="price" value="13500"><fmt:formatNumber value="13500" pattern="#,###"/>원</td>
-		      <td>		       	
-  				<input type="text" class="spinner" id="spinner2" name="count" maxlength='2' value=1 style="border:0 solid black;" readonly/>
-			  </td>
-		      <td>적립금</td>
-		      <td>[조건]</td>
-		      <td><span id="totalAmount"></span></td>		      
-		    </tr>
-		    <tr>
-		    	<td colspan="8" style="text-align:right;"></td>
-		    </tr>
-		    <tr>
-		   		 <td colspan="8" style="font-size:12px; color:red;">*5만원 이상 주문시 배송비 무료입니다. (기본 배송비 : 3500원)</td>		    
-		    </tr>
-		  </tbody>
+		  <tbody>
+		  <%-- 장바구니에서 주문페이지로 정보가 담긴 경우 --%>
+		  	<c:forEach var="basketList" items="${requestScope.basketList}" varStatus="status">
+			  	<tr>
+	  	  		  <td>
+					 <button type="button" class="btn btn-secondary btn-sm" style="font-size: 8pt; padding: 5px;" onclick ="deleteBasket(this)">삭제</button>
+				  </td>
+			      <td><a href="/product/prodDetail.go?prod_code=${basketList.prod_code}"><img src="/img_prod/${basketList.prod_img_url}" width=60px;/></a></td>
+			      <td>${basketList.prod_exp}</td>
+			      <td>
+			       <span class="price">
+			        <c:choose>
+			        	<c:when test="${basketList.discount_price eq -9999}"><fmt:formatNumber value="${basketList.prod_price}" type="number"></fmt:formatNumber></c:when>
+			        	<c:otherwise><fmt:formatNumber value="${basketList.discount_price}" type="number"></fmt:formatNumber></c:otherwise>
+			        </c:choose>
+			        </span>원		       
+			      </td>
+			      <td>			       	
+	  				<input type="text" class="goods_qy" id="goods_qy${status.index}" name="goods_qy" value="${basketList.goods_qy}" style="border:none; width:20px;" readOnly/>
+			      <td>
+			       <span class="point" id="point${status.index}">
+			      	<c:choose>					        	
+			        	<c:when test="${basketList.discount_price eq -9999}">
+			        		<fmt:formatNumber value="${basketList.prod_price*basketList.goods_qy/100}" type="number"></fmt:formatNumber>
+			        	</c:when>
+			        	<c:otherwise>0</c:otherwise>
+			        </c:choose>
+			        </span>원
+			      </td>
+			      <td>
+			      <span class="priceToT" id="priceTot${status.index}">
+			      	<c:choose>					        	
+			        	<c:when test="${basketList.discount_price eq -9999}">
+			        		<fmt:formatNumber value="${basketList.prod_price*basketList.goods_qy}" type="number"></fmt:formatNumber>
+			        	</c:when>
+			        	<c:otherwise><fmt:formatNumber value="${basketList.discount_price*basketList.goods_qy}" type="number"></fmt:formatNumber></c:otherwise>
+			        </c:choose>
+			        </span>원
+			      </td>					      	      		      
+			    </tr>
+			   </c:forEach>
+		    </tbody>
 		</table>
+		
 	<%-- 배송 주소록 관리 표 --%>
-	<div style="float:left; padding-bottom:15px; font-weight: bold;">배송정보</div>
+	<div style="float:left; padding-bottom:15px; font-weight: bold; font-size:20px;">배송정보</div>
 	<div style="float:right; padding-bottom:15px;">*필수입력사항</div>
 	<table class="table">
 		<tr>
@@ -152,7 +162,7 @@ table.table.btable > tbody > tr > td:nth-child(1){
 		<table class="table">			
 		    <tr>
 		      <td>배송지명 *</td>
-		      <td><input id='delivername' name="delivername" maxlength = "15" class="form-control col-sm-3" type='text' value = "${defaultAddr.delivername}"/></td>
+		      <td><input id='delivername' name="delivername" maxlength = "15" class="form-control col-sm-3 required" type='text' value = "${defaultAddr.delivername}"/></td>
 		    </tr>
 			<tr>
 		      <td>성명 *</td>
@@ -237,18 +247,15 @@ table.table.btable > tbody > tr > td:nth-child(1){
 		</table>		
   	</form>
   	<div class="title">
-        <p style="font-weight: bold;">결제 예정 금액</p>
+        <p style="font-weight: bold; font-size:20px;">결제 예정 금액</p>
     </div>
 	<div class="totalArea">
 		<table class="table">			
 			<thead style="text-align:center;">
 				<tr>
-					<th><strong>총 주문 금액</strong>						
-					</th>
-					<th>
-						<strong>배송비</strong>
-					</th>
-					<th><strong>총 결제예정 금액</strong></th>
+					<th class="col-md-4"><strong>총 주문 금액</strong>						</th>
+					<th class="col-md-4"><strong>배송비</strong></th>
+					<th class="col-md-4"><strong>총 결제예정 금액</strong></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -270,44 +277,38 @@ table.table.btable > tbody > tr > td:nth-child(1){
 					</td>
 				</tr>
 			</tbody>
-		</table>
-	</div>
-		<div class="gMerge">
-			<table class="table">			
-				<!-- 적립금 -->
-				<tbody>
-					<tr>
-						<td>적립금
-							<p style="font-size:11px">(보유 적립금 : <span id="point"></span>원)</p>
-						</td>					
-						<td>						
-							<input id="inputPoint" name="inputPoint" class="form-control col-sm-2" placeholder="" size="10" value="" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
-							<ul style="list-style: none; padding-left: 3px; font-size:12px;">
-								<li>적립금은 최소 1,000 이상일 때 결제가 가능합니다.</li>
-								<li id="mileage_max_unlimit" class="displaynone">최대 사용금액은 제한이 없습니다.</li>
-								<li id="mileage_max_limit" class="">1회 구매시 적립금 최대 사용금액은 0원입니다.</li>
-								<li>적립금으로만 결제할 경우, 결제금액이 0으로 보여지는 것은 정상이며 [결제하기] 버튼을 누르면 주문이 완료됩니다.</li>								
-							</ul>
-						</td>
-					</tr>
-				</tbody>
-				<!-- 예치금 -->			
 			</table>
-		</div>
-	<!-- 결제 -->
-	<table class="table payTable">
-		<tr>
-			<td>총 적립금</td>
-			<td style="text-align:center;">111111원</td>
-			<td>총 결제금액</td>
-			<td style="text-align:center;"><span id="totalAmount"></span>111111원</td>
-			<td style="float:right"><a href="#none" id="btn_payment" class="btn btn-secondary" style="font-size:16px; font-weight:700; padding:10px 20px;width:170px; ">결제하기</a></td>
-		</tr>
-	</table>
+			<table class="table">
+			<tbody>
+				<tr>
+					<td class="col-md-2">적립금
+						<p style="font-size:11px">(보유 적립금 : <span id="point">${sessionScope.loginuser.point}</span>원)</p>
+					</td>					
+					<td class="col-md-5">
+					<div class="form-inline pb-1">					
+						<input id="inputPoint" name="inputPoint" class="form-control col-sm-2" placeholder="" size="10" value="" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+						<button type="button" class="btn btn-light  btn-sm" id="usePoint" style="margin-left:5px">사용</button>
+					</div>
+						<ul style="list-style: none; padding-left: 5px; font-size:12px;">
+							<li id="mileage_max_unlimit" class="displaynone">최대 사용금액은 제한이 없습니다.</li>
+							<li>적립금으로만 결제할 경우, 결제금액이 0으로 보여지는 것은 정상이며 [결제하기] 버튼을 누르면 주문이 완료됩니다.</li>								
+						</ul>
+					</td>
+					<td class="tdTitle col-md-1" style="font-size:11px;">총 적립금</td>
+					<td style="text-align:center;" class="col-md-3"><span id="totalPoint"></span>원</td>
+					<td class="col-md-1"><a href="javascript:pay();" id="btn_payment" class="btn btn-secondary" style="font-size:16px; font-weight:700; padding:10px 20px;width:170px;">결제하기</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>		
+	</div>
+</section>	
+
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>	
 <script>
 $(function(){
 	
+	// 주소록 
 	$('input[name="addr"]').click(function(){
 		 
 		  if($(this).prop('checked')){
@@ -344,6 +345,8 @@ $(function(){
 		   } 
 	});
 	
+	// 총 결제금액 불러오기
+	calTotalAmount();
 }); 
 // 다음 주소 API
 function execDaumPostcode() {
@@ -416,8 +419,95 @@ function selectAll(selectAll)  {
 		checkbox.checked = selectAll.checked;
 	})
 }
-function getAddr(ano){
+//장바구니 삭제
+function deleteBasket(obj){
 	
+	
+	var tr = obj.parentNode.parentNode;
+    tr.parentNode.removeChild(tr);
+
+    calTotalAmount();
+}
+// 총 값 계산
+function calTotalAmount(){
+	
+	let totalPoint = 0;
+	//총 적립금
+	$(".point").each((index, item) => {
+				
+		var point = parseInt($(item).text().replace(/,/g , ''));
+		totalPoint = totalPoint + point;
+	
+	});
+	
+	$("#totalPoint").text(totalPoint);
+	
+	// 총 주문 금액
+	let totalPrice = 0;
+	$(".priceToT").each((index, item) => {
+		
+		var priceToT = parseInt($(item).text().replace(/,/g , ''));
+		totalPrice = totalPrice + priceToT;
+		
+	});
+	
+	
+	$("#totalPrice").text(totalPrice);
+	
+	// 배송비 설정하기
+	let fee = 3500;
+	if(totalPrice >= 50000){
+		fee = 0;
+	} 
+	$("#fee").text(fee);
+	
+	// 총 결제금액
+	/* var totalAmount = 0;
+	$(".priceToT").each((index, item) => {
+		
+		var priceToT = parseInt($(item).text().replace(/,/g , ''));
+		totalAmount = totalAmount + priceToT;
+		
+	}); */
+	$("#totalAmount").text(totalPrice + fee);
+	
+	//var vv = $("#totalAmount").text();
+	//$("#order_totalAmount").val(vv);
+}
+
+// 적립금 사용
+$("#usePoint").click(function() {
+	
+	var point = parseInt($("#point").text());
+	var inputPoint = Math.floor(parseInt($("#inputPoint").val()));
+	
+	if(inputPoint > point){
+		alert('적립금이 부족합니다.');
+		$("#inputPoint").val("");
+		return;
+	}
+	
+	$("#totalAmount").text(parseInt($("#totalAmount").text()) -  inputPoint);
+	$("#point").text(point-inputPoint);
+
+});
+
+function pay(){
+	
+	
+	var arr_requiredInfo = document.getElementsByClassName("required");
+	
+	var boolFlag = false;
+	for(var i=0; i<arr_requiredInfo.length; i++){
+		var value = arr_requiredInfo[i].value;
+		if(value == "" || value == null){
+			alert("필수사항 입력");
+			boolFlag = true;
+			break;
+		}
+	}
+	// orderForm . PG사에 보낼 폼데이터 설정하기
+	alert("결제!" + $("#order_totalAmount").val());
 }
 </script>				 
 <jsp:include page="/WEB-INF/include/footer.jsp"/>

@@ -23,6 +23,4 @@ public interface InterProductDAO {
 	// 카테고리 이름(중간 카테고리 이름설정)
 	String categoryName(String sort_code) throws SQLException;
 
-	// 상품 정보 가져오기
-	ProductVO getProductInfo(String prod_code) throws SQLException;
 }

@@ -15,7 +15,7 @@ body {
               min-height: 1024px; }  
 
 #footer		{ background-color: #999999; 
-              height: 100px; }
+              height: 1500px; }
 
 td, th, input, select, textarea, p {
 	padding: 0.2%; /* 안쪽 여백 */

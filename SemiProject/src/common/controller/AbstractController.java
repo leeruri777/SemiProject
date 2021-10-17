@@ -38,6 +38,7 @@ public abstract class AbstractController implements InterCommand{
 		
 		return check;
 	}
+
 	public void checkLoginAuth(HttpServletRequest request, String view) {
 		
 		HttpSession session = request.getSession();
@@ -76,6 +77,7 @@ public abstract class AbstractController implements InterCommand{
 			return;
 		}
 	}
+   
 	public void getCategory(HttpServletRequest request) throws SQLException {
 		
 		InterProductDAO pdao = new ProductDAO();
