@@ -26,7 +26,7 @@ public class PurchaseEndController extends AbstractController {
 				
 				String coinmoney = request.getParameter("totalAmount"); //결제할 금액 알아오기
 				
-				request.setAttribute("totalAmount", totalAmount); //span태그의 총결제금액
+				//request.setAttribute("totalAmount", totalAmount); //span태그의 총결제금액
 				request.setAttribute("email", loginuser.getEmail()); // MemberDAO의 메소드에서 얻어옴. return memeber인 것. loginuser.getEmail() 복호화되어진 로그인한 유저의 이메일 얻어오기
 				request.setAttribute("name", loginuser.getName());
 				request.setAttribute("mobile", loginuser.getMobile());

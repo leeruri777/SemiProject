@@ -7,7 +7,7 @@ SELECT * FROM tabs;
 SELECT * FROM TBL_MEMBER
 SELECT * FROM TBL_LOGINHISTORY
 SELECT * FROM TBL_PROD
-SELECT * FROM TBL_STOCK
+SELECT * FROM TBL_BASKET
 
 
 select *
@@ -92,5 +92,8 @@ SELECT * FROM ORDER_SETLE;
  values( sysdate, '허니버터칩', 30);
  
  */
-
-
+-- 적립금은 prod_price의 몇퍼센트로 치기. 상품명. 적립금때문에 조인할필요는 없을듯
+select order_dt, 적립금, prod_name
+from order_settle
+where userid = " and 상태 ="완료";
+order by order_d desc;
