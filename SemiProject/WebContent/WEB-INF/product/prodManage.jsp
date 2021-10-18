@@ -206,7 +206,7 @@
 				
 				var frm = document.one_prod_frm;
 				
-				frm.one_prod_code.value = $(this).find(".prod_code").text();
+				frm.one_prod_code.value = $(this).parent().parent().find(".prod_code").text();
 				
 			//	alert(frm.one_prod_code.value + "임");
 				
@@ -279,14 +279,14 @@
 	
 				      	
 				      		
-				      		<label class="col-4" for="delCate" id="del">삭제할 카테고리 :</label>
-							    	<select id="delCate" class="mx-0 px-0" name="sort_code">
+				      		<label class="col-4 text-right" for="delCate" id="del">삭제할 카테고리 :</label>
+							    	<select id="delCate" class="mx-0 px-0 col-7" name="sort_code">
 							    		<c:forEach var="sort" items="${sortList}">
 							    			<option value="${sort.sort_code}">${sort.sort_name}</option>
 							    		</c:forEach>
 							    	</select>
 							    	<br>
-							    	<p style="color: red; font-size: 8pt;">*카테고리 삭제 시 해당 카테고리에 속한 상품도 삭제됩니다</p>
+							    	<p style="color: red; font-size: 8pt;" class="text-center my-1">*카테고리 삭제 시 해당 카테고리에 속한 상품도 삭제됩니다</p>
 								
 					</div>			     	         							
 			      
@@ -492,7 +492,7 @@
 							<c:forEach var="mprodmap" items="${sProductList}">
 								
 									<tr class="row w-100 px-0 mx-0 one_prod">
-										<form>	
+									<form>	
 											<td class="col-sm-2 mx-0 px-0">
 												<img src="../img_prod/${mprodmap.mivo.prod_img_url}" class="img-fluid mx-0 px-0">
 											</td>
