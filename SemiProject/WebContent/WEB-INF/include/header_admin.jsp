@@ -73,8 +73,9 @@
                             </a>
                             <div class="collapse" id="collapseLayouts2" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="#">상품 등록</a>
-                                    <a class="nav-link" href="#">상품 관리</a>
+                                    <a class="nav-link" href="/product/prodRegister.go">상품 등록</a>
+                                    <a class="nav-link" href="/product/prodManage.go">상품 관리</a>
+                                    <a class="nav-link" href="/product/adManage.go">배너 관리</a>
                                 </nav>
                             </div>
                             
