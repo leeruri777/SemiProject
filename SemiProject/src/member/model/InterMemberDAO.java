@@ -51,6 +51,6 @@ public interface InterMemberDAO {
 		// 로그인한 사용자의 기본 배송지 가져오기
 		AddressVO getAddressL(String userid) throws SQLException;
 		// 배송지 정보 수정하기
-		int updateAddress(AddressVO addressVo) throws SQLException;
+		int updateAddress(AddressVO addressVo) throws SQLException;		
 }
 

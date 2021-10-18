@@ -1,19 +1,24 @@
 package board.member;
 
-import java.util.Date;
 
 // num,title,writer,content,regdate,cnt
 public class BoardVO {
+	
 	private int num;
 	private String title;
 	private String writer;
 	private String content;
-	private Date regdate;
+	private String regdate;
 	private int cnt;
+	
+
+	
+	
+	
 	
 	public BoardVO() {}
 	
-	public BoardVO(int num, String title, String writer, String content, Date regdate, int cnt) {
+	public BoardVO(int num, String title, String writer, String content, String regdate, int cnt) {
 		super();
 		this.num = num;
 		this.title = title;
@@ -46,10 +51,10 @@ public class BoardVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getRegdate() {
+	public String getRegdate() {
 		return regdate;
 	}
-	public void setRegdate(Date regdate) {
+	public void setRegdate(String regdate) {
 		this.regdate = regdate;
 	}
 	public int getCnt() {
@@ -64,6 +69,10 @@ public class BoardVO {
 		return "BoardVO [num=" + num + ", title=" + title + ", writer=" + writer + ", content=" + content + ", regdate="
 				+ regdate + ", cnt=" + cnt + "]";
 	}
+
+	
+
+	
 	
 	
 	
