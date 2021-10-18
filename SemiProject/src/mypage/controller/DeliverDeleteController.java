@@ -39,13 +39,19 @@ public class DeliverDeleteController extends AbstractController {
 					}
 				}
 	
+				String type = request.getParameter("type");
+				
 				if(n == 0) {
+					
 					request.setAttribute("message", "삭제가 취소되었습니다.");
-					request.setAttribute("loc", "/mypage/deliveraddr.go");
+					request.setAttribute("loc", "/mypage/deliveraddr.go?type="+type);
+														
 					super.setViewPage("/WEB-INF/msg.jsp");
 				} else {
-					super.setRedirect(true);
-					super.setViewPage("/mypage/deliveraddr.go");
+					
+					super.setRedirect(true);					
+					super.setViewPage("/mypage/deliveraddr.go?type="+type);
+
 				}
 			}
 		}
