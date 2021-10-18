@@ -81,7 +81,7 @@ public class ProductManageAction extends AbstractController {
 	        // super.setRedirect(false);
 	        super.setViewPage("/WEB-INF/msg.jsp");
 			
-			}
+		}
 		
 			
 			/////////////////////////////
