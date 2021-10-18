@@ -43,6 +43,6 @@ public interface InterMemberDAO {
 		// 배송지 정보 가져오기
 		AddressVO getAddress(Long ano, String userid) throws SQLException;
 		// 배송지 정보 수정하기
-		int updateAddress(AddressVO addressVo) throws SQLException;
+		int updateAddress(AddressVO addressVo) throws SQLException;		
 }
 

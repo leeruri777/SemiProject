@@ -22,7 +22,15 @@
 <p>등록일자:${vo.regdate}</p>
 <p>조회수:${vo.cnt}</p>
 
-<a href="${pageContext.request.contextPath}/board/editForm.go?num=${vo.num}"><button>수정</button></a>
-<a href="${pageContext.request.contextPath}/board/deleteForm.go?num=${vo.num}"><button>삭제</button></a>
+<c:if test="${sessionScope.loginuser != null and sessionScope.loginuser.userid == 'admin'}">	
+	<button onclick="javascript:location.href='${pageContext.request.contextPath}/board/editForm.go?num=${vo.num}'">수정</button>
+</c:if>
+
+<c:if test="${sessionScope.loginuser != null and sessionScope.loginuser.userid == 'admin'}">	
+	<button onclick="javascript:location.href='${pageContext.request.contextPath}/board/deleteForm.go?num=${vo.num}'">삭제</button>
+</c:if>
+
+<!--  <a href="${pageContext.request.contextPath}/board/editForm.go?num=${vo.num}"><button>수정</button></a>-->
+<!-- <a href="${pageContext.request.contextPath}/board/deleteForm.go?num=${vo.num}"><button>삭제</button></a>-->
 </body>
 </html>

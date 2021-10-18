@@ -1,4 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="board.member.*, java.util.List"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%
+	MypageDAO mdao = new MypageDAO();
+	List<MypageVO> as = mdao.selectpage();
+	pageContext.setAttribute("as", as);
+%>   
 
 <jsp:include page="/WEB-INF/include/header.jsp"/>
 <jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
@@ -29,29 +37,11 @@ table > tbody > tr > td:nth-child(5){
 	width: 10%;
 }	
 </style>
-<%-- ////내용 시작//// --%>	
+<%-- ////내용 시작//// --%>
+
+	
 <div class="container p-5" >		
-	<%-- 검색하기 --%>
-	<div class="pt-4 pb-5">
-	  <div class="card">
-	    <div class="card-body ">
-	    <select class="" style="font-size: 11pt;">
-		    	<option value="">제목+내용</option>
-		    	<option value="">제목</option>
-		    	<option value="">내용</option>
-		    	<option value="">작성자</option>
-		</select>	
-		&nbsp;	
-		 <tr>
-	         <td>
-	           <input type="text" id=""  style="height: 25px; width: 105px; font-size: 11pt;">
-	         </td>
-        </tr>
-		&ensp;
-		<button type="button" onclick="" style="border: solid 1px gray; border-radius: 5px; font-size: 10pt; padding: 3px 8px;">검색</button>	
-	    </div>
-	  </div>
-	</div>
+	
 	<%-- 게시물 --%>
 		<table class="table">		  
 		    <tr style="background-color: #f9f9f9;">
@@ -60,30 +50,21 @@ table > tbody > tr > td:nth-child(5){
 		      <td>작성일</td>
 		      <td>작성자</td>
 		      <td>조회수</td>
-		    </tr>	  
-		  <tbody>
-		    <tr>
-		      <td>1</td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>		     
 		    </tr>
+		    <c:forEach var="mypage" items="${as}">
+				
+				  
+		  
 		    <tr>
-		      <td>2</td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>	      
+		      <td>${mypage.myno}</td>
+		      <td><a href="${pageContext.request.contextPath}/board/mypage.go?no=${mypage.myno}">${mypage.mytitle}</a></td>
+		      <td>${mypage.myday}</td>
+		      <td>${mypage.fk_userid}</td>
+		      <td>${mypage.myview}</td>
+		      
 		    </tr>
-		    <tr>
-		      <td>3</td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		      <td></td>
-		    </tr>
-		  </tbody>
+		    </c:forEach>
+		  
 		</table>		
 		<br>	
 	<%-- 페이지네이션 --%>	
