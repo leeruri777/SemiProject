@@ -74,22 +74,28 @@ public class ProductDAO_JDH implements InterProductDAO_JDH {
 	                "        from "+
 	                "        ( "+
 	                "            select prod_code "+
-	                "            from tbl_prod "+
-	                "            where fk_sort_code = ? "+
-	                "        ) M "+
-	                "        join tbl_prod_info I "+
-	                "        on M.prod_code = I.fk_prod_code "+
-	                "        where prod_sale != 0 "+
-	                "        order by fk_prod_code desc "+
-	                "    ) A "+
-	                "    join "+
-	                "    ( "+
-	                "    select distinct fk_prod_code, first_value(prod_img_url) over(partition by fk_prod_code order by prod_img_code) AS prod_img_url "+
-	                "    from tbl_prod_img "+
-	                "    ) G "+
-	                "    on A.prod_code = G.fk_prod_code ";
+	                "            from tbl_prod ";
+	                
+	                
+	          if(sort_code != null && sort_code.trim() != "") 
+	                sql += "            where fk_sort_code = ? ";
+	          
+	          sql += "        ) M "+
+	                 "        join tbl_prod_info I "+
+	                 "        on M.prod_code = I.fk_prod_code "+
+	                 "        where prod_sale != 0 "+
+	                 "        order by fk_prod_code desc "+
+	                 "    ) A "+
+	                 "    join "+
+	                 "    ( "+
+	                 "    select distinct fk_prod_code, first_value(prod_img_url) over(partition by fk_prod_code order by prod_img_code) AS prod_img_url "+
+	                 "    from tbl_prod_img "+
+	                 "    ) G "+
+	                 "    on A.prod_code = G.fk_prod_code ";
 	          
 	                pstmt = conn.prepareStatement(sql);
+	                
+	          if(sort_code != null && sort_code.trim() != "") 
 	                pstmt.setString(1, sort_code);
 	                
 	                rs = pstmt.executeQuery();

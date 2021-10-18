@@ -329,7 +329,7 @@ $(document).ready(function(){
 	                    </div>
                     </c:forEach>
                     
-             	</div>
+             	  </div>
              
              <c:if test="${not empty reviewList}">
              	

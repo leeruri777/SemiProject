@@ -423,11 +423,11 @@
 				
 				<form name="productFrm" class="row w-100 my-3">
 					
-					<div class="col-md-2 mb-2 pl-4">
+					<div class="col-md-3 mb-2 pl-4">
 						<button type="button" class="btn categoryDelete btn-sm btn-warning " data-toggle="modal" data-target="#delCateModal">카테고리삭제</button>
 					</div>
 					
-					<div class="col-md-7 mb-2 pl-4" align="center">
+					<div class="col-md-6 mb-2 pl-4" align="center">
 						<select id="searchType" name="searchType">
 							<c:if test="${'fk_prod_code' eq searchType}">	
 								<option value="prod_name">상품명</option>					
