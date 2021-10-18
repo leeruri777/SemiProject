@@ -87,7 +87,7 @@
 		
 		<button type="button" onclick="goSearch();" style="margin-right: 30px;">검색</button>
 		
-		<span style="color: red; font-weight: bold; font-size: 12pt;">페이지당 회원명수-</span>
+		<span style="color: red; font-weight: bold; font-size: 12pt;">페이지당 게시글수-</span>
       	<select id="sizePerPage" name="sizePerPage">
          <option value="10">10</option>
          <option value="5">5</option>
