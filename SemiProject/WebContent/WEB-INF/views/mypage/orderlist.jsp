@@ -30,7 +30,7 @@ table td {
 	<div class="pt-4 pb-5">	
 	  <div class="card">
 	    <div class="card-body">
-	    <form id="searchForm" name="searchForm">	      
+	    <form id="searchFrm" name="searchFrm">	      
 		      <select style="font-size: 11pt;" id="status" name="status">
 			    	<option value="all">전체 주문처리상태</option>
 			        <option value="beforedeposit">입금전</option>
@@ -170,11 +170,10 @@ function search(){
 			return;
 		}
 	}
-	console.log('fd',fromDate);
-	console.log('td',fromDate);
 	
-	var frm = document.searchForm;
+	var frm = document.searchFrm;
 	frm.action = '/mypage/orderlist.go';
+	
 	frm.submit();
 }
 $(function() {

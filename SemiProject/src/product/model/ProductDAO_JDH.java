@@ -74,11 +74,11 @@ public class ProductDAO_JDH implements InterProductDAO_JDH {
 	                "        from "+
 	                "        ( "+
 	                "            select prod_code "+
-	                "            from tbl_prod ";
+	                "            from tbl_prod where fk_sort_code != -9999 ";
 	                
 	                
 	          if(sort_code != null && sort_code.trim() != "") 
-	                sql += "            where fk_sort_code = ? ";
+	                sql += "            and fk_sort_code = ? ";
 	          
 	          sql += "        ) M "+
 	                 "        join tbl_prod_info I "+

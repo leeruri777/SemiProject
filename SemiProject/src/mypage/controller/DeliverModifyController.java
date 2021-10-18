@@ -25,13 +25,22 @@ public class DeliverModifyController extends AbstractController {
 			HttpSession session = request.getSession();
 			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 			String userid = loginuser.getUserid();
+			
+			String type = "";
+			
 			if("GET".equalsIgnoreCase(method)) {
 				
 				Long ano = Long.parseLong(request.getParameter("ano"));
 				AddressVO addressVo = mdao.getAddress(ano, userid);
 				request.setAttribute("addressVo", addressVo);
+				type = request.getParameter("type");
 				
-				setViewPage("/WEB-INF/views/mypage/deliverModify.jsp");
+				if("orderForm".equalsIgnoreCase(type)) {
+					setViewPage("/WEB-INF/views/order/deliverModify.jsp");
+				} else {
+					setViewPage("/WEB-INF/views/mypage/deliverModify.jsp");
+				}
+			
 			} else {			
 				
 				
@@ -61,17 +70,18 @@ public class DeliverModifyController extends AbstractController {
 			    
 				int result = mdao.updateAddress(addressVo);
 				int defaultChange = 0;
-				
+								
 				if(default_yn.equals("y")) {
 					defaultChange = mdao.changeAddressDefaultN(addressVo);
 				}
 				
-				if(result == 1) {
-					super.setRedirect(true);
-					super.setViewPage("/mypage/deliveraddr.go");
+				type = request.getParameter("type");
+				
+				if(result == 1) {					
+					super.setViewPage("/mypage/deliveraddr.go?type="+type);
 				} else {
 					request.setAttribute("message", "배송지 수정이 실패하였습니다.");
-					request.setAttribute("loc", "/mypage/deliveraddr.go");
+					request.setAttribute("loc", "/mypage/deliveraddr.go?type="+type);
 					
 					super.setViewPage("/WEB-INF/msg.jsp");
 				}
