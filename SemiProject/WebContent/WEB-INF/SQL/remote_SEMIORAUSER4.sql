@@ -114,10 +114,26 @@ from
           , order_no, order_dt, prod_name, prod_price, floor(prod_price/10000)*100 as addpoint
     from ORDER_SETLE
     where fk_user_id = 'admin'
+   
 ) V
-where RNO between 1 and 8; 
+where RNO between 1 and 8 
+order by order_dt desc;
 
 
+
+
+
+select order_dt, prod_name, prod_price, floor(prod_price/100)*100 as addpoint
+from
+(
+    select row_number() over(order by ORDER_NO asc) AS RNO 
+          , order_no, order_dt, prod_name, prod_price, floor(prod_price/100)*100 as addpoint
+    from ORDER_SETLE
+    where fk_user_id = 'admin'
+   
+) V
+where RNO between 1 and 8 
+order by order_dt desc;
 
 
 select order_dt, floor(prod_price/10000)*100 as addpoint, prod_name
@@ -130,7 +146,7 @@ from
 ) V
 where RNO between 1 and 8; -- ? ?
 
-
+/*
 select order_dt, floor(prod_price/10000)*100 as addpoint, prod_name
 from
 (
@@ -140,3 +156,27 @@ from
     where fk_user_id = ?
 ) V
 where RNO between ? and ?; 
+*/
+
+
+select count(*) --96
+from order_setle
+where fk_user_id = 'admin';
+
+
+select ceil(count(*)/to_number('10')), ceil(count(*)/to_number('5')), ceil(count(*)/to_number('3'))
+from order_setle
+where fk_user_id = 'admin';
+
+select ceil(count(*)/to_number('10'))
+ from order_setle 
+ where fk_user_id = 'admin';
+ 
+ 
+ select ceil(count(*)/10)
+ from order_setle 
+ where fk_user_id = 'admin';
+ 
+ select ceil(count(*)/10)
+ from order_setle 
+ where fk_user_id = ?
