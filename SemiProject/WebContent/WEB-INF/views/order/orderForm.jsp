@@ -105,7 +105,7 @@ table.table.btable > tbody > tr > td:nth-child(1){
 					 <button type="button" class="btn btn-secondary btn-sm" style="font-size: 8pt; padding: 5px;" onclick ="deleteBasket(this)">삭제</button>
 				  </td>
 			      <td><a href="/product/prodDetail.go?prod_code=${basketList.prod_code}"><img src="/img_prod/${basketList.prod_img_url}" width=60px;/></a></td>
-			      <td>${basketList.prod_exp}</td>
+			      <td>${basketList.prod_name}</td>
 			      <td>
 			       <span class="price">
 			        <c:choose>
