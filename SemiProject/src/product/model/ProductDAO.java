@@ -285,6 +285,21 @@ public class ProductDAO implements InterProductDAO {
 			
 			result = pstmt.executeUpdate();
 			
+			// 재고가 0이 아닐 경우 입고폐기테이블에 insert
+			if(prod.getProd_stock() != 0) {
+				
+				sql = " insert into tbl_inout_stock(inout_code,status,fk_prod_code,inout_qty) " + 
+					  " values(seq_inout_code.nextval, 1, ?, ?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod_code);
+				pstmt.setInt(2, prod.getProd_stock());
+				
+				result = pstmt.executeUpdate();
+				
+			}
+			
 			// 추가상품이 있을 경우 추가상품 테이블에 insert
 			if(paraMap.get("prod_plus_list") != null) {
 				
@@ -466,5 +481,227 @@ public class ProductDAO implements InterProductDAO {
       
       return categoryName;
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   
+    // 상품정보 update
+	@Override
+	public int updateProd(Map<String, Object> paraMap) throws SQLException {
+		
+		int result = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = "";
+			
+			int sort_code = 0;
+			
+			// 신규 카테고리 일 경우 카테고리 테이블 insert
+			if(paraMap.get("sort_name") != null) {
+				
+				sql = " select seq_sort_code.nextval from dual ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				rs = pstmt.executeQuery();
+				
+				rs.next();
+				
+				sort_code = rs.getInt(1);
+				
+				sql = " insert into tbl_sort(sort_code, sort_name) "
+					+ " values(?, ?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setInt(1, sort_code);
+				pstmt.setString(2, (String)paraMap.get("sort_name"));
+				
+				result = pstmt.executeUpdate();
+				
+			}
+			
+			// 상품 테이블에 update
+			ProductVO prod = (ProductVO)paraMap.get("prod");
+			
+			sql = " update tbl_prod set fk_sort_code = ? where prod_code = ? ";	
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(sort_code == 0) {
+				sort_code = prod.getSort_code();
+			}
+						
+			pstmt.setInt(1, sort_code);
+			pstmt.setString(2, prod.getProd_code());
+			
+			result = pstmt.executeUpdate();
+			
+			// 상품상세테이블에 update
+			sql = " update tbl_prod_info set prod_name = ?, prod_price = ?, prod_ice = ?, prod_plus = ?"
+				+ ", prod_select = ?, prod_sale = ?, discount_price = ?, prod_exp = ? where fk_prod_code = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			
+			pstmt.setString(1, prod.getProd_name());
+			pstmt.setInt(2, prod.getProd_price());
+			pstmt.setInt(3, prod.getProd_ice());
+			pstmt.setInt(4, prod.getProd_plus());
+			pstmt.setInt(5, prod.getProd_select());
+			pstmt.setInt(6, prod.getProd_sale());
+			pstmt.setInt(7, prod.getDiscount_price());
+			pstmt.setString(8, prod.getProd_exp());			
+			pstmt.setString(9, prod.getProd_code());
+			
+			result = pstmt.executeUpdate();
+
+			// 추가상품이 있을 경우 추가상품 테이블에 기존 것을 삭제하고 다시 insert
+			if(paraMap.get("prod_plus_list") != null) {
+				
+				sql = " delete from tbl_prod_plus where fk_prod_code = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod.getProd_code());
+				
+				for(String prod_plus_code : (ArrayList<String>)paraMap.get("prod_plus_list")) {
+					
+					sql = " insert into tbl_prod_plus(plus_code,fk_prod_code,fk_prod_plus_code) "
+						+ " values (seq_plus_code.nextval,?,?) ";
+					
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setString(1, prod.getProd_code());
+					pstmt.setString(2, prod_plus_code);
+					
+					result = pstmt.executeUpdate();
+					
+				}
+				
+			}
+						
+			// 골라담기상품이 있을 경우 골라담기 테이블에 기존 것을 삭제하고 다시 insert
+			if(paraMap.get("prod_select_list") != null) {
+				
+				sql = " delete from tbl_prod_select where fk_prod_code = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod.getProd_code());
+				
+				for(String prod_select_code : (ArrayList<String>)paraMap.get("prod_select_list")) {
+					
+					sql = " insert into tbl_prod_select(select_code,fk_prod_code,fk_prod_select_code) "
+						+ " values (seq_select_code.nextval,?,?) ";
+					
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setString(1, prod.getProd_code());
+					pstmt.setString(2, prod_select_code);
+					
+					result = pstmt.executeUpdate();
+					
+				}
+				
+			}
+			
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
+	
+	///////////////////////////////////////////////////////////////////////////
+	
+	// 타이틀이미지 update
+	@Override
+	public int updateTitle(List<String> titleimglist, String prod_code) throws SQLException {
+		
+		int result = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_prod_img where fk_prod_code = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, prod_code);
+			
+			result = pstmt.executeUpdate();			
+
+			// 타이틀 이미지 테이블에 insert			
+			for(String titleimg : titleimglist) {
+				
+				sql = " insert into tbl_prod_img(prod_img_code,fk_prod_code,prod_img_url) "
+					+ " values (seq_prod_img_code.nextval,?,?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod_code);
+				pstmt.setString(2, titleimg);
+				
+				result = pstmt.executeUpdate();
+				
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
+	
+	//////////////////////////////////////////////////////////////////////////
+	
+	// 상세이미지 update
+	@Override
+	public int updateDetail(List<String> detailimglist, String prod_code) throws SQLException {
+
+		int result = 0;
+		
+		try {
+
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_prod_img_detail where fk_prod_code = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, prod_code);
+			
+			result = pstmt.executeUpdate();	
+
+			// 상세 이미지 테이블에 insert			
+			for(String detailimg : detailimglist) {
+				
+				sql = " insert into tbl_prod_img_detail(prod_img_detail_code,fk_prod_code,prod_img_detail_url) "
+					+ " values (seq_prod_img_detail_code.nextval,?,?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod_code);
+				pstmt.setString(2, detailimg);
+				
+				result = pstmt.executeUpdate();
+				
+			}
+			
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
 
 }

@@ -2,11 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/WEB-INF/include/header_admin.jsp"/>
 <style>
- .section{
- 	width : 90%;
- 	margin-left : 200px;
- 	margin-top : 100px;
- }
+a { 
+	text-decoration:none 
+} 
 </style>
 <section class="section">
 <div class="container-fluid px-4">
@@ -46,7 +44,7 @@
 		<tbody>
 			<c:forEach var="memberList" items="${requestScope.memberList}">
 				<tr>
-					<td>${memberList.userid}</td>
+					<td><a href="/admin/orderList.go?userid=${memberList.userid}">${memberList.userid}</a></td>
 					<td>${memberList.name}</td>
 					<td>${memberList.email}</td>
 					<td>${memberList.mobile}</td>

@@ -14,13 +14,19 @@ public class AdManageAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		InterProductDAO_KJH pdao = new ProductDAO_KJH();
+		String view = "/WEB-INF/product/adManage.jsp";
 		
-		List<Map<String, Object>> bannerList =  pdao.allBanner();
+		super.checkAdministration(request, view);
 		
-		request.setAttribute("bannerList", bannerList);
+		if(view.equals(super.getViewPage())) {
 		
-		super.setViewPage("/WEB-INF/product/adManage.jsp");
+			InterProductDAO_KJH pdao = new ProductDAO_KJH();
+			
+			List<Map<String, Object>> bannerList =  pdao.allBanner();
+			
+			request.setAttribute("bannerList", bannerList);
+		
+		}
 		
 	}
 

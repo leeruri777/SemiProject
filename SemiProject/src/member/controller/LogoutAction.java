@@ -15,7 +15,8 @@ public class LogoutAction extends AbstractController {
 		session.invalidate();
 		
 		super.setRedirect(true);
-		super.setViewPage("/");
+		super.setViewPage(request.getContextPath() + "/main.go");
+		
 	}
 
 }

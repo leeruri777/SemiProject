@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <style>	
 /* 상단 네비게이션바 간격 */
-.navbar-nav > li{ 
+.mypageNav > li{ 
   	padding-left:30px;
   	padding-right:30px;
 }	
@@ -16,11 +16,10 @@ table > tbody:nth-child(1) > tr > td {
 }
 </style>
 
-<div style="width:100%; height:60px; text-align:center; padding-top:60px;">
-</div>
-<nav class="navbar navbar-expand-sm bg-white text-secondary" style="border-top: 1px solid #d9d9d9; border-bottom: 1px solid #d9d9d9;">
+<div style="width:100%; height:60px; text-align:center; padding-top:20px;"></div>
+<nav class="navbar navbar-expand-sm bg-white text-secondary" style="border-top: 1px solid #d9d9d9; border-bottom: 1px solid #d9d9d9; text-align:center;">
 <!-- Links -->
-  <ul class="navbar-nav  ml-auto mr-auto">
+  <ul class="navbar-nav ml-auto mr-auto mypageNav">
 	    <li class="nav-item">
 	    	<a class="nav-link text-secondary" id="navcolor" href="/mypage/basket.go">장바구니</a>
 	     </li>
