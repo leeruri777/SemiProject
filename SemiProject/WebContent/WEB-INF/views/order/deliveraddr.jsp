@@ -72,7 +72,6 @@ div.ec-base-help {
 			      <td>${addrList.address}&nbsp;${addrList.detailaddress}&nbsp;${addrList.extraaddress}</td>
 			      <td>
 			      	<button type="button" onclick="location.href = '/mypage/deliverModify.go?type=orderForm&ano=${addrList.ano}' " class="btn btn-light" style="font-size: 9pt; padding: 3px 8px;">수정</button>
-			      	<button type="button" onclick="" class="btn btn-secondary" style="font-size: 9pt; padding: 3px 8px;">적용</button>
 			       </td>	      
 			    </tr>
 		  	</c:forEach>		  

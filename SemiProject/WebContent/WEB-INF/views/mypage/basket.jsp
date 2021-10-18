@@ -57,7 +57,7 @@ table.table.btable > tbody > tr > td:nth-child(1){
 			  	  		<input type="hidden" class="prod_stock" id="prod_stock${status.index}" name="prod_stock" value="${basketList.prod_stock}"/>
 			  	  		  <td><input type='checkbox' name='select' value="${basketList.basket_no}"/></td>
 					      <td><a href="/product/prodDetail.go?prod_code=${basketList.prod_code}"><img src="/img_prod/${basketList.prod_img_url}" width=60px;/></a></td>
-					      <td>${basketList.prod_exp}</td>
+					      <td>${basketList.prod_name}</td>
 					      <td>
 					       <span class="price">
 					        <c:choose>

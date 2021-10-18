@@ -109,7 +109,7 @@ public class OrderDAO implements InterOrderDAO {
 	    	  
 	    	  conn = ds.getConnection();
 	    	  
-	    	  String sql = "select b.basket_no, v.prod_img_url, v.prod_exp, v.prod_price, v.discount_price, b.goods_qy, v.prod_stock, v.prod_code "
+	    	  String sql = "select b.basket_no, v.prod_img_url, v.prod_exp, v.prod_price, v.discount_price, b.goods_qy, v.prod_stock, v.prod_code, v.prod_name "
 	    		  	  	+ "from view_prodonedetail v, tbl_basket b "
 	    	  			+ "where b.fk_user_id=? and b.fk_prod_code = v.prod_code";	                
 	    	 
@@ -128,6 +128,7 @@ public class OrderDAO implements InterOrderDAO {
 	            basket.put("goods_qy", rs.getInt(6));
 	            basket.put("prod_stock", rs.getInt(7));
 	            basket.put("prod_code", rs.getString(8));
+	            basket.put("prod_name", rs.getString(9));
 	            
 	            basketList.add(basket);
 	         }
@@ -251,7 +252,7 @@ public class OrderDAO implements InterOrderDAO {
 	    	  
 	    	  for(int i=0; i<basket_no_arr.length; i++) {
 	    		  
-	    		  String sql = "select b.basket_no, v.prod_img_url, v.prod_exp, v.prod_price, v.discount_price, b.goods_qy, v.prod_stock, v.prod_code "
+	    		  String sql = "select b.basket_no, v.prod_img_url, v.prod_exp, v.prod_price, v.discount_price, b.goods_qy, v.prod_stock, v.prod_name "
 		    		  	     + "from view_prodonedetail v, tbl_basket b "
 		    	  			 + "where b.basket_no = ? and b.fk_user_id = ? and b.fk_prod_code = v.prod_code";	               
 		    	 
@@ -270,7 +271,7 @@ public class OrderDAO implements InterOrderDAO {
 		            basket.put("discount_price", rs.getInt(5));
 		            basket.put("goods_qy", rs.getInt(6));
 		            basket.put("prod_stock", rs.getInt(7));
-		            basket.put("prod_code", rs.getString(8));
+		            basket.put("prod_name", rs.getString(8));
 		            
 		            basketList.add(basket);
 		         }
@@ -297,7 +298,7 @@ public class OrderDAO implements InterOrderDAO {
 	    	  
 	    	  for(int i=0; i<arrProd_code.length; i++) {
 	    		  
-	    		  String sql = "select prod_img_url, prod_exp, prod_price, discount_price, prod_stock "
+	    		  String sql = "select prod_img_url, prod_exp, prod_price, discount_price, prod_stock, prod_name "
 	    		  			 + "from view_prodonedetail "
 	    		  			 + "where prod_code = ? ";             
 		    	 
@@ -315,6 +316,7 @@ public class OrderDAO implements InterOrderDAO {
 		            product.put("discount_price", rs.getInt(4));
 		            product.put("prod_stock", rs.getInt(5));
 		            product.put("goods_qy", Integer.parseInt(goods_qyAmount[i]));
+		            product.put("prod_name", rs.getString(6));
 		            
 		            prodList.add(product);
 		         }
