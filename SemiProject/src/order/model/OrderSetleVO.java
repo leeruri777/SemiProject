@@ -1,5 +1,6 @@
 package order.model;
 
+import java.util.Date;
 
 public class OrderSetleVO {
 	
@@ -136,7 +137,7 @@ public class OrderSetleVO {
 	public void setPayment_type(String payment_type) {
 		this.payment_type = payment_type;
 	}
-	
+	   
 	///////////////////////////////////////////////
 	/* 상품 하나당 적립되는 적립금 구하기 (페이징 처리를 한 회원 한명의 적립금 내역 보여주기 메소드에서 사용함)*/
 	private int addpoint;         // 상품가격의 1%
@@ -148,8 +149,6 @@ public class OrderSetleVO {
 	public int getAddpoint() {
 		return addpoint;
 	}
-	//////////////////////////////////////////////
-	
-	
-	
+	////////////////////////////////////////////// 
+	   
 }
