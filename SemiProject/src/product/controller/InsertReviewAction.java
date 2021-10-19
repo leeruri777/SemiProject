@@ -54,9 +54,8 @@ public class InsertReviewAction extends AbstractController {
 				String score = mtrequest.getParameter("score");
 				
 				String review_img = mtrequest.getFilesystemName("photo");
-				
-				
-			//	if(review_img == "") System.out.println("확인하려고");
+								
+			//	if(review_img == "") 
 			//	System.out.println(orderno + " , " + prod_code + " , " + userid + " , " + content + " , " + review_img + " , " + score);
 				
 				Map<String,String> paraMap = new HashMap<>();
