@@ -72,6 +72,7 @@ div.ec-base-help {
 			      <td>${addrList.address}&nbsp;${addrList.detailaddress}&nbsp;${addrList.extraaddress}</td>
 			      <td>
 			      	<button type="button" onclick="location.href = '/mypage/deliverModify.go?type=orderForm&ano=${addrList.ano}' " class="btn btn-light" style="font-size: 9pt; padding: 3px 8px;">수정</button>
+			      	<button type="button" onclick="changeAddress(${addrList.ano})" class="btn btn-secondary" style="font-size: 9pt; padding: 3px 8px;">적용</button>
 			       </td>	      
 			    </tr>
 		  	</c:forEach>		  
@@ -133,6 +134,12 @@ function deleteAddr(){
 	
 	document.body.appendChild(frm);
 	frm.submit();
+}
+// 배송지 적용하기
+function changeAddress(ano){
+	
+	opener.changeAddress(ano);
+	self.close();
 }
 </script>				 
 <!-- Bootstrap core JS-->

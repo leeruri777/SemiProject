@@ -55,7 +55,6 @@ public class OrderFormAction extends AbstractController {
 				String[] goods_qyAmount = goods_qy.split(",");
 				
 				List<Map<String, Object>> basketList = odao.getProdInfoByPno(arrProd_code, goods_qyAmount);
-				System.out.println(basketList);
 				
 				request.setAttribute("basketList", basketList);
 				super.setViewPage("/WEB-INF/views/order/orderForm.jsp");

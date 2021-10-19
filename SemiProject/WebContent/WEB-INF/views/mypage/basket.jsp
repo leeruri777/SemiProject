@@ -225,11 +225,11 @@ function calTotal(){
 	$("#totalPrice").text(totalPrice);
 	// 배송비(변수) 5만원 이상 무료.
 	var fee = 0;
-	if(totalPrice >= 50000){
+	if(totalPrice >= parseInt(${sessionScope.deliverFeeSet.freeline})){
 		fee = 0;
 		$("#dliverFee").text(fee);
 	} else {
-		fee = 3500;
+		fee = ${sessionScope.deliverFeeSet.fee};
 		$("#dliverFee").text(fee);
 	}
 	$("#totalAmount").text(totalPrice + fee);
@@ -383,6 +383,10 @@ function selectOrder(type){
 	if(type == 'all'){		
 		$("input[name=select]").prop('checked',true);
 	} 
+	if($("input[name=select]:checked").length == 0){
+		alert("최소 1개의 상품을 선택해야 합니다.");
+		return;
+	}
 	$("input[name=select]:checked").each(function() { 
 		
 		basket_no_arr.push($(this).val());

@@ -555,4 +555,54 @@ public class OrderDAO implements InterOrderDAO {
 			return result;
 		}
 
+		@Override
+		public Map<String, Object> getDeliverFee() throws SQLException {
+			
+			Map<String, Object> paraMap = new HashMap<>();
+		      
+		    try {
+		         
+	 	        conn = ds.getConnection();
+	 	        String sql = "SELECT fee, freeline from tbl_deliverfee ";
+	 	        
+	 	        pstmt = conn.prepareStatement(sql);
+	 	        rs = pstmt.executeQuery();
+	 	        rs.next();
+	 	        paraMap.put("fee", rs.getInt(1));
+	 	        paraMap.put("freeline", rs.getInt(2));
+	 	        	 	    
+		    } catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				close();
+			}
+		    
+		    return paraMap;
+		}
+
+		@Override
+		public int updateDeliverFee(int fee, int freeline) throws SQLException {
+			
+			int result = 0;
+		      
+		    try {
+		         
+	 	        conn = ds.getConnection();
+	 	        String sql = "UPDATE tbl_deliverfee SET fee = ?, freeline = ? ";
+	 	        
+	 	        pstmt = conn.prepareStatement(sql);
+	 	        pstmt.setInt(1, fee);
+	 	        pstmt.setInt(2, freeline);
+	 	        
+	 	        result = pstmt.executeUpdate();
+	 	        
+		    } catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				close();
+			}
+		    
+		    return result;
+		}
+
 }
