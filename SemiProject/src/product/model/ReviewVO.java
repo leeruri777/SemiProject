@@ -12,6 +12,16 @@ public class ReviewVO {
 	private String review_date;
 	
 	private String username;
+	
+	private String prod_name;
+
+	public String getProd_name() {
+		return prod_name;
+	}
+
+	public void setProd_name(String prod_name) {
+		this.prod_name = prod_name;
+	}
 
 	public String getReviewno() {
 		return reviewno;
@@ -46,7 +56,7 @@ public class ReviewVO {
 	}
 
 	public String getContent() {
-		return content.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+		return content;
 	}
 
 	public void setContent(String content) {

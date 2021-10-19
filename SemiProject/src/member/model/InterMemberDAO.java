@@ -20,6 +20,12 @@ public interface InterMemberDAO {
 		boolean emailDuplicateCheck(String email) throws SQLException;
 		// 회원정보 수정
 		int updateMember(MemberVO member) throws SQLException;
+		// 아이디 찾기(이름, 이메일)
+		String findId(Map<String, String> paraMap) throws SQLException;
+		// 비밀번호 찾기용 계정 검색(아이디, 이메일)
+		int isExistId(Map<String, String> paraMap) throws SQLException;
+		// 비밀번호 변경하기
+		int updatePw(Map<String, String> paraMap) throws SQLException;
 		
 		// 회원 한 명의 정보 가져오기
 		MemberVO selectOneMember(Map<String, String> paraMap) throws SQLException;
@@ -43,9 +49,10 @@ public interface InterMemberDAO {
 		int deleteAddress(Long ano, String userid) throws SQLException;
 		// 배송지 정보 가져오기
 		AddressVO getAddress(Long ano, String userid) throws SQLException;
+		// 로그인한 사용자의 기본 배송지 가져오기
+		AddressVO getAddressL(String userid) throws SQLException;
 		// 배송지 정보 수정하기
-		int updateAddress(AddressVO addressVo) throws SQLException;
-		
+		int updateAddress(AddressVO addressVo) throws SQLException;		
 		
 		///////////////////////////////////////////////////////////////
 		/* 적립금페이지 */
@@ -58,7 +65,6 @@ public interface InterMemberDAO {
 		// 페이징 처리를 위한 회원 한명의 적립금 내역 총페이지 수(totalPage) 알아오기
 		int getPointTotalPage(String fk_user_id) throws SQLException;
 		///////////////////////////////////////////////////////////////
-		
 		
 }
 

@@ -39,7 +39,7 @@ public interface InterProductDAO_KJH {
 	int updateBanner(String this_sort_code, String ad_img_url_pick) throws SQLException;
 
 	// 리뷰를 작성할 주문건 가져오기
-	String getOrdernoforReview(String prod_code) throws SQLException;
+	String getOrdernoforReview(String prod_code, String userid) throws SQLException;
 
 	// 리뷰테이블 insert
 	int insertReview(Map<String, String> paraMap) throws SQLException;
@@ -55,10 +55,37 @@ public interface InterProductDAO_KJH {
 
 	// 리뷰 페이징 처리를 위한 페이지바 만들기 & 리뷰 총 개수
 	Map<String, String> getReviewTotal(String prod_code) throws SQLException;
+	// 장바구니 담기
+	int insertBasket(Map<String, Object> paraMap) throws SQLException;	
 
-	// 장바구니 테이블  insert
-	int insertBasket(Map<String, Object> paraMap) throws SQLException;
+	// 상품 입고, 폐기 기록 가져오기
+	List<InOutVO> getInOutList(String prod_code) throws SQLException;
 
+	// 상품정보가져오기(관리자버전)
+	Map<String, Object> getAdminProdDetail(String prod_code) throws SQLException;
+
+	// 상품삭제
+	int deleteProduct(String prod_code) throws SQLException;
+
+	// 배너리스트 파일명 select
+	List<Map<String, String>> getBannerList() throws SQLException;
 	
+	// NEW 상품 4개 select
+	List<ProductVO_KJH> getNewList() throws SQLException;
+
+	// HIT 상품 4개 select
+	List<ProductVO_KJH> getHitList() throws SQLException;
+
+	// BEST 상품 4개 select
+	List<ProductVO_KJH> getBestList() throws SQLException;
+
+	// SALE 상품 4개 select
+	List<ProductVO_KJH> getSaleList() throws SQLException;
+
+	// 최신 리뷰 4개 select
+	List<ReviewVO> getReviewList() throws SQLException;
+
+	// 상품 검색 결과 select
+	List<ProductVO_KJH> getSearchResult(String searchWord) throws SQLException;
 
 }

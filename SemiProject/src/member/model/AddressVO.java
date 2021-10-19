@@ -24,7 +24,7 @@ public class AddressVO {
 	private String address; // 기본주소
 	private String detailaddress; // 상세주소
 	private String extraaddress; // 참고항목
-	private String default_yn; // 기본배
+	private String default_yn; // 기본배송지
 	private String hometel; // 집전화
 	private String mobile; // 핸드폰
 	

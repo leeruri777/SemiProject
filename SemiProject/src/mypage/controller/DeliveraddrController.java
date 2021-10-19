@@ -33,7 +33,14 @@ public class DeliveraddrController extends AbstractController {
 			request.setAttribute("addrList", addrList);
 			request.setAttribute("addressCnt", addressCnt);
 			
-			super.setViewPage("/WEB-INF/views/mypage/deliveraddr.jsp");
+			String type = request.getParameter("type");
+			
+			// 주문페이지에서 주소록 보기
+			if("orderForm".equalsIgnoreCase(type)) {
+				super.setViewPage("/WEB-INF/views/order/deliveraddr.jsp");
+			} else { // 마이페이지에서 보기
+				super.setViewPage("/WEB-INF/views/mypage/deliveraddr.jsp");
+			}
 		} else {		
 			request.setAttribute("message", "로그인이 필요합니다.");
 			request.setAttribute("loc", "/member/login.go");

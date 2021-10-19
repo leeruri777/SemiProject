@@ -580,8 +580,125 @@ public class MemberDAO implements InterMemberDAO {
 		}
 		return n;
 	}
-
 	
+	@Override
+	public AddressVO getAddressL(String userid) throws SQLException {
+		
+		AddressVO addressVo = new AddressVO();
+		try {
+			conn = ds.getConnection();
+			String sql = "SELECT USERID, POSTCODE, ADDRESS, DETAILADDRESS, EXTRAADDRESS, DEFAULT_YN, HOMETEL, MOBILE, ANO, DELIVERNAME, NAME "
+						+"FROM TBL_ADDRESS_LIST "
+						+ "WHERE userid = ? and DEFAULT_YN ='y'";
+			
+			pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, userid);
+	        
+	        rs = pstmt.executeQuery();
+			rs.next();
+			
+			addressVo.setUserid(rs.getString(1));
+			addressVo.setPostcode(rs.getString(2));
+			addressVo.setAddress(rs.getString(3));
+			addressVo.setDetailaddress(rs.getString(4));
+			addressVo.setExtraaddress(rs.getString(5));
+			addressVo.setDefault_yn(rs.getString(6));
+			addressVo.setHometel(rs.getString(7));
+			addressVo.setMobile(rs.getString(8));
+			addressVo.setAno(rs.getLong(9));
+			addressVo.setDelivername(rs.getString(10));
+			addressVo.setName(rs.getString(11));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return addressVo;
+	}
+	
+	/////////////// end 배송지 /////////////////////////////////////////
+
+	@Override
+	public String findId(Map<String, String> paraMap) throws SQLException {
+		
+		String userid = "";
+		try {
+			conn = ds.getConnection();
+			String sql = "SELECT userid "
+						+"FROM TBL_MEMBER "
+						+ "WHERE name = ? and email = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, paraMap.get("name"));
+	        pstmt.setString(2, aes.encrypt(paraMap.get("email")) );
+	        
+	        rs = pstmt.executeQuery();
+	        if(rs.next()) {
+	        	userid = rs.getString(1);
+	        }
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return userid;
+	}
+
+	@Override
+	public int isExistId(Map<String, String> paraMap) throws SQLException {
+		
+		int result = 0;
+		try {
+			conn = ds.getConnection();
+			String sql = "SELECT count(*) "
+						+"FROM TBL_MEMBER "
+						+ "WHERE userid = ? and email = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, paraMap.get("userid"));
+	        pstmt.setString(2, aes.encrypt(paraMap.get("email")) );
+	        
+	        rs = pstmt.executeQuery();
+	        while(rs.next()) {
+	        	result = rs.getInt(1);
+	        }
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return result;
+	}
+
+	@Override
+	public int updatePw(Map<String, String> paraMap) throws SQLException {
+	
+		int success = 0;
+		try {
+			conn = ds.getConnection();
+			String sql = "UPDATE tbl_member set pwd = ? "
+					+ ", lastpwdchangedate = sysdate "
+					+ "where userid = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, Sha256.encrypt(paraMap.get("pwd")));
+			pstmt.setString(2, paraMap.get("userid"));
+			
+			success = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return success;
+		
+	}
+
 	
 	///////////////////////////////////////////////////////////////////////////////////
 	/* 적립금페이지 */
@@ -589,142 +706,123 @@ public class MemberDAO implements InterMemberDAO {
 	@Override
 	public MemberVO memberTotalPoint(String userid) throws SQLException {
 	MemberVO mvo = null;
-		
-		try {
+	
+	try {
 			conn = ds.getConnection();
 			
 			String sql = " select POINT "+
-						 " from TBL_MEMBER "+
-						 " where userid = ? ";
+			" from TBL_MEMBER "+
+			" where userid = ? ";
 			
-			 pstmt = conn.prepareStatement(sql);
-	         pstmt.setString(1, userid);
-	                  
-	         rs = pstmt.executeQuery();
-	         
-	         if(rs.next()) {  
-	               
-	            mvo = new MemberVO();
-	            
-	            mvo.setPoint(rs.getInt(1));
-	           
-	         }
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-	    } finally {
-			close();
-		}
-		
-		
-		
-		return mvo;
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {  
+			
+			mvo = new MemberVO();
+			
+			mvo.setPoint(rs.getInt(1));
+			
 	}
-
+	
+	} catch (Exception e) {
+	e.printStackTrace();
+	} finally {
+	close();
+	}
+	
+	
+	
+	return mvo;
+	}
+	
 	//////////////////////////////////////////////////////
 	// 페이징 처리를 한 회원 한명의 적립금 내역 보여주기
-		@Override
-		public List<OrderSetleVO> selectPointList(Map<String, String> paraMap) throws SQLException {
+	@Override
+	public List<OrderSetleVO> selectPointList(Map<String, String> paraMap) throws SQLException {
+	
+	List<OrderSetleVO> pointList = new ArrayList<>();
+	
+	try {
+			conn = ds.getConnection();
 			
-			List<OrderSetleVO> pointList = new ArrayList<>();
+			String sql = " select order_dt, prod_price, prod_name " + 
+			" from " + 
+			" ( " + 
+			"    select row_number() over(order by ORDER_NO asc) AS RNO  " + 
+			"          , order_no, order_dt, prod_price, prod_name " + 
+			"    from ORDER_SETLE " + 
+			"    where fk_user_id = ? " + 
+			" ) V " + 
+			" where RNO between ? and ?  " + 
+			" order by order_dt desc ";
 			
-			try {
-				 conn = ds.getConnection();
-				 
-				 String sql = " select order_dt, prod_price, prod_name " + 
-				 			  " from " + 
-				 			  " ( " + 
-				 			  "    select row_number() over(order by ORDER_NO asc) AS RNO  " + 
-				 			  "          , order_no, order_dt, prod_price, prod_name " + 
-					 	 	  "    from ORDER_SETLE " + 
-					 		  "    where fk_user_id = ? " + 
-					 		  " ) V " + 
-					 		  " where RNO between ? and ?  " + 
-					 		  " order by order_dt desc ";
-				
-				pstmt = conn.prepareStatement(sql);	 		
-				
-				int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo")); //currentShowPageNo는 문자열이라서 인트타입으로 바꿔야 공식을 써서 계산할 수 있다
-				int sizePerPage = 10;
-				
-				pstmt.setString(1, paraMap.get("userid"));
-				pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
-				pstmt.setInt(3, (currentShowPageNo * sizePerPage)); // 공식 
-				
-				rs = pstmt.executeQuery(); //sql문을 실행한다. 리턴타입은 리슐트셋이 될 것이다
-				
-				while(rs.next()) { //있는지 묻는다. 있으면 와일문을 실행함
-					
-					OrderSetleVO opvo = new OrderSetleVO();
-					opvo.setOrder_dt(rs.getString(1));
-					opvo.setAddpoint(rs.getInt(2)); //OrderSetleVO에 메소드 만들기
-					opvo.setProd_name(rs.getString(3)); 
-					
-					pointList.add(opvo); // pvo에 넣은 것들을pointList에 다 담았다. 액션에 넘겨주고 액션이 뷰단에 넘겨주면 뷰단에서는 각각을 겟해올 것이다
-					
-				}// end of while-------------------
-				
-				
-		    } finally {
-				close();
-			}
-			
-			return pointList;
-		}// end of public List<MemberVO> selectPagingMember(Map<String, String> paraMap) ------------------
+	pstmt = conn.prepareStatement(sql);	 		
+	
+	int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo")); //currentShowPageNo는 문자열이라서 인트타입으로 바꿔야 공식을 써서 계산할 수 있다
+	int sizePerPage = 10;
+	
+	pstmt.setString(1, paraMap.get("userid"));
+	pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
+	pstmt.setInt(3, (currentShowPageNo * sizePerPage)); // 공식 
+	
+	rs = pstmt.executeQuery(); //sql문을 실행한다. 리턴타입은 리슐트셋이 될 것이다
+	
+	while(rs.next()) { //있는지 묻는다. 있으면 와일문을 실행함
+	
+	OrderSetleVO opvo = new OrderSetleVO();
+	opvo.setOrder_dt(rs.getString(1));
+	opvo.setAddpoint(rs.getInt(2)); //OrderSetleVO에 메소드 만들기
+	opvo.setProd_name(rs.getString(3)); 
+	
+	pointList.add(opvo); // pvo에 넣은 것들을pointList에 다 담았다. 액션에 넘겨주고 액션이 뷰단에 넘겨주면 뷰단에서는 각각을 겟해올 것이다
+	
+	}// end of while-------------------
+	
+	
+	} finally {
+	close();
+	}
+	
+	return pointList;
+	}// end of public List<MemberVO> selectPagingMember(Map<String, String> paraMap) ------------------
+	
+	
+	
+	
+	// 페이징 처리를 위한 회원 한명의 적립금 내역 총페이지 수(totalPage) 알아오기
+	@Override
+	public int getPointTotalPage(String userid) throws SQLException {
+	
+	int totalPage = 0;
+	
+	try {
+		conn = ds.getConnection();
+		
+		String sql = " select ceil(count(*)/10) " + 
+		" from order_setle  " + 
+		" where fk_user_id = ? ";
+		
+		pstmt = conn.prepareStatement(sql);
+		
+		pstmt.setString(1, userid );
+		
+		rs = pstmt.executeQuery();
+		
+		rs.next();
+		
+		totalPage = rs.getInt(1);
+		
+	} finally {
+	close();
+	}
+	
+	
+	return totalPage;
+	}
 
-		
-		
-		
-		// 페이징 처리를 위한 회원 한명의 적립금 내역 총페이지 수(totalPage) 알아오기
-		@Override
-		public int getPointTotalPage(String userid) throws SQLException {
-			
-			int totalPage = 0;
-			
-			try {
-				conn = ds.getConnection();
-				
-				String sql = " select ceil(count(*)/10) " + 
-							 " from order_setle  " + 
-						     " where fk_user_id = ? ";
-				
-				pstmt = conn.prepareStatement(sql);
-				
-				pstmt.setString(1, userid );
-				
-				rs = pstmt.executeQuery();
-				
-				rs.next();
-				
-				totalPage = rs.getInt(1);
-				
-		    } finally {
-				close();
-			}
-			
-			
-			return totalPage;
-		}
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//////////////////////////////////////////////////////////
-		
 
 	
 

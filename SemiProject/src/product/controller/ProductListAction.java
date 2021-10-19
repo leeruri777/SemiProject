@@ -32,7 +32,7 @@ public class ProductListAction extends AbstractController {
 		String categoryName = pdao.categoryName(sort_code);
 		
 		request.setAttribute("categoryName", categoryName);
-		
+						
 		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/product/prodList.jsp");
 		

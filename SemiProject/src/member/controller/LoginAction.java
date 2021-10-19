@@ -1,16 +1,22 @@
 package member.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import common.controller.AbstractController;
 import member.model.InterMemberDAO;
 import member.model.MemberDAO;
 import member.model.MemberVO;
+import order.model.InterOrderDAO;
+import order.model.OrderDAO;
 
 public class LoginAction extends AbstractController {
 
@@ -21,11 +27,10 @@ public class LoginAction extends AbstractController {
 		
 		if(method.equalsIgnoreCase("GET")) {
 			if(super.checkLogin(request)) {
-				
-				request.setAttribute("message", "이미 로그인을 하셨습니다.");
-		        request.setAttribute("loc", "/");
+				// 로그인이 되어있는 경우
+		        request.setAttribute("loc", request.getHeader("referer"));
 		         
-		        super.setViewPage("/WEB-INF/msg.jsp");
+		        super.setViewPage("/WEB-INF/msgNoAlert.jsp");
 			} else {
 				super.setViewPage("/WEB-INF/views/member/loginForm.jsp");
 			}
@@ -60,6 +65,25 @@ public class LoginAction extends AbstractController {
 										
 					HttpSession session = request.getSession();
 					session.setAttribute("loginuser", loginuser);
+
+					InterOrderDAO odao = new OrderDAO();
+					
+					List<Map<String, Object>> basketList = odao.getBasketList(loginuser.getUserid());
+					session.setAttribute("basketList", basketList);
+									
+//					JSONArray jsonArr = new JSONArray();				
+//					
+//					if(basketList.size() > 0) {
+//						
+//							for(Map<String, Object> basket : basketList) {
+//							
+//								JSONObject jsonObj = new JSONObject();							
+//								jsonObj.put("prod_code", basket.get("prod_code"));    
+//					            jsonArr.put(jsonObj);
+//							}								
+//							String basketListJson = jsonArr.toString();
+//							session.setAttribute("basketListJson", basketListJson);
+//					}
 					
 					if(loginuser.isRequirePwdChange()) {
 						 String message = "비밀번호를 변경한지 3개월이 지났습니다. 암호를 변경하세요";
@@ -71,8 +95,10 @@ public class LoginAction extends AbstractController {
 				         super.setViewPage("/WEB-INF/msg.jsp");
 					} else {
 						// 비밀번호를 변경한지 3개월 이내인 경우
-						super.setRedirect(true);
-						super.setViewPage("/");
+						
+						request.setAttribute("loc", "javascript:history.back()");
+						super.setViewPage("/WEB-INF/msgNoAlert.jsp");
+						
 					}
 			        
 				}

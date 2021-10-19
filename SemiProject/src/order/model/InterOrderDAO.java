@@ -35,4 +35,9 @@ public interface InterOrderDAO {
 	int getOrderSetleListCount(Pagination pg) throws SQLException;
 	//주문목록 테이블에 insert하는 메소드
 	int insertOrderSetle(OrderSetleVO ovo) throws SQLException;
+	
+	// 현재 배송비 가져오기
+	Map<String, Object> getDeliverFee() throws SQLException;
+	// 배송비 변경하기
+	int updateDeliverFee(int fee, int freeline) throws SQLException;
 }

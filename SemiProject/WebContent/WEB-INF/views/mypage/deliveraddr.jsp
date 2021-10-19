@@ -4,9 +4,25 @@
 <jsp:include page="/WEB-INF/include/header.jsp"/>
 <jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
 
-
+<link rel="stylesheet" type="text/css" href="/css/mypage/mypageStyle.css" />
 <title>마이페이지 - 배송 주소록 관리</title>
-
+<style>
+/* 표 가운데 정렬 , 글자색, 글자크기*/
+table td {
+	text-align: center;
+	color:#616161;
+	font-size: 15px;
+}		
+/* 표 체크박스 칸 가로넓이 줄이기*/
+table td:nth-child(1) {
+	width: 4%;
+}
+div.ec-base-help {		    
+	margin-bottom : 10px;
+    border: 1px solid #d6d4d4;
+    line-height: 18px;
+}	
+</style>   
 <div class="container p-5" >	
 	<p style="margin-bottom:8px; font-weight: bold; color: black; text-align: center; font-size: 16pt;">&nbsp;* 배송 주소록 관리</p>
 	<div class="ec-base-help">
@@ -18,7 +34,7 @@
 	    </div>
 	</div>
 	<%-- 배송 주소록 관리 표 --%>
-		<table class="table addtable">	
+		<table class="table">	
 		    <tr style="background-color: #f9f9f9;">
 		      <td><input type='checkbox'name='select'value='selectall'onclick='selectAll(this)'/></td>
 		      <td>배송지명</td>
@@ -66,12 +82,12 @@ $("#btnRegister").click(function(){
 });
 
 function selectAll(selectAll)  {
-  const checkboxes 
-       = document.getElementsByName('select');
   
+  const checkboxes = document.getElementsByName('selectAddr');  
   checkboxes.forEach((checkbox) => {
     checkbox.checked = selectAll.checked;
   })
+  
 }
 
 // 배송지 삭제

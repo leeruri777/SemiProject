@@ -19,23 +19,30 @@ public class ProductDetailAction extends AbstractController {
 		
 		Map<String,Object> prodMap = pdao.getProdDetail(prod_code); 
 		
+		if("y".equalsIgnoreCase(request.getParameter("cart"))) {
+			request.setAttribute("cart", "y");
+		}
+		
 		if(prodMap.size() != 0) {
 			
 			request.setAttribute("prodMap", prodMap);
 			
 			String currentShowPageNo = request.getParameter("currentShowPageNo"); // 페이지번호
 			
-			if(currentShowPageNo == null)
+			if(currentShowPageNo == null) {				
 				currentShowPageNo = "1";
+			}
+			
+			else {
+				request.setAttribute("currentShowPageNo", currentShowPageNo);
+			}
 			
 			try {				
 				Integer.parseInt(currentShowPageNo); // int로 변환되는지 먼저 확인한다				
 			} catch (NumberFormatException e) {
 				currentShowPageNo = "1";
 			}
-			
-			request.setAttribute("currentShowPageNo", currentShowPageNo);
-			
+						
 			Map<String, String> reviewTotalMap = pdao.getReviewTotal(prod_code);
 			
 			int reviewTotalCnt = Integer.parseInt(reviewTotalMap.get("reviewTotalCnt"));

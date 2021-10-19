@@ -15,7 +15,30 @@ public class Pagination {
 	// 검색
 	private String searchType; // 검색타입
 	private String keyword; // 키워드
+	
+	private String fromDate; // 날짜 기한
+	private String toDate; // 날짜 기한
+	
+	private String userid; // 사용자
 
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+	public String getFromDate() {
+		return fromDate;
+	}
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+	public String getToDate() {
+		return toDate;
+	}
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
 	public int getStartList() {
 		return startList;
 	}

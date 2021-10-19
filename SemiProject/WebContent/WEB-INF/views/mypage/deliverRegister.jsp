@@ -2,9 +2,26 @@
 <jsp:include page="/WEB-INF/include/header.jsp"/>
 <jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
 
-
+<link rel="stylesheet" type="text/css" href="/css/mypage/mypageStyle.css" />
 <title>마이페이지 - 배송지 등록</title>
+<style type="text/css">
+/* 표 가운데 정렬 , 글자색, 글자크기*/
+table td {
+	text-align: left;
+	color:#616161;
+	font-size: 15px;
+}
 
+/* 표 첫번째열 가로넓이, 색, 정렬 등 */
+table td:nth-child(1) {
+	width:15%;
+	background-color: #f9f9f9;
+	text-align: left;
+	font-weight: bold;
+	font-size: 10pt;
+	padding-left: 3%;
+}   
+</style>
 <div style="width:100%; height:60px; text-align:center; padding-top:60px;"></div>
 <%-- ////내용 시작//// --%>	
 <div class="container p-5" >	
@@ -13,7 +30,7 @@
 	<%-- 배송 주소록 관리 표 --%>
 	<form name="addAddressFrm">
 	<input type="hidden" name="userid" value="${sessionScope.loginuser.userid}"/>
-		<table class="table regtable">	 
+		<table class="table">	 
 		    <tr>
 		      <td>배송지명 *</td>
 		      <td><input id='delivername' name="delivername" maxlength = "15" class="form-control col-sm-3" type='text'/></td>

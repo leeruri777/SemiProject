@@ -2,9 +2,16 @@
 <jsp:include page="/WEB-INF/include/header.jsp"/>
 <jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
 
-
+<link rel="stylesheet" type="text/css" href="/css/mypage/mypageStyle.css" />
 <title>마이페이지 - 취소/반품/교환 내역</title>
-
+<style type="text/css">	
+/* 표 가운데 정렬 , 글자색, 글자크기*/
+table td {
+	text-align: center;
+	color:#616161;
+	font-size: 15px;
+}	
+</style>
 <div style="width:100%; height:60px; text-align:center; padding-top:60px;"></div>
 <%-- ////내용 시작//// --%>	
 <div class="container p-5" >		

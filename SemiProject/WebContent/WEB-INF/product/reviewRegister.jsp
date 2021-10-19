@@ -123,7 +123,7 @@
 			//	console.log(fileArr[1]);
 				
 				if(fileArr[1] != "jpg" && fileArr[1] != "bmp" && fileArr[1] != "png" && fileArr[1] != "jpeg") {
-			   		alert("배너는 이미지만 등록 가능합니다. (jpg, jpeg, bmp, png)");
+			   		alert("포토리뷰는 이미지만 등록 가능합니다. (jpg, jpeg, bmp, png)");
 			   		return;
 				}
 				
@@ -144,7 +144,7 @@
 		<h4>리뷰등록</h4>
 		<hr>
 		
-		<form name="reviewFrm">
+		<form name="reviewFrm" enctype="multipart/form-data">
 			
 			<table class="tbl w-100">
 				

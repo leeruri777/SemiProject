@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -17,6 +18,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import product.model.InterProductDAO;
+import product.model.ProductDAO;
+import product.model.SortVO;
 
 
 @WebServlet(
@@ -83,6 +87,14 @@ public class FrontController extends HttpServlet {
 		} else {
 			try {
 				request.setCharacterEncoding("UTF-8");
+				
+				InterProductDAO pdao = new ProductDAO();
+				
+				// 모든 카테고리 가져오기
+				List<SortVO> sortList = pdao.AllSort();
+				
+				request.setAttribute("sortList", sortList);
+				
 				action.execute(request, response); // 요청시 로직을 실행할 메소드 실행
 				String viewPage = action.getViewPage(); // 반환할 페이지 가져오기
 				boolean isRedirect = action.isRedirect();

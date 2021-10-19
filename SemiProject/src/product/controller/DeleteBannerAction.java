@@ -11,22 +11,30 @@ public class DeleteBannerAction extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		String this_sort_code = request.getParameter("del_sort_code");
+		String view = "checkAdmin";
 		
-		InterProductDAO_KJH pdao = new ProductDAO_KJH();
+		super.checkAdministration(request, view);
 		
-		int result = pdao.deleteBanner(this_sort_code);
-				
-		if(result == 0) {
-			request.setAttribute("message", "배너삭제에 실패하였습니다. 다시 진행해주세요.");
-			request.setAttribute("loc", "/product/adManage.go");
-			setViewPage("/WEB-INF/msg.jsp");
-		}
+		if(view.equals(super.getViewPage())) {
 		
-		else {			
-			request.setAttribute("message", "배너삭제가 완료되었습니다.");
-			request.setAttribute("loc", "/product/adManage.go");
-			setViewPage("/WEB-INF/msg.jsp");
+			String this_sort_code = request.getParameter("del_sort_code");
+			
+			InterProductDAO_KJH pdao = new ProductDAO_KJH();
+			
+			int result = pdao.deleteBanner(this_sort_code);
+					
+			if(result == 0) {
+				request.setAttribute("message", "배너삭제에 실패하였습니다. 다시 진행해주세요.");
+				request.setAttribute("loc", "/product/adManage.go");
+				super.setViewPage("/WEB-INF/msg.jsp");
+			}
+			
+			else {			
+				request.setAttribute("message", "배너삭제가 완료되었습니다.");
+				request.setAttribute("loc", "/product/adManage.go");
+				super.setViewPage("/WEB-INF/msg.jsp");
+			}
+		
 		}
 		
 	}
