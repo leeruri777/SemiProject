@@ -558,6 +558,28 @@ public class ProductDAO implements InterProductDAO {
 			
 			result = pstmt.executeUpdate();
 
+			// 기존에 추가상품이 있었으나 없앴을 경우
+			if(prod.getProd_plus() == 0) {
+				sql = " delete from tbl_prod_plus where fk_prod_code = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod.getProd_code());
+				
+				result = pstmt.executeUpdate();
+			}
+			
+			// 기존에 골라담기가 있었으나 없앴을 경우
+			if(prod.getProd_select() == 0) {
+				sql = " delete from tbl_prod_select where fk_prod_code = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, prod.getProd_code());
+				
+				result = pstmt.executeUpdate();
+			}
+			
 			// 추가상품이 있을 경우 추가상품 테이블에 기존 것을 삭제하고 다시 insert
 			if(paraMap.get("prod_plus_list") != null) {
 				
