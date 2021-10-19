@@ -4,10 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/WEB-INF/include/header.jsp"/>
-<jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
-
 <link rel="stylesheet" type="text/css" href="/css/mypage/mypageStyle.css" />
-<title>마이페이지 - 배송지 등록</title>
+<title>주문서 작성</title>
 <style type="text/css">
 /* 표 첫번째열 가로넓이, 색, 정렬 등 */
 table td:nth-child(1) {
@@ -105,16 +103,12 @@ table.table.btable > tbody > tr > td:nth-child(1){
 					 <button type="button" class="btn btn-secondary btn-sm" style="font-size: 8pt; padding: 5px;" onclick ="deleteBasket(this)">삭제</button>
 				  </td>
 			      <td><a href="/product/prodDetail.go?prod_code=${basketList.prod_code}"><img src="/img_prod/${basketList.prod_img_url}" width=60px;/></a></td>
-			      <td class="prod_name">${basketList.prod_name}</td>
+			      <td>${basketList.prod_name}</td>
 			      <td>
 			       <span class="price">
 			        <c:choose>
-			        	<c:when test="${basketList.discount_price eq -9999}"><fmt:formatNumber value="${basketList.prod_price}" type="number"></fmt:formatNumber>
-			        		<input type="hidden" value="${basketList.prod_price}" class="price_comma_del" />
-			        	</c:when>
-			        	<c:otherwise><fmt:formatNumber value="${basketList.discount_price}" type="number"></fmt:formatNumber>
-			        	    <input type="hidden" value="${basketList.discount_price}" class="price_comma_del" />
-			        	</c:otherwise>
+			        	<c:when test="${basketList.discount_price eq -9999}"><fmt:formatNumber value="${basketList.prod_price}" type="number"></fmt:formatNumber></c:when>
+			        	<c:otherwise><fmt:formatNumber value="${basketList.discount_price}" type="number"></fmt:formatNumber></c:otherwise>
 			        </c:choose>
 			        </span>원		       
 			      </td>
@@ -306,15 +300,6 @@ table.table.btable > tbody > tr > td:nth-child(1){
 		</table>
 	</div>		
 	</div>
-	
-	<form name="frm_order_setle">
-		<input type="hidden" name="prod_name" />
-		<input type="hidden" name="price" />
-		<input type="hidden" name="goods_qy" />
-		
-		<input type="hidden" name="user_name" value="${sessionScope.loginuser.name}" />
-		
-	</form>
 </section>	
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>	
@@ -468,24 +453,13 @@ function calTotalAmount(){
 	$("#totalPrice").text(totalPrice);
 	
 	// 배송비 설정하기
-	let fee = 3500;
-	if(totalPrice >= 50000){
+	let fee = ${sessionScope.deliverFeeSet.fee};
+	if(totalPrice >= parseInt(${sessionScope.deliverFeeSet.freeline})){
 		fee = 0;
 	} 
 	$("#fee").text(fee);
-	
-	// 총 결제금액
-	/* var totalAmount = 0;
-	$(".priceToT").each((index, item) => {
-		
-		var priceToT = parseInt($(item).text().replace(/,/g , ''));
-		totalAmount = totalAmount + priceToT;
-		
-	}); */
 	$("#totalAmount").text(totalPrice + fee);
-	
-	//var vv = $("#totalAmount").text();
-	//$("#order_totalAmount").val(vv);
+
 }
 
 // 적립금 사용
@@ -507,10 +481,6 @@ $("#usePoint").click(function() {
 
 function pay(){
 	
-	if( ${empty sessionScope.loginuser} ) {
-		alert("결제를 하시려면 먼저 로그인 부터 하세요!!");
-		return;
-	}
 	
 	var arr_requiredInfo = document.getElementsByClassName("required");
 	
@@ -524,55 +494,34 @@ function pay(){
 		}
 	}
 	// orderForm . PG사에 보낼 폼데이터 설정하기
-	// alert("결제!" + $("#order_totalAmount").val());
-	var email = '${sessionScope.loginuser.email}';
-	var name = '${sessionScope.loginuser.name}';
-	var mobile = '${sessionScope.loginuser.mobile}';
-	
-	var url = "/order/purchaseEnd.go?email="+email+"&name="+name+"&mobile="+mobile; 
-    
-    //window.open은 팝업창 띄우기임
-    window.open(url, "purchaseEnd",
-    			"left=350px, top=100px, width=850px, height=600px");
+	alert("결제!" + $("#order_totalAmount").val());
 }
 
-
-function goORDER_SETLE_INSERT() {
+function changeAddress(ano){
+	console.log('ca실행 -> ', ano);
+	$.ajax({
+		type : 'POST',
+		data : {"ano": ano},
+		dataType :'json',
+		url : '/order/changeAddress.go',
+		success : function(json){
+			console.log(json);
+			$("#delivername").val(json.delivername);
+			$("#name").val(json.name);
+			$("#postcode").val(json.postcode);
+			$("#address").val(json.address);
+			$("#detailaddress").val(json.detailaddress);
+			$("#extraaddress").val(json.extraaddress);
+			$("#mo1").val(json.mobile.substring(0,3));
+			$("#mo2").val(json.mobile.substring(3,7));
+			$("#mo3").val(json.mobile.substring(7,11));
+		},
+		error: function(request, status, error){
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        }
+		
+	});
 	
-	var class_prod_name = document.getElementsByClassName("prod_name");
-	var class_price_comma_del = document.getElementsByClassName("price_comma_del");
-	var class_goods_qy = document.getElementsByClassName("goods_qy");
-	
-	var arr_prod_name = new Array(); 
-    var arr_price = new Array(); 
-    var arr_goods_qy = new Array();
-	
-    for(var i=0; i<class_prod_name.length; i++) {
-	//	console.log("상품명 : " + class_prod_name[i].innerText + ", 판매가 : " + class_price[i].innerText + ", 주문개수 : " + class_goods_qy[i].value);
-    
-	    arr_prod_name.push(class_prod_name[i].innerText);
-    	arr_price.push(class_price_comma_del[i].value);
-    	arr_goods_qy.push(class_goods_qy[i].value);
-	}// end of for---------------------------------------
-     
-    for(var i=0; i<arr_prod_name.length; i++) {
-    	console.log("상품명 : " + arr_prod_name[i] + ", 판매가 : " + arr_price[i] + ", 주문개수 : " + arr_goods_qy[i] );      
-	}
- 
-	var prod_name_join = arr_prod_name.join();	
-	var price_join = arr_price.join();
-	var goods_qy_join = arr_goods_qy.join();
-	
-    var frm = document.frm_order_setle;
-    frm.prod_name.value = prod_name_join;
-    frm.price.value = price_join;
-    frm.goods_qy.value = goods_qy_join;
-    
-    frm.action = "/order/orderSetleEnd.go";
-    frm.method = "POST"; 
-	frm.submit();
 }
-
-</script>	
-			 
+</script>				 
 <jsp:include page="/WEB-INF/include/footer.jsp"/>
