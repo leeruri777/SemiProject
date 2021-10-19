@@ -150,7 +150,7 @@ body {
 <div class="main">
 	<div class="header">
 		<h1 class="shopname">
-			<a href="/"><img src="/images/tteok_logo.png"></a>
+			<a href="/"><img src="../images/소떡로고2.png"></a>
 		</h1>
 	</div>
 	<div class="section">
