@@ -4,10 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/WEB-INF/include/header.jsp"/>
-<jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
-
 <link rel="stylesheet" type="text/css" href="/css/mypage/mypageStyle.css" />
-<title>마이페이지 - 배송지 등록</title>
+<title>주문서 작성</title>
 <style type="text/css">
 /* 표 첫번째열 가로넓이, 색, 정렬 등 */
 table td:nth-child(1) {
@@ -455,24 +453,13 @@ function calTotalAmount(){
 	$("#totalPrice").text(totalPrice);
 	
 	// 배송비 설정하기
-	let fee = 3500;
-	if(totalPrice >= 50000){
+	let fee = ${sessionScope.deliverFeeSet.fee};
+	if(totalPrice >= parseInt(${sessionScope.deliverFeeSet.freeline})){
 		fee = 0;
 	} 
 	$("#fee").text(fee);
-	
-	// 총 결제금액
-	/* var totalAmount = 0;
-	$(".priceToT").each((index, item) => {
-		
-		var priceToT = parseInt($(item).text().replace(/,/g , ''));
-		totalAmount = totalAmount + priceToT;
-		
-	}); */
 	$("#totalAmount").text(totalPrice + fee);
-	
-	//var vv = $("#totalAmount").text();
-	//$("#order_totalAmount").val(vv);
+
 }
 
 // 적립금 사용
@@ -508,6 +495,33 @@ function pay(){
 	}
 	// orderForm . PG사에 보낼 폼데이터 설정하기
 	alert("결제!" + $("#order_totalAmount").val());
+}
+
+function changeAddress(ano){
+	console.log('ca실행 -> ', ano);
+	$.ajax({
+		type : 'POST',
+		data : {"ano": ano},
+		dataType :'json',
+		url : '/order/changeAddress.go',
+		success : function(json){
+			console.log(json);
+			$("#delivername").val(json.delivername);
+			$("#name").val(json.name);
+			$("#postcode").val(json.postcode);
+			$("#address").val(json.address);
+			$("#detailaddress").val(json.detailaddress);
+			$("#extraaddress").val(json.extraaddress);
+			$("#mo1").val(json.mobile.substring(0,3));
+			$("#mo2").val(json.mobile.substring(3,7));
+			$("#mo3").val(json.mobile.substring(7,11));
+		},
+		error: function(request, status, error){
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        }
+		
+	});
+	
 }
 </script>				 
 <jsp:include page="/WEB-INF/include/footer.jsp"/>

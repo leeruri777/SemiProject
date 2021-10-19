@@ -82,12 +82,12 @@ $("#btnRegister").click(function(){
 });
 
 function selectAll(selectAll)  {
-  const checkboxes 
-       = document.getElementsByName('select');
   
+  const checkboxes = document.getElementsByName('selectAddr');  
   checkboxes.forEach((checkbox) => {
     checkbox.checked = selectAll.checked;
   })
+  
 }
 
 // 배송지 삭제

@@ -1,12 +1,17 @@
 package common.controller;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import product.model.*;
+import order.model.InterOrderDAO;
+import order.model.OrderDAO;
+import product.model.InterProductDAO_KJH;
+import product.model.ProductDAO_KJH;
+import product.model.ProductVO_KJH;
+import product.model.ReviewVO;
 
 public class MainController extends AbstractController {
 
@@ -14,7 +19,11 @@ public class MainController extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		InterProductDAO_KJH pdao = new ProductDAO_KJH();
-				
+		InterOrderDAO odao = new OrderDAO();
+		
+		// 배송비 설정
+		Map<String, Object> deliverFeeSet = odao.getDeliverFee();
+		request.getSession().setAttribute("deliverFeeSet", deliverFeeSet);
 		// 배너리스트 파일명 select
 		List<Map<String, String>> bannerList = pdao.getBannerList();
 		

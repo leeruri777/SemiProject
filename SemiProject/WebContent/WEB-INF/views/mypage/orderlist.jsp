@@ -23,9 +23,6 @@ table td {
 	  <li class="nav-item">
 	    <a class="nav-link active text-secondary" href="/mypage/orderlist.go">주문내역조회</a>
 	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link text-secondary" href="/mypage/cancellist.go">취소/반품/교환 내역</a>
-	  </li>
 	</ul>	
 	<div class="pt-4 pb-5">	
 	  <div class="card">
