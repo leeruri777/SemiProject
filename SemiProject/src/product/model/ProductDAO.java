@@ -566,7 +566,7 @@ public class ProductDAO implements InterProductDAO {
 				
 				pstmt.setString(1, prod.getProd_code());
 				
-				result = pstmt.executeUpdate();
+				pstmt.executeUpdate();
 			}
 			
 			// 기존에 골라담기가 있었으나 없앴을 경우
@@ -577,7 +577,7 @@ public class ProductDAO implements InterProductDAO {
 				
 				pstmt.setString(1, prod.getProd_code());
 				
-				result = pstmt.executeUpdate();
+				pstmt.executeUpdate();
 			}
 			
 			// 추가상품이 있을 경우 추가상품 테이블에 기존 것을 삭제하고 다시 insert
