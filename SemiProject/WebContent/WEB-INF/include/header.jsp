@@ -110,6 +110,7 @@ function kakaoLogout() {
     }
     Kakao.Auth.logout(function() {
       location.href = "/member/logout.go";
-    })
-  }
+	})
+}
+  
 </script>
