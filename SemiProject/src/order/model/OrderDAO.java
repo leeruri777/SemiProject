@@ -272,6 +272,7 @@ public class OrderDAO implements InterOrderDAO {
 		            basket.put("goods_qy", rs.getInt(6));
 		            basket.put("prod_stock", rs.getInt(7));
 		            basket.put("prod_name", rs.getString(8));
+		         //   basket.put("prod_code", rs.getString(9));
 		            
 		            basketList.add(basket);
 		         }
