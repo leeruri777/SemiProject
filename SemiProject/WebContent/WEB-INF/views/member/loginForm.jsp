@@ -150,7 +150,7 @@ body {
 <div class="main">
 	<div class="header">
 		<h1 class="shopname">
-			<a href="/"><img src="/images/tteok_logo.png"></a>
+			<a href="/"><img src="/images/소떡로고2.png"></a>
 		</h1>
 	</div>
 	<div class="section">
@@ -206,7 +206,7 @@ body {
           <h4 class="modal-title">아이디 찾기</h4>
           <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
         </div>
-        
+        <a style="cursor: pointer;" data-toggle="modal" data-target="#userIdfind" data-dismiss="modal">아이디 찾기</a>
         <!-- Modal body -->
         <div class="modal-body">
           <div id="idFind">
@@ -272,16 +272,6 @@ $(function(){
 	Kakao.init('825e56e17bd334ca86670e481b45954e');
 	console.log(Kakao.isInitialized());
 });
-
-//카카오 로그인
-
-/* function loginWithKakao() {
-  Kakao.Auth.authorize({
-    redirectUri: 'http://localhost:1217'
-  })
-} */
-
-   
 
 function kakaoLogin() {
 	
