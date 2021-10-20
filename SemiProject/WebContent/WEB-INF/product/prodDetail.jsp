@@ -942,10 +942,10 @@
 						</tr>
 						
 					</table>
-				
+				<div  id="buypage"></div>
 				
 					<c:if test="${prodMap.pvo.prod_stock ne '0'}">	
-						<div class="ml-3 px-0" id="buypage">
+						<div class="ml-3 px-0">
 						<%-- 골라담기X --%>	
 							<c:if test="${prodMap.pvo.prod_select eq '0'}">
 								
