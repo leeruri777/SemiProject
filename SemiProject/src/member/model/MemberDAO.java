@@ -85,12 +85,13 @@ public class MemberDAO implements InterMemberDAO {
 	public int registerMember(MemberVO member, String type) throws SQLException {
 		
 		int n = 0;
+		String sql = "";
 		try {
 			conn = ds.getConnection();
 			
 			if(type.equalsIgnoreCase("normal")) {
 				
-				String sql = "insert into tbl_member(userid, pwd, name, email, mobile, gender, birthday) "     
+					sql   += "insert into tbl_member(userid, pwd, name, email, mobile, gender, birthday) "     
 		                  + "values(?, ?, ?, ?, ?, ?, ?)"; 
 				
 				pstmt = conn.prepareStatement(sql);
@@ -105,15 +106,27 @@ public class MemberDAO implements InterMemberDAO {
 				
 			} else {
 				
-				String sql = "insert into tbl_member(userid, pwd, name, email) "     
-		                  + "values(?, ?, ?, ?)"; 
-				
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, member.getUserid());
-				pstmt.setString(2, Sha256.encrypt(member.getPwd()));
-				pstmt.setString(3, member.getName());
-				pstmt.setString(4, aes.encrypt(member.getEmail()));
-			
+				if(member.getEmail() == null || member.getEmail() == "") {
+					
+					sql = "insert into tbl_member(userid, pwd, name, email) "			
+		                + "values(?, ?, ?, ?)";
+					
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, member.getUserid());
+					pstmt.setString(2, Sha256.encrypt(member.getPwd()));
+					pstmt.setString(3, member.getName());
+					pstmt.setString(4, aes.encrypt(member.getEmail()));
+					
+				} else {
+					
+					sql = "insert into tbl_member(userid, pwd, name) "		
+		                + "values(?, ?, ?)"; 
+					
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, member.getUserid());
+					pstmt.setString(2, Sha256.encrypt(member.getPwd()));
+					pstmt.setString(3, member.getName());
+				}		
 			}
 			
 			n = pstmt.executeUpdate();
@@ -685,20 +698,20 @@ public class MemberDAO implements InterMemberDAO {
 	        pstmt.setString(1, userid);
 	        
 	        rs = pstmt.executeQuery();
-			rs.next();
-			
-			addressVo.setUserid(rs.getString(1));
-			addressVo.setPostcode(rs.getString(2));
-			addressVo.setAddress(rs.getString(3));
-			addressVo.setDetailaddress(rs.getString(4));
-			addressVo.setExtraaddress(rs.getString(5));
-			addressVo.setDefault_yn(rs.getString(6));
-			addressVo.setHometel(rs.getString(7));
-			addressVo.setMobile(rs.getString(8));
-			addressVo.setAno(rs.getLong(9));
-			addressVo.setDelivername(rs.getString(10));
-			addressVo.setName(rs.getString(11));
-			
+			while(rs.next()) {				
+				addressVo.setUserid(rs.getString(1));
+				addressVo.setPostcode(rs.getString(2));
+				addressVo.setAddress(rs.getString(3));
+				addressVo.setDetailaddress(rs.getString(4));
+				addressVo.setExtraaddress(rs.getString(5));
+				addressVo.setDefault_yn(rs.getString(6));
+				addressVo.setHometel(rs.getString(7));
+				addressVo.setMobile(rs.getString(8));
+				addressVo.setAno(rs.getLong(9));
+				addressVo.setDelivername(rs.getString(10));
+				addressVo.setName(rs.getString(11));				
+			}
+						
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
