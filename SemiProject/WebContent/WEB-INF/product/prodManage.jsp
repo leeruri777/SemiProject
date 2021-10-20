@@ -104,88 +104,26 @@
 			   
 			   $("input#plusqty").val("");
 			   
-			   
 		   });
 		
 		$("button.stock_minus").click(function() {
 			  
 			   var prod_code = $(this).parent().parent().find(".prod_code").text();
 			   var prod_name = $(this).parent().parent().find(".prod_name").text();
-			   
-			   
+			  			   
 			  // console.log(prod_code+","+prod_name);
 			   		   
 			   $("[name=prod_code_minus]").val(prod_code);
 			   $("[name=prod_name_minus]").val(prod_name);
-			   $("[name=minusqty]").val(inout_qty);
-			   $("[name=plus_minus_exp]").val(inout_exp);
+	//		   $("[name=minusqty]").val(inout_qty);
+			   $("#stock_minus").val($(this).parent().find(".prod_stock").text());
+	//		   $("[name=plus_minus_exp]").val(inout_exp);
 			   
-			   $("#stock_minus").val($(this).parent().parent().find(".prod_stock").text());
-			 
-			   
-			  // console.log($("#stock_minus").val())
+			   //console.log($("#stock_minus").val());
 			   
 			   $("input#minusqty").val("");
 			   
 		});
-		
-		
-		
-			
-		$("input#plusqty").blur(function(){
-			if(isNaN($(this).val())) {
-				alert("숫자만 입력하세요");
-				$(this).val("");
-				return;
-			}
-			
-			if( ($(this).val()).trim() == "") {
-				alert("입고량을 반드시 입력하세요");	
-				$(this).val("");
-				return;
-			}
-			
-			var arrinqty = $(this).val().split(".");
-						
-			if(arrinqty.length != 1) {
-				alert("정수만 입력하세요");
-				$(this).val("");
-				return;
-			}
-			
-		});
-		
-		
-		
-		$("input#minusqty").blur(function(){
-			if(isNaN($(this).val())){
-				alert("숫자만 입력하세요");
-				$(this).val("");
-				return;
-			}
-			
-			if( ($(this).val()).trim() == "") {
-				alert("폐기량을 반드시 입력하세요");
-				$(this).val("");
-				return;
-			}
-			
-			var arrminusqty = $(this).val().split(".");
-			
-			if(arrminusqty.length != 1) {
-				alert("정수만 입력하세요");
-				$(this).val("");
-				return;
-			}
-			
-			if( Number($("#stock").val()) < Number($(this).val()) ) {
-				alert("폐기량은 재고량을 초과할 수 없습니다");
-				$(this).val("");
-				return;
-			}
-			
-			
-		}); 
 		
 		
 		$("button.stock_plus_do").bind('click', function(){
@@ -237,6 +175,32 @@
 		// console.log(frm.status_plus.value);
 		// console.log(frm.plusqty.value);
 		
+		if(isNaN(frm.plusqty.value)) {
+				alert("숫자만 입력하세요");
+				frm.plusqty.value = ""
+				return;
+		}
+			
+		if( frm.plusqty.value.trim() == "") {
+			alert("입고량을 반드시 입력하세요");	
+			frm.plusqty.value =""
+			return;
+		}
+		
+		var arrinqty = frm.plusqty.value.split(".");
+					
+		if(arrinqty.length != 1) {
+			alert("정수만 입력하세요");
+			frm.plusqty.value = ""
+			return;
+		}
+		
+		if(Number(frm.plusqty.value) < 1){
+			alert("입고량은 1개 이상이어야 합니다");
+			frm.minusqty.value = ""
+			return;
+		}
+		
 		
 		frm.action = "/product/plusProduct.go";
 		frm.method = "POST";
@@ -250,6 +214,37 @@
 		// console.log(frm.status_minus.value);
 		// console.log(frm.minusqty.value);
 		// console.log(frm.plus_minus_exp.value);
+		
+		if(isNaN(frm.minusqty.value)){
+			alert("숫자만 입력하세요");
+			frm.minusqty.value=""
+			return;
+		}
+		
+		if( frm.minusqty.value.trim() == "") {
+			alert("폐기량을 반드시 입력하세요");
+			frm.minusqty.value=""
+			return;
+		}
+		
+		var arrminusqty = frm.minusqty.value.split(".");
+		
+		if(arrminusqty.length != 1) {
+			alert("정수만 입력하세요");
+			frm.minusqty.value = ""
+			return;
+		}
+		
+		if( Number($("#stock_minus").val()) < Number(frm.minusqty.value) ) {
+			alert("폐기량은 재고량을 초과할 수 없습니다");
+			frm.minusqty.value=""
+			return;
+		} 
+		if(Number(frm.minusqty.value) < 1){
+			alert("폐기량은 1개 이상이어야 합니다");
+			frm.minusqty.value = ""
+			return;
+		}
 		
 		
 		frm.action = "/product/minusProduct.go";
@@ -400,7 +395,7 @@
 		    </div>
 		  </div>		
 			
-			<form name="확인">
+			<!-- <form name="확인">
 				<input type="hidden" class="status" />
 				<input type="hidden" class="prod_code_plus" />
 				<input type="hidden" class="plusqty" /> 
@@ -410,7 +405,7 @@
 				<input type="hidden" class="prod_code_minus" />
 				<input type="hidden" class="minusqty" /> 
 				<input type="hidden" class="plus_minus_exp" /> 
-			</form>
+			</form> -->
 			
 			
 			<!----------------------------------------------------------------------- -->
