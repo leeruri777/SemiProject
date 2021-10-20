@@ -298,7 +298,7 @@ public class OrderDAO implements InterOrderDAO {
 	    	  
 	    	  for(int i=0; i<arrProd_code.length; i++) {
 	    		  
-	    		  String sql = "select prod_img_url, prod_exp, prod_price, discount_price, prod_stock, prod_name "
+	    		  String sql = "select prod_img_url, prod_exp, prod_price, discount_price, prod_stock, prod_name, prod_code "
 	    		  			 + "from view_prodonedetail "
 	    		  			 + "where prod_code = ? ";             
 		    	 
@@ -317,6 +317,7 @@ public class OrderDAO implements InterOrderDAO {
 		            product.put("prod_stock", rs.getInt(5));
 		            product.put("goods_qy", Integer.parseInt(goods_qyAmount[i]));
 		            product.put("prod_name", rs.getString(6));
+		            product.put("prod_code", rs.getString(7));
 		            
 		            prodList.add(product);
 		         }

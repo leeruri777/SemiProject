@@ -299,7 +299,7 @@ table.table.btable > tbody > tr > td:nth-child(1){
 						</ul>
 					</td>
 					<td class="tdTitle col-md-1" style="font-size:11px;">총 적립금</td>
-					<td style="text-align:center;" class="col-md-3"><span id="totalPoint"></span>원</td>
+					<td style="text-align:center;" class="col-md-3"><span class="totalPoint" id="totalPoint"></span>원</td>
 					<td class="col-md-1"><a href="javascript:pay();" id="btn_payment" class="btn btn-secondary" style="font-size:16px; font-weight:700; padding:10px 20px;width:170px;">결제하기</a></td>
 				</tr>
 			</tbody>
@@ -534,8 +534,9 @@ function pay(){
 	var url = "/order/purchaseEnd.go?email="+email+"&name="+name+"&mobile="+mobile; 
     
     //window.open은 팝업창 띄우기임
-    window.open(url, "purchaseEnd",
-    			"left=350px, top=100px, width=850px, height=600px");
+   // window.open(url, "purchaseEnd",
+    //			"left=350px, top=100px, width=850px, height=600px");
+    goORDER_SETLE_INSERT();
 }
 
 
@@ -545,8 +546,8 @@ function goORDER_SETLE_INSERT() { /* OrderSetleEndAction로 frm_order_setle폼�
 	var class_prod_name = document.getElementsByClassName("prod_name");
 	var class_price_comma_del = document.getElementsByClassName("price_comma_del");
 	var class_goods_qy = document.getElementsByClassName("goods_qy");
-	
 	var class_prod_code = document.getElementsByClassName("prod_code");//
+	
 	var class_user_req = document.getElementsByClassName("user_req");//
 	
 	/* 태그에서 class이름을 잡은 위치에 있는 값들을 각각 태그의 value값이나 텍스트를 쓰는 위치에 넣어주고 배열에 넣기 */
@@ -557,7 +558,7 @@ function goORDER_SETLE_INSERT() { /* OrderSetleEndAction로 frm_order_setle폼�
     var arr_prod_code = new Array();//
 	
     for(var i=0; i<class_prod_name.length; i++) {
-	//console.log("상품명 : " + class_prod_name[i].innerText + ", 판매가 : " + class_price[i].innerText + ", 주문개수 : " + class_goods_qy[i].value);
+	console.log("상품명 : " + class_prod_name[i].innerText + ", 판매가 : " + class_price_comma_del[i].innerText + ", 주문개수 : " + class_goods_qy[i].value +", 주문개수 : " + class_prod_code[i].value);
     
 	    arr_prod_name.push(class_prod_name[i].innerText);
     	arr_price.push(class_price_comma_del[i].value);
@@ -567,12 +568,21 @@ function goORDER_SETLE_INSERT() { /* OrderSetleEndAction로 frm_order_setle폼�
     	
 	}// end of for---------------------------------------
 	
-	var user_req = '';//
-	user_req.push(class_user_req.innerText);//
+	
+	//var user_req = class_user_req.value;
+	//var user_req = $("#user_req").text();
+	//var user_req = $(tag_name[name=omessage]).text();
+	var user_req = $(textarea[name=omessage]).text();
+	
+	var totalPoint = $("#totalAmount").text();
+	totalPoint = parseInt(totalPoint);
+	
+	console.log('prod_code_join', prod_code_join);
+	console.log('arr_prod_code',arr_prod_code);
 	
      
     for(var i=0; i<arr_prod_name.length; i++) {
-    	console.log("상품명 : " + arr_prod_name[i] + ", 판매가 : " + arr_price[i] + ", 주문개수 : " + arr_goods_qy[i] + ", 상품코드 : " + arr_prod_code[i] );      
+    	console.log("상품명 : " + arr_prod_name[i] + ", 판매가 : " + arr_price[i] + ", 주문개수 : " + arr_goods_qy[i] + ", 상품코드 : " + arr_prod_code[i] + ", 배송메세지 : " + user_req + ", 총적립금 : " + totalPoint );      
 	}
  
 	/* 배열을 문자열로 바꿔주고 변수에 넣기 */
@@ -589,15 +599,17 @@ function goORDER_SETLE_INSERT() { /* OrderSetleEndAction로 frm_order_setle폼�
     frm.prod_name.value = prod_name_join;
     frm.price.value = price_join;
     frm.goods_qy.value = goods_qy_join;
+    frm.prod_code.value = prod_code_join; 
+   
+    frm.prod_code.value = prod_code_join;
     
-    frm.prod_code.value = prod_code_join; //상품번호. 값을 못잡았다.
     frm.user_req.value = user_req; //배송메세지
     
     
     
     frm.action = "/order/orderSetleEnd.go";
     frm.method = "POST"; 
-	frm.submit();
+	//frm.submit();
 }
 
 
