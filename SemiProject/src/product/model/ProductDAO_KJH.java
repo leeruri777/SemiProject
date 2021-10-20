@@ -887,7 +887,7 @@ public class ProductDAO_KJH implements InterProductDAO_KJH {
 				
 				pstmt = conn.prepareStatement(sql);
 				
-				if(paraMap.get("review_img") == null) {
+				if(paraMap.get("photo") == null) {
 					pstmt.setInt(1, 100);
 				}
 				

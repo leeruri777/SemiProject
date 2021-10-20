@@ -53,7 +53,8 @@ public class InsertReviewAction extends AbstractController {
 				String content = mtrequest.getParameter("content").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br>");
 				String score = mtrequest.getParameter("score");
 				
-				String review_img = mtrequest.getFilesystemName("photo");
+				String photo = mtrequest.getFilesystemName("photo");
+				String review_img = mtrequest.getParameter("review_img");
 								
 			//	if(review_img == "") 
 			//	System.out.println(orderno + " , " + prod_code + " , " + userid + " , " + content + " , " + review_img + " , " + score);
@@ -64,6 +65,7 @@ public class InsertReviewAction extends AbstractController {
 				paraMap.put("prod_code", prod_code);
 				paraMap.put("userid", userid);
 				paraMap.put("content", content);
+				paraMap.put("photo", photo);
 				paraMap.put("review_img", review_img);
 				paraMap.put("score", score);
 				
