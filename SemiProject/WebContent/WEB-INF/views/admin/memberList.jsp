@@ -90,8 +90,8 @@ $(function(){
 	}
 	$("#keyword").val("${requestScope.keyword}");	
 	
-	$("select#sizePerPage").val(${requestScope.sizePerPage});
-	$("select#sizePerPage").change(function(){
+	$("#select#sizePerPage").val(${requestScope.sizePerPage});
+	$("#select#sizePerPage").change(function(){
 		goSearch();	
 	});
 	

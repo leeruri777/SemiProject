@@ -414,19 +414,19 @@ public class OrderDAO implements InterOrderDAO {
 			List<Map<String, Object>> orderSetleList = new ArrayList<>();
 			
 			String userid = pg.getUserid();
-		    String status = pg.getSearchType();
+		    String status = pg.getStatus();
 		    String fromDate = pg.getFromDate();
 		    String toDate = pg.getToDate();
 						
 			try {
 				conn = ds.getConnection();
-				String sql = "select order_dt, PROD_IMG_URL, PROD_EXP, GOODS_QY, TOT_AMOUNT, status, prod_code "
+				String sql = "select order_dt, PROD_IMG_URL, PROD_EXP, GOODS_QY, TOT_AMOUNT, status, prod_code, order_no, prod_name "
 						   + "from "
 						   + "    ( "
 						   + "    select rownum as RNUM, t.* "
 						   + "    from "
 					   	   + "        ( "
-						   + "        select o.order_dt, v.PROD_IMG_URL, v.PROD_EXP, o.GOODS_QY, o.TOT_AMOUNT, o.status, v.prod_code "
+						   + "        select o.order_dt, v.PROD_IMG_URL, v.PROD_EXP, o.GOODS_QY, o.TOT_AMOUNT, o.status, v.prod_code, o.order_no, o.prod_name "
 						   + "        from ORDER_SETLE o, VIEW_PRODONEDETAIL v "
 						   + "        where o.fk_user_id = ? "
 						   + "        and o.fk_prod_code = v.prod_code ";
@@ -486,6 +486,8 @@ public class OrderDAO implements InterOrderDAO {
 					order.put("tot_amount", rs.getInt(5));
 					order.put("status", rs.getString(6));
 					order.put("prod_code", rs.getString(7));
+					order.put("order_no", rs.getString(8));
+					order.put("prod_name", rs.getString(9));
 					
 					orderSetleList.add(order);
 				}
@@ -603,6 +605,258 @@ public class OrderDAO implements InterOrderDAO {
 			}
 		    
 		    return result;
+		}
+
+		@Override
+		public List<Map<String, Object>> getOrderSetleListAll(Pagination pg) throws SQLException {
+			
+			List<Map<String, Object>> orderSetleListAll = new ArrayList<>();
+			String searchType = pg.getSearchType();
+		    String keyword = pg.getKeyword();
+		    String status = pg.getStatus();
+		    String fromDate = pg.getFromDate();
+		    String toDate = pg.getToDate();
+		    		    
+		    int currPageNo = pg.getCurrPageNo();
+			int sizePerPage = pg.getSizePerPage();
+			
+			if("userid".equals(searchType)) {
+				searchType = "o.fk_user_id";
+			} else if("name".equals(searchType)) {
+				searchType = "o.user_name";
+			}
+			
+			try {
+				conn = ds.getConnection();
+				String sql = "select order_dt, PROD_IMG_URL, PROD_EXP, GOODS_QY, TOT_AMOUNT, status, prod_code, fk_user_id, user_name, order_no, prod_name  "
+						   + "from "
+						   + "    ( "
+						   + "    select rownum as RNUM, t.* "
+						   + "    from "
+					   	   + "        ( "
+						   + "			select o.order_dt, v.PROD_IMG_URL, v.PROD_EXP, o.GOODS_QY, o.TOT_AMOUNT, o.status, v.prod_code, o.fk_user_id, o.user_name, o.order_no, o.prod_name "	
+						   + "			from ORDER_SETLE o, VIEW_PRODONEDETAIL v "
+						   + "			where 1=1 ";
+								
+				if(searchType != null && keyword != "" && !keyword.trim().isEmpty()) {
+					   sql += "			and " + searchType + " like '%'|| ? ||'%' ";
+				}
+				if(status != null) {
+					   sql += "			and status = ? ";
+				}					  
+					   sql += "			and o.fk_prod_code = v.prod_code ";
+					   
+			    if(fromDate != null && toDate != null) {
+			    	   sql += "			and o.order_dt between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') ";
+			    }
+			    	   sql += "        order by order_dt desc "
+						   + "        ) t "
+						   + "    where rownum <= ? "
+						   + "    ) "
+						   + "where ? <= RNUM";
+						    
+				pstmt = conn.prepareStatement(sql);
+				// 아이디 및 사용자로 검색하는 경우
+				if(keyword != "" && !keyword.trim().isEmpty()) {
+					pstmt.setString(1, keyword);
+					
+					// 배송상태 검색값이 존재하는 경우
+					if(status != null) {
+						pstmt.setString(2, status);
+						// 검색 기한이 존재하는 경우
+						if(fromDate != null && toDate != null) {
+							pstmt.setString(3, fromDate);
+							pstmt.setString(4, toDate);
+							pstmt.setInt(5, currPageNo * sizePerPage );
+							pstmt.setInt(6, pg.getStartList() );
+					    } else {
+					    	//검색 기한이 없는 경우
+					    	pstmt.setInt(3, currPageNo * sizePerPage );
+							pstmt.setInt(4, pg.getStartList() );
+					    } 
+					} else { 
+						// 배송상태 검색값은 없지만 검색기간은 있는 경우
+						if(fromDate != null && toDate != null) {
+							pstmt.setString(2, fromDate);
+							pstmt.setString(3, toDate);
+							pstmt.setInt(4, currPageNo * sizePerPage );
+							pstmt.setInt(5, pg.getStartList() );
+					    } else {
+					    	pstmt.setInt(2, currPageNo * sizePerPage );
+							pstmt.setInt(3, pg.getStartList() );
+					    }
+					}
+					
+				} else {
+					
+					// 배송상태 검색값이 존재하는 경우
+					if(status != null) {
+						pstmt.setString(1, status);
+						// 검색 기한이 존재하는 경우
+						if(fromDate != null && toDate != null) {
+							pstmt.setString(2, fromDate);
+							pstmt.setString(3, toDate);
+							pstmt.setInt(4, currPageNo * sizePerPage );
+							pstmt.setInt(5, pg.getStartList() );
+					    } else {
+					    	//검색 기한이 없는 경우
+					    	pstmt.setInt(3, currPageNo * sizePerPage );
+							pstmt.setInt(4, pg.getStartList() );
+					    }
+					} else { 
+						// 배송상태 검색값은 없지만 검색기간은 있는 경우
+						if(fromDate != null && toDate != null) {
+							pstmt.setString(1, fromDate);
+							pstmt.setString(2, toDate);
+							pstmt.setInt(3, currPageNo * sizePerPage );
+							pstmt.setInt(4, pg.getStartList() );
+					    } else {					    	
+					    	pstmt.setInt(1, currPageNo * sizePerPage );
+							pstmt.setInt(2, pg.getStartList() );
+					    }
+					}
+					
+				}											
+									
+				rs = pstmt.executeQuery();
+				while(rs.next()) {
+					
+					Map<String, Object> order = new HashMap<>();
+					order.put("order_dt", rs.getDate(1));
+					order.put("prod_img_url", rs.getString(2));
+					order.put("prod_exp", rs.getString(3));
+					order.put("goods_qy", rs.getInt(4));
+					order.put("tot_amount", rs.getInt(5));
+					order.put("status", rs.getString(6));
+					order.put("prod_code", rs.getString(7));
+					order.put("userid", rs.getString(8));
+					order.put("name", rs.getString(9));
+					order.put("order_no", rs.getString(10));
+					order.put("prod_name", rs.getString(11));
+					
+					orderSetleListAll.add(order);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				close();
+			}
+			
+			return orderSetleListAll;
+		}
+
+		@Override
+		public int getOrderSetleListCountAll(Pagination pg) throws SQLException {
+			
+			int result = 0;
+			String searchType = pg.getSearchType();
+		    String keyword = pg.getKeyword();
+		    String status = pg.getStatus();
+		    String fromDate = pg.getFromDate();
+		    String toDate = pg.getToDate();
+			
+			try {
+				conn = ds.getConnection();
+				String sql = "select count(*)  "
+						   + "from ORDER_SETLE o, VIEW_PRODONEDETAIL v "
+						   + "where 1=1 ";
+				
+				if("userid".equals(searchType)) {
+					searchType = "o.fk_user_id";
+				} else if("name".equals(searchType)) {
+					searchType = "o.user_name";
+				}				
+				if(searchType != null && keyword != null && !keyword.trim().isEmpty()) {
+					sql += "and " + searchType + " like '%'|| ? ||'%' ";
+				}
+				if(status != null) {
+					   sql += "and status = ? ";
+				}					  
+					   sql += "and o.fk_prod_code = v.prod_code ";
+					   
+			    if(fromDate != null && toDate != null) {
+			    	   sql += "and o.order_dt between to_date(?,'YYYY-MM-DD') and to_date(?,'YYYY-MM-DD') ";
+			    }
+						    
+				pstmt = conn.prepareStatement(sql);				
+				if(keyword != "" && !keyword.trim().isEmpty()) {
+					pstmt.setString(1, keyword);
+					
+					// 배송상태 검색값이 존재하는 경우
+					if(status != null) {
+						pstmt.setString(2, status);
+						// 검색 기한이 존재하는 경우
+						if(fromDate != null && toDate != null) {
+							pstmt.setString(3, fromDate);
+							pstmt.setString(4, toDate);
+					    } 
+					} else { 
+						// 배송상태 검색값은 없지만 검색기간은 있는 경우
+						if(fromDate != null && toDate != null) {
+							pstmt.setString(2, fromDate);
+							pstmt.setString(3, toDate);
+					    }
+					}
+					
+				} else {
+					
+					// 배송상태 검색값이 존재하는 경우
+					if(status != null) {
+						pstmt.setString(1, status);
+						// 검색 기한이 존재하는 경우
+						if(fromDate != null && toDate != null) {
+							pstmt.setString(2, fromDate);
+							pstmt.setString(3, toDate);
+					    } 
+					} else { 
+						// 배송상태 검색값은 없지만 검색기간은 있는 경우
+						if(fromDate != null && toDate != null) {
+							pstmt.setString(1, fromDate);
+							pstmt.setString(2, toDate);
+					    }
+					}
+					
+				}											
+									
+				rs = pstmt.executeQuery();
+				rs.next();
+				result = rs.getInt(1);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				close();
+			}
+			
+			return result;
+		}
+
+		@Override
+		public int updateDeliverStatus(String order_no, String status) {
+			
+			int result = 0;
+		      
+		    try {
+		         
+		        conn = ds.getConnection();
+		                  
+	            String sql = "UPDATE ORDER_SETLE SET status = ? " 
+	            		   + "WHERE order_no = ? ";
+	                      	            
+	            pstmt = conn.prepareStatement(sql);	                    
+	            pstmt.setString(1, status);
+	            pstmt.setString(2, order_no);
+	            
+	            result = pstmt.executeUpdate();            
+         
+		      } catch (Exception e){
+		    	  e.printStackTrace();
+		      } finally {
+		         close();
+		      }
+		      
+		      return result;
 		}
 
 }

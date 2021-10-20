@@ -54,7 +54,7 @@ table td {
 		<table class="table table-bordered">
 		  <thead>
 		    <tr style="background-color: #f9f9f9;">
-		      <td>주문일자</td>
+		      <td>주문일자[주문번호]</td>
 		      <td>이미지</td>
 		      <td>상품정보</td>
 		      <td>수량</td>
@@ -65,9 +65,9 @@ table td {
 		  <tbody>
 	    	<c:forEach items="${requestScope.orderList}" var ="orderList">
 		    	<tr>
-		    		 <td>${orderList.order_dt}</td>
+		    		 <td>${orderList.order_dt}(${orderList.order_no})</td>
 				     <td><a href="/product/prodDetail.go?prod_code=${orderList.prod_code}"><img src="/img_prod/${orderList.prod_img_url}" alt="상품사진" width=60px;/></a></td>
-				     <td>${orderList.prod_exp}</td>
+				     <td>${orderList.prod_name}</td>
 				     <td>${orderList.goods_qy}</td>
 				     <td><fmt:formatNumber value="${orderList.tot_amount}" type="number"></fmt:formatNumber>원</td>
 				     <td>

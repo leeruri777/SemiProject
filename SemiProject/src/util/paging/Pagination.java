@@ -13,9 +13,17 @@ public class Pagination {
 	private int startPage; // 각 페이지 범위의 시작 번호
 	
 	// 검색
+	private String status; // 배송상태 검색
 	private String searchType; // 검색타입
 	private String keyword; // 키워드
 	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	private String fromDate; // 날짜 기한
 	private String toDate; // 날짜 기한
 	

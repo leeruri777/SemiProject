@@ -70,7 +70,7 @@
                             <div class="collapse" id="collapseLayouts3" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="#">배송승인</a>
-                                    <a class="nav-link" href="#">배송관리</a>
+                                    <a class="nav-link" href="/admin/deliverManage.go">배송관리</a>
                                     <a class="nav-link" href="/admin/deliverFee.go">배송비</a>
                                 </nav>
                             </div>                      
