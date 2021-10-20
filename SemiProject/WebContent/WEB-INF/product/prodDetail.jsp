@@ -935,7 +935,10 @@
 						
 						<tr>
 							<td><span class="ml-1">배송비</span></td>
-							<td class="">3,500원&nbsp;(39,800원 이상 구매 시 무료)</td>
+							<td class="">
+								<fmt:formatNumber value="${sessionScope.deliverFeeSet.fee}" type="number"></fmt:formatNumber>원&nbsp;
+								(<fmt:formatNumber value="${sessionScope.deliverFeeSet.freeline}" type="number"></fmt:formatNumber>원 이상 구매 시 무료)
+							</td>
 						</tr>
 						
 					</table>

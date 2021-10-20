@@ -2,6 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/WEB-INF/include/header_admin.jsp"/>
 <style>
+.section{
+ 	width : 70%;
+ 	margin-left : 300px;
+ 	margin-top : 100px;
+ }
 a { 
 	text-decoration:none 
 } 
@@ -85,8 +90,8 @@ $(function(){
 	}
 	$("#keyword").val("${requestScope.keyword}");	
 	
-	$("select#sizePerPage").val(${requestScope.sizePerPage});
-	$("select#sizePerPage").change(function(){
+	$("#select#sizePerPage").val(${requestScope.sizePerPage});
+	$("#select#sizePerPage").change(function(){
 		goSearch();	
 	});
 	

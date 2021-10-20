@@ -23,14 +23,11 @@ table td {
 	  <li class="nav-item">
 	    <a class="nav-link active text-secondary" href="/mypage/orderlist.go">주문내역조회</a>
 	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link text-secondary" href="/mypage/cancellist.go">취소/반품/교환 내역</a>
-	  </li>
 	</ul>	
 	<div class="pt-4 pb-5">	
 	  <div class="card">
 	    <div class="card-body">
-	    <form id="searchForm" name="searchForm">	      
+	    <form id="searchFrm" name="searchFrm">	      
 		      <select style="font-size: 11pt;" id="status" name="status">
 			    	<option value="all">전체 주문처리상태</option>
 			        <option value="beforedeposit">입금전</option>
@@ -57,7 +54,7 @@ table td {
 		<table class="table table-bordered">
 		  <thead>
 		    <tr style="background-color: #f9f9f9;">
-		      <td>주문일자</td>
+		      <td>주문일자[주문번호]</td>
 		      <td>이미지</td>
 		      <td>상품정보</td>
 		      <td>수량</td>
@@ -68,9 +65,9 @@ table td {
 		  <tbody>
 	    	<c:forEach items="${requestScope.orderList}" var ="orderList">
 		    	<tr>
-		    		 <td>${orderList.order_dt}</td>
+		    		 <td>${orderList.order_dt}(${orderList.order_no})</td>
 				     <td><a href="/product/prodDetail.go?prod_code=${orderList.prod_code}"><img src="/img_prod/${orderList.prod_img_url}" alt="상품사진" width=60px;/></a></td>
-				     <td>${orderList.prod_exp}</td>
+				     <td>${orderList.prod_name}</td>
 				     <td>${orderList.goods_qy}</td>
 				     <td><fmt:formatNumber value="${orderList.tot_amount}" type="number"></fmt:formatNumber>원</td>
 				     <td>
@@ -170,11 +167,10 @@ function search(){
 			return;
 		}
 	}
-	console.log('fd',fromDate);
-	console.log('td',fromDate);
 	
-	var frm = document.searchForm;
+	var frm = document.searchFrm;
 	frm.action = '/mypage/orderlist.go';
+	
 	frm.submit();
 }
 $(function() {

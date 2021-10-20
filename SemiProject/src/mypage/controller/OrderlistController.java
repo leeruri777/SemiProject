@@ -37,8 +37,6 @@ public class OrderlistController extends AbstractController {
 			
 			// 주소창에 GET 문자열 입력 방지
 			try {
-				String curr = request.getParameter("currPageNo");
-				int currr = Integer.parseInt(curr);
 				currPageNo = Integer.parseInt(request.getParameter("currPageNo"));		
 			} catch(Exception e) {
 				currPageNo = 1;			
@@ -76,7 +74,7 @@ public class OrderlistController extends AbstractController {
 				toDate = null;
 			}
 			
-			pg.setSearchType(status);
+			pg.setStatus(status);
 			pg.setCurrPageNo(currPageNo);			
 			pg.setFromDate(fromDate);
 			pg.setToDate(toDate);

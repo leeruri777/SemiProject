@@ -151,7 +151,6 @@ function goUpdate(){
 	
 	var pwd = $("input#pwd").val().trim();
 	if(pwd == ""){
-		$("input#pwd").val('${sessionScope.loginuser.pwd}');
 		pwdCheck = true;
 		pwdConfirmCheck = true;
 	}

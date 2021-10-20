@@ -18,10 +18,19 @@ public class MemberVO {
 	   private int idle;                  // 휴면유무         0: 활동중  /  1 : 휴면중 
 	                                      // 마지막으로 로그인 한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴면으로 지정
 	   private int grade;				  // 등급. 0: 사용자  /  1:  관리자.  기본값 0
+	   private String loginType; // 카카오, 일반
 	   
 	   /////////////////////////////////////////////////////////////////////
 	   
-	   private boolean requirePwdChange = false;
+	   public String getLoginType() {
+		return loginType;
+	}
+
+	public void setLoginType(String loginType) {
+		this.loginType = loginType;
+	}
+
+	private boolean requirePwdChange = false;
 	   // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났으면 true
 	   // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지나지 않았으면 false
 	   

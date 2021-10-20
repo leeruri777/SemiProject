@@ -9,8 +9,15 @@ public class DeliverRegisterController extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// super.setRedirect(false);
-		super.setViewPage("/WEB-INF/views/mypage/deliverRegister.jsp");
+		
+		String type = request.getParameter("type");
+		
+		if("orderForm".equalsIgnoreCase(type)) {
+			super.checkLoginAuth(request, "/WEB-INF/views/order/deliverRegister.jsp");
+		} else {
+			super.checkLoginAuth(request, "/WEB-INF/views/mypage/deliverRegister.jsp");
+		}
+		
 		
 	}
 
