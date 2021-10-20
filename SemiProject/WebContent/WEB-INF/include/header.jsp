@@ -21,6 +21,7 @@
 <!-- jquery UI -->
 <link rel="stylesheet" type="text/css" href="/jquery-ui-1.12.1.custom/jquery-ui.css" />
 <script type="text/javascript" src="/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 </head>
 
 <!-- Navigation-->
@@ -77,7 +78,14 @@
 						</c:if>
 						<li class="nav-item"><a class="nav-link" href="#">${sessionScope.loginuer.userid}</a></li>
 						<li class="nav-item"><a class="nav-link" href="/mypage/orderlist.go">마이페이지</a></li>
-						<li class="nav-item"><a class="nav-link" href="/member/logout.go">로그아웃</a></li>
+						<c:choose>
+							<c:when test="${sessionScope.loginuser.loginType == 'kakao'}">
+								<li class="nav-item"><a class="nav-link" onclick="kakaoLogout();">로그아웃!</a></li>
+							</c:when>
+							<c:otherwise>
+								<li class="nav-item"><a class="nav-link" href="/member/logout.go">로그아웃</a></li>						
+							</c:otherwise>
+						</c:choose>																
 					</c:otherwise>
 				</c:choose>							                                       
             </ul>            
@@ -90,4 +98,18 @@
 	</div>
 		
 <body>
-
+<script type="text/javascript">
+$(function(){
+	// 카카오 초기화
+	Kakao.init('825e56e17bd334ca86670e481b45954e');
+});
+function kakaoLogout() {
+    if (!Kakao.Auth.getAccessToken()) {
+      alert('로그인을 해주세요.');
+      return
+    }
+    Kakao.Auth.logout(function() {
+      location.href = "/member/logout.go";
+    })
+  }
+</script>

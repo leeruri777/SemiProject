@@ -267,26 +267,72 @@ $(function(){
 			goLogin();
 		}
 	});
-	
 	// 카카오 초기화
 	Kakao.init('825e56e17bd334ca86670e481b45954e');
-	console.log(Kakao.isInitialized());
 });
 
 function kakaoLogin() {
 	
     Kakao.Auth.login({
-        scope: 'profile_nickname, account_email, gender, birthday', //동의항목 페이지에 있는 개인정보 보호 테이블의 활성화된 ID값을 넣습니다.
         success: function(response) {
-            console.log(response) // 로그인 성공하면 받아오는 데이터
             Kakao.API.request({ // 사용자 정보 가져오기 
                 url: '/v2/user/me',
-                /* data: {
-                    property_keys: ["kakao_profile_nickname","kakao_account.email","kakao_account.gender","kakao_birthday"]
-                }, */
-            	
-                success: (response) => {
-                    alert(response)
+                success: (response) => {               
+                    $.ajax({
+    					type : "post",
+    					url : '/member/idDuplicateCheck.go',
+    					data : {"userid":response.id+"K"},
+    					dataType:"json",
+    					success : function(json){   				
+    						if(json.idExists){
+    							// 존재하는 경우 로그인 처리
+    							var frm = document.createElement('form');
+    							frm.setAttribute('method', 'post');
+    							frm.setAttribute('action', '/member/kakaoLogin.go');
+    							var hiddenInput = document.createElement('input');
+    							hiddenInput.setAttribute('type','hidden');
+    							hiddenInput.setAttribute('name','userid');
+    							hiddenInput.setAttribute('value',response.id+"K");
+    							frm.appendChild(hiddenInput);
+    							document.body.appendChild(frm);
+    							frm.submit(); 
+    							
+    						} else{
+    							// 회원가입
+    							$.ajax({
+    								type : "post",
+    		    					url : '/member/kakaoSignUp.go',
+    		    					data : {"userid":response.id+"K",
+    		    						    "name":response.properties.nickname,
+    		    						    "email":response.kakao_account.email},
+    		    					dataType :"json",
+    		    					success : function(json){
+    		    						if(json.success){
+    		    							// 로그인
+    		    							var frm = document.createElement('form');
+    		    							frm.setAttribute('method', 'post');
+    		    							frm.setAttribute('action', '/member/kakaoLogin.go');
+    		    							var hiddenInput = document.createElement('input');
+    		    							hiddenInput.setAttribute('type','hidden');
+    		    							hiddenInput.setAttribute('name','userid');
+    		    							hiddenInput.setAttribute('value',response.id+"K");
+    		    							frm.appendChild(hiddenInput);
+    		    							document.body.appendChild(frm);
+    		    							frm.submit(); 		    							
+    		    						} else {
+    		    							alert('카카오 회원가입 실패. 일반계정으로 로그인하시기 바랍니다.');
+    		    						}
+    		    					},
+    		    					error: function(request, status, error){
+    		    		                   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+    		    		                }
+    							});
+    						}						
+    					},
+    					error: function(request, status, error){
+    		                   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+    		                }
+    				});
                 }
             });
             // window.location.href='/ex/kakao_login.html' //리다이렉트 되는 코드

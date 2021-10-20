@@ -44,7 +44,7 @@ public class SignUpAction extends AbstractController {
 	         try {
 	        	 
 	        	 InterMemberDAO mdao = new MemberDAO();
-		         int n = mdao.registerMember(member);
+		         int n = mdao.registerMember(member, "normal");
 		         
 		         if(n==1) {
 		        	 message += "회원가입이 완료되었습니다.";
