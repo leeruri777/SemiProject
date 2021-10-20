@@ -182,6 +182,17 @@
 						
 		});// end of $("button.plus").click()---------------------------------------
 		
+		if("${prodMap.pvo.prod_plus}" != "1") {
+			
+			$(document).on('click', ".pick_del", function() {
+				
+				if($(this).val() == "important") {
+					alert("필수 구매 옵션입니다.");
+				}
+				
+			});
+			
+		}
 		
 		////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -347,7 +358,7 @@
 			
 			var selectCnt = Number($("span#selectCnt").text());
 						
-			$("select[name=myselect]").change(function() {
+			$("select.myselect").change(function() {
 					
 				if(this.selectedIndex != 0 && selectCnt == 0) {
 					alert("골라담기 개수가 초과되었습니다.");
@@ -357,13 +368,13 @@
 				else if(this.selectedIndex != 0 && selectCnt != 0) {					
 					
 					selectCnt -= 1;
-					
-					var select_price = Number($(this).parent().find("#select_price").text());
+										
+					var select_price = Number($(this).next().val());
 					var select_value = $(this).val();
 										
-					var arrSelect = $("select[name=myselect]");
+					var arrSelect = $("select.myselect");
 					
-				//	console.log(select_price);
+				//	console.log(arrSelect);
 					
 					var html = 	"<div class='row mx-0 px-0 my-2 pt-3' style='border-top: solid 1px #d9d9d9;'>"+
 									"<div class='col-3 col-md-4'><p>" + $(this).find("option:selected").text() + "</div>"+
@@ -476,7 +487,7 @@
 					
 				//	console.log(howmany_minus);
 				
-					var arrSelect = $("select[name=myselect]");
+					var arrSelect = $("select.myselect");
 					
 					var myprice = Number($(this).parent().parent().find("#myprice").text());
 					
@@ -1034,9 +1045,9 @@
 									<div class="col-3 col-md-4">골라담기</div>
 									<div class="col-9 col-md-8">
 										
-										<c:forEach var="selectvo" items="${prodMap.selectList}">
-										
-											<select name="myselect" class="form-control form-control-sm w-80 mb-1">
+										<c:forEach var="selectvo" items="${prodMap.selectList}" varStatus="status">
+										<c:if test="${selectvo.discount_price eq -9999}">
+											<select name="myselect${status.index}" class="form-control form-control-sm w-80 mb-1 myselect">
 												<option>- [필수] 옵션을 선택해 주세요 -</option>												
 												<c:if test="${selectvo.prod_stock eq 0}">
 													<option value="${selectvo.prod_code}" disabled="disabled">
@@ -1049,13 +1060,31 @@
 													</option>												
 												</c:if>																					
 											</select>
-											<span id="select_price" style="display: none;">
-												<c:if test="${selectvo.discount_price eq -9999}">${selectvo.prod_price}</c:if>
-												<c:if test="${selectvo.discount_price ne -9999}">${selectvo.discount_price}</c:if>												
-											</span>
-											<span id="select_stock" style="display: none;">
+											<input type="hidden" value="${selectvo.prod_price}">
+											<span class="select_stock" style="display: none;">
 												${selectvo.prod_stock}											
 											</span>
+										</c:if>
+										
+										<c:if test="${selectvo.discount_price ne -9999}">
+											<select name="myselect${status.index}" class="form-control form-control-sm w-80 mb-1 myselect">
+												<option>- [필수] 옵션을 선택해 주세요 -</option>												
+												<c:if test="${selectvo.prod_stock eq 0}">
+													<option value="${selectvo.prod_code}" disabled="disabled">
+														${selectvo.prod_name}&nbsp;[품절]
+													</option>
+												</c:if>
+												<c:if test="${selectvo.prod_stock ne 0}">
+													<option value="${selectvo.prod_code}">
+														${selectvo.prod_name}												
+													</option>												
+												</c:if>																					
+											</select>
+											<input type="hidden" value="${selectvo.discount_price}">
+											<span class="select_stock" style="display: none;">
+												${selectvo.prod_stock}											
+											</span>
+										</c:if>
 										</c:forEach>
 										
 										<span id="selectCnt" style="display: none;">${prodMap.pvo.prod_select}</span>
@@ -1074,7 +1103,7 @@
 								</c:if>
 								<c:if test="${prodMap.pvo.discount_price ne '-9999'}">
 									<div class="col-7" style="text-align: right;">
-										<h3><span id="total_price"></span>원<span class="small" id="total"><small>(</small>1</span><small>개)</small></h3>
+										<h3><span id="total_price"></span>원<small>(</small><span class="small" id="total">1</span><small>개)</small></h3>
 									</div>
 								</c:if>
 							</div>
