@@ -4,8 +4,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/WEB-INF/include/header.jsp"/>
+<jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
+
 <link rel="stylesheet" type="text/css" href="/css/mypage/mypageStyle.css" />
-<title>주문서 작성</title>
+<title>마이페이지 - 배송지 등록</title>
 <style type="text/css">
 /* 표 첫번째열 가로넓이, 색, 정렬 등 */
 table td:nth-child(1) {
@@ -102,9 +104,7 @@ table.table.btable > tbody > tr > td:nth-child(1){
 	  	  		  <td>
 					 <button type="button" class="btn btn-secondary btn-sm" style="font-size: 8pt; padding: 5px;" onclick ="deleteBasket(this)">삭제</button>
 				  </td>
-			      <td><a href="/product/prodDetail.go?prod_code=${basketList.prod_code}" ><img src="/img_prod/${basketList.prod_img_url}" width=60px;/></a>
-			      		<input type="hidden" value="${basketList.prod_code}" class="prod_code" /> <%-- 상품번호값알아오려고 추가해봄 --%>
-			      </td>
+			      <td><a href="/product/prodDetail.go?prod_code=${basketList.prod_code}"><img src="/img_prod/${basketList.prod_img_url}" width=60px;/></a></td>
 			      <td class="prod_name">${basketList.prod_name}</td>
 			      <td>
 			       <span class="price">
@@ -246,7 +246,7 @@ table.table.btable > tbody > tr > td:nth-child(1){
 		    </tr>
 		    <tr>	
 		    	<td>배송메세지</td>	    
-		    	<td><textarea id="omessage" class="user_req" name="omessage" maxlength="255" cols="70"></textarea></td>
+		    	<td><textarea id="omessage" name="omessage" maxlength="255" cols="70"></textarea></td>
 		    </tr>    
 		</table>		
   	</form>
@@ -306,28 +306,15 @@ table.table.btable > tbody > tr > td:nth-child(1){
 		</table>
 	</div>		
 	</div>
-	<%-- goORDER_SETLE_INSERT함수를 실행해서 OrderSetleEndAction로 보낼 폼 --%>
+	
 	<form name="frm_order_setle">
 		<input type="hidden" name="prod_name" />
 		<input type="hidden" name="price" />
-		<input type="hidden" name="goods_qy" /> 
-		
-		<input type="hidden" name="fk_prod_code" /> <%-- 결제내역에 insert하기 위한 상품번호 문자열--%>
+		<input type="hidden" name="goods_qy" />
 		
 		<input type="hidden" name="user_name" value="${sessionScope.loginuser.name}" />
-		<input type="hidden" name="fk_user_id" value="${sessionScope.loginuser.userid}" />
-		<input type="hidden" name="totalAmount" /> <%-- 결제내역에 insert하기 위한 총결제액 --%>
-		<input type="hidden" name="user_req" /> <%-- 결제내역에 insert하기 위한 배송메세지 --%>
-		<input type="hidden" name="point" /> <%-- 회원테이블에 update하기 위한 총point --%>
-		<input type="hidden" name="basket_no" /> <%-- 장바구니에서 delet하기 위한 장바구니번호 문자열--%>
-												<%-- 결제내역에 insert하기 위한 payment_type 아임포트 문자열--%>
 		
-		<%-- TBL_STOCK테이블에서에서 재고량을 감소시킬때는 상품코드를 where에 잡아서 재고량 컬럼인 prod_stock에서 goods_qy를 빼면 될까요?--%>
-												
-												
 	</form>
-	
-	
 </section>	
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>	
@@ -481,13 +468,24 @@ function calTotalAmount(){
 	$("#totalPrice").text(totalPrice);
 	
 	// 배송비 설정하기
-	let fee = ${sessionScope.deliverFeeSet.fee};
-	if(totalPrice >= parseInt(${sessionScope.deliverFeeSet.freeline})){
+	let fee = 3500;
+	if(totalPrice >= 50000){
 		fee = 0;
 	} 
 	$("#fee").text(fee);
+	
+	// 총 결제금액
+	/* var totalAmount = 0;
+	$(".priceToT").each((index, item) => {
+		
+		var priceToT = parseInt($(item).text().replace(/,/g , ''));
+		totalAmount = totalAmount + priceToT;
+		
+	}); */
 	$("#totalAmount").text(totalPrice + fee);
-
+	
+	//var vv = $("#totalAmount").text();
+	//$("#order_totalAmount").val(vv);
 }
 
 // 적립금 사용
@@ -539,94 +537,42 @@ function pay(){
 }
 
 
-function goORDER_SETLE_INSERT() { /* OrderSetleEndAction로 frm_order_setle폼을 전송시키기 위한 함수 */
+function goORDER_SETLE_INSERT() {
 	
-	/* 태그에서 class이름을 잡기 */
 	var class_prod_name = document.getElementsByClassName("prod_name");
 	var class_price_comma_del = document.getElementsByClassName("price_comma_del");
 	var class_goods_qy = document.getElementsByClassName("goods_qy");
 	
-	var class_prod_code = document.getElementsByClassName("prod_code");//
-	var class_user_req = document.getElementsByClassName("user_req");//
-	
-	/* 태그에서 class이름을 잡은 위치에 있는 값들을 각각 태그의 value값이나 텍스트를 쓰는 위치에 넣어주고 배열에 넣기 */
 	var arr_prod_name = new Array(); 
     var arr_price = new Array(); 
     var arr_goods_qy = new Array();
-    
-    var arr_prod_code = new Array();//
 	
     for(var i=0; i<class_prod_name.length; i++) {
-	//console.log("상품명 : " + class_prod_name[i].innerText + ", 판매가 : " + class_price[i].innerText + ", 주문개수 : " + class_goods_qy[i].value);
+	//	console.log("상품명 : " + class_prod_name[i].innerText + ", 판매가 : " + class_price[i].innerText + ", 주문개수 : " + class_goods_qy[i].value);
     
 	    arr_prod_name.push(class_prod_name[i].innerText);
     	arr_price.push(class_price_comma_del[i].value);
     	arr_goods_qy.push(class_goods_qy[i].value);
-    	
-    	arr_prod_code.push(class_prod_code[i].value);//
-    	
 	}// end of for---------------------------------------
-	
-	var user_req = '';//
-	user_req.push(class_user_req.innerText);//
-	
      
     for(var i=0; i<arr_prod_name.length; i++) {
-    	console.log("상품명 : " + arr_prod_name[i] + ", 판매가 : " + arr_price[i] + ", 주문개수 : " + arr_goods_qy[i] + ", 상품코드 : " + arr_prod_code[i] );      
+    	console.log("상품명 : " + arr_prod_name[i] + ", 판매가 : " + arr_price[i] + ", 주문개수 : " + arr_goods_qy[i] );      
 	}
  
-	/* 배열을 문자열로 바꿔주고 변수에 넣기 */
 	var prod_name_join = arr_prod_name.join();	
 	var price_join = arr_price.join();
 	var goods_qy_join = arr_goods_qy.join();
 	
-	var prod_code_join = arr_prod_code.join();//
-	
-	
-	
-	/* 변수를 폼에 넣기 */
     var frm = document.frm_order_setle;
     frm.prod_name.value = prod_name_join;
     frm.price.value = price_join;
     frm.goods_qy.value = goods_qy_join;
-    
-    frm.prod_code.value = prod_code_join; //상품번호. 값을 못잡았다.
-    frm.user_req.value = user_req; //배송메세지
-    
-    
     
     frm.action = "/order/orderSetleEnd.go";
     frm.method = "POST"; 
 	frm.submit();
 }
 
-
-
-function changeAddress(ano){
-	console.log('ca실행 -> ', ano);
-	$.ajax({
-		type : 'POST',
-		data : {"ano": ano},
-		dataType :'json',
-		url : '/order/changeAddress.go',
-		success : function(json){
-			console.log(json);
-			$("#delivername").val(json.delivername);
-			$("#name").val(json.name);
-			$("#postcode").val(json.postcode);
-			$("#address").val(json.address);
-			$("#detailaddress").val(json.detailaddress);
-			$("#extraaddress").val(json.extraaddress);
-			$("#mo1").val(json.mobile.substring(0,3));
-			$("#mo2").val(json.mobile.substring(3,7));
-			$("#mo3").val(json.mobile.substring(7,11));
-		},
-		error: function(request, status, error){
-            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-        }
-		
-	});
-	
-}
-</script>				 
+</script>	
+			 
 <jsp:include page="/WEB-INF/include/footer.jsp"/>
