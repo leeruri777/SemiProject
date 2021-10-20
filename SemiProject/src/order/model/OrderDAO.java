@@ -252,7 +252,7 @@ public class OrderDAO implements InterOrderDAO {
 	    	  
 	    	  for(int i=0; i<basket_no_arr.length; i++) {
 	    		  
-	    		  String sql = "select b.basket_no, v.prod_img_url, v.prod_exp, v.prod_price, v.discount_price, b.goods_qy, v.prod_stock, v.prod_name "
+	    		  String sql = "select b.basket_no, v.prod_img_url, v.prod_exp, v.prod_price, v.discount_price, b.goods_qy, v.prod_stock, v.prod_name, v.prod_code "
 		    		  	     + "from view_prodonedetail v, tbl_basket b "
 		    	  			 + "where b.basket_no = ? and b.fk_user_id = ? and b.fk_prod_code = v.prod_code";	               
 		    	 
@@ -272,7 +272,7 @@ public class OrderDAO implements InterOrderDAO {
 		            basket.put("goods_qy", rs.getInt(6));
 		            basket.put("prod_stock", rs.getInt(7));
 		            basket.put("prod_name", rs.getString(8));
-		         //   basket.put("prod_code", rs.getString(9));
+		            basket.put("prod_code", rs.getString(9));
 		            
 		            basketList.add(basket);
 		         }
@@ -607,4 +607,202 @@ public class OrderDAO implements InterOrderDAO {
 		    return result;
 		}
 
+		
+		
+		
+		
+		//결제 후 실행되는 메소드
+		// ===== Transaction 처리하기 ===== // 
+		@Override
+		public int orderSetleAdd(HashMap<String, Object> paraMap) throws SQLException {
+			//paraMap은 이 메소드를 호출하는 곳 즉, OrderSetleEndAction에서 넣어놨었다. 실제로 스트링타입이나 인트타입이더라도 맵에 오브젝트 타입으로 넣어뒀기에 여기에서 끄집어내올때는 원래 타입으로 형변환해준다.
+			int isSuccess = 0;
+			int n1=0, n2=0, n3=0, n4=0;
+			try {
+				
+				 conn = ds.getConnection();
+				 
+				 conn.setAutoCommit(false); //수동커밋
+				 
+				 
+				 // 1. 주문 테이블에 insert 하기(수동커밋처리)	 
+				
+				//맵에 오브젝트 타입이라고 넣었기때문에 형변환해준다. 스트링 배열 타입이다. 제품번호, 주문량, 주문가격 배열 등은 모두 배열에 들어간 개수가 같으니 아무거나 잡아서 그 갯수만큼 for문을 돌려도 된다. 반복문을 돌릴 것이다.
+				 if(true) {
+					
+				 	String[] prod_name_Arr = (String[]) paraMap.get("prod_name_Arr");
+					String[] price_Arr = (String[]) paraMap.get("price_Arr");
+					String[] goods_qy_Arr = (String[]) paraMap.get("goods_qy_Arr");
+					String[] fk_prod_code_Arr = (String[]) paraMap.get("fk_prod_code_Arr");
+					
+					
+					
+					
+					int cnt = 0;
+					for(int i=0; i<prod_name_Arr.length; i++) {
+						
+						 String sql =  " insert into order_setle(order_no, fk_user_id , user_name " + 
+			         			  "                       , fk_prod_code, prod_name, prod_price  " + 
+			         			  "                       , goods_qy, dscnt_amount , tot_amount " + 
+			         			  "                       , order_dt, user_req, payment_type, status) " +  
+			                      " values(order_no.nextval, ?, ?, ?, ?, ?, ?, ?, ?, default, ?, 'kp', '배송준비중') ";
+						
+						pstmt = conn.prepareStatement(sql); 
+						
+						//위치홀더에 값넣기
+						pstmt.setString(1, (String)paraMap.get("fk_user_id")); 
+						pstmt.setString(2, (String)paraMap.get("user_name"));
+						pstmt.setString(3, fk_prod_code_Arr[i]);
+						pstmt.setString(4, prod_name_Arr[i]); 
+						pstmt.setString(5, price_Arr[i]); 
+						pstmt.setString(6, goods_qy_Arr[i]); 
+						pstmt.setString(7, price_Arr[i]); //할인가? dscnt_amount
+						pstmt.setInt(8, Integer.parseInt((String)paraMap.get("totalAmount")));//totalAmount   setInt Integer.parseInt((String)paraMap.get("sumtotalPrice"))
+						pstmt.setString(9, (String)paraMap.get("user_req"));
+						
+						pstmt.executeUpdate();
+						cnt++; // 이 배열의 개수만큼 cnt가 늘어난다. 3개의 상품이 들어가있다면 cnt는 3이다.
+					}// end of for -----------------
+					
+					if(cnt == prod_name_Arr.length) {//위가 정상적으로 실행될 경우이다. // pnumArr.length이 배열의 개수만큼 cnt가 늘어난다. 3개의 상품이 들어가있다면 cnt는 3이다. 정상적으로 위가 실행되면 둘의 값이 같을 것이다.
+						n1=1; //올바르게 sql문이 실행되었다면 1값을 n1에 넣어준다.
+					}
+					System.out.println("~~~~~~ 확인용 n1 : " + n1);
+					
+				 }// end of if ----------------------
+				 
+					// 2. 제품잔고 테이블에서 제품번호에 해당하는 잔고량을 주문량 만큼 감하기(수동커밋처리) 
+					if(n1 == 1) {
+						String[] goods_qy_Arr = (String[]) paraMap.get("goods_qy_Arr");
+						String[] fk_prod_code_Arr = (String[]) paraMap.get("fk_prod_code_Arr");
+						
+						int cnt = 0;
+						for(int i=0; i<fk_prod_code_Arr.length; i++) {
+							
+							String sql = " update tbl_stock set prod_stock = prod_stock - ? "
+					                   + " where fk_prod_code = ? ";
+
+							 
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setInt(1, Integer.parseInt(goods_qy_Arr[i]));
+							pstmt.setString(2, fk_prod_code_Arr[i]);
+							
+							pstmt.executeUpdate();
+							cnt++;
+						
+						}// end of for------------------------
+						
+						if(cnt == fk_prod_code_Arr.length) {
+							n2=1;
+						}
+						System.out.println("~~~~~~ 확인용 n2 : " + n2);
+					}// end of if ----------------------
+				
+				
+					 // 3. 장바구니 테이블에서 주문한 행들을 삭제(delete OR update)하기(수동커밋처리) 
+					
+					// >> 장바구니에서 주문을 한 것이 아니라 특정제품을 바로주문하기를 한 경우에는 장바구니 테이블에서 행들 삭제할 작업은 없다. <<
+					  if( paraMap.get("basket_no_join") != null && n2==1 ) {
+						  //for문 쓸 필요없이 in을 쓰면된다. 장바구니번호가 5번, 7번 , 10번인걸 삭제하력 한다면 왼쪽처럼 하면 될 것이다.where cartno in(5, 7, 10) 
+						  String sql = " delete from tbl_basket "
+						  	  + " where basket_no in("+ (String)paraMap.get("basket_no_join") +") ";
+						  
+						
+						  
+						  pstmt = conn.prepareStatement(sql);
+						  
+						  n3 = pstmt.executeUpdate();
+						  
+						  System.out.println("~~~~~~ 확인용 n3 : " + n3);
+						  // ~~~~~~ 확인용 n3 : 3 //장바구니번호가 배열에 3개 들어있었다면 3개행을 삭제하게 되니까 n4에는 3값이 나온다.
+						  
+						  
+					  }// end of if------------------------------------------------
+				         
+					  if( paraMap.get("basket_no_join") == null && n2==1 ) { //장바구니번호가 없을 경우니 null일 경우이다.
+					 // "제품 상세 정보" 페이지에서 "바로주문하기" 를 한 경우 
+			         // 장바구니 번호인 basket_no_join 이 없는 것이다.
+						  n3 = 1;
+						  
+						  System.out.println("~~~~~~ 바로주문하기인 경우 확인용 n3 : " + n3);
+						  // ~~~~~~ 확인용 n3 : 1 //행을 삭제할 필요가 없다. 그냥 1값을 주었다.
+						  
+					  }// end of if ------------------------------------------------------
+				
+				
+					
+					// 4. 회원 테이블에서 로그인한 사용자의 point 를 더하기(update)(수동커밋처리)	 
+
+					  
+					  if(n3 > 0) {
+					    	
+					    	String sql = " update tbl_member set point = point + ? "
+					    			   + " where userid = ? ";
+					             
+					             pstmt = conn.prepareStatement(sql);
+					             
+					             pstmt.setInt(1, Integer.parseInt((String)paraMap.get("totalPoint")) );
+					             pstmt.setString(2, (String)paraMap.get("fk_user_id") );
+					              
+					             
+								 n4 = pstmt.executeUpdate();
+								  
+								 System.out.println("~~~~~~ 확인용 n4 : " + n4);
+								 // ~~~~~~ 확인용 n4 : 1 //유저아이디가 고유하니까 업데이트된 행은 하나라서 1값이 나올 것이다.
+					    	
+					    }// end of if-----------------------------------------------
+					  
+					
+					
+					  // 5. **** 모든처리가 성공되었을시 commit 하기(commit) **** 
+					
+					  if(n1*n2*n3*n4 > 0) {
+					    	
+					    	conn.commit();
+					    	
+					    	conn.setAutoCommit(true);
+					    	// 자동커밋으로 전환
+					    	
+					    	System.out.println("~~~~~~ 확인용 n1*n2*n3*n4 : " + (n1*n2*n3*n4) );
+					    	 
+					    	isSuccess = 1;
+					    	
+					    }
+					    
+					
+					
+					
+				
+				
+				
+			} catch(SQLException e) {
+				
+				// 6. **** SQL 장애 발생시 rollback 하기(rollback) **** 
+				conn.rollback();
+				
+				conn.setAutoCommit(true);
+				
+				isSuccess = 0;//꼭쓸필요는 없다. 디폴트를 0으로 해두었었기때문에 여기에서도 0값을 준다.
+				
+			} finally {
+				close();
+			}
+				
+			
+			
+			return isSuccess;
+			
+		}
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 }

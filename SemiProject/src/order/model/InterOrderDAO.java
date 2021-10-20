@@ -1,6 +1,7 @@
 package order.model;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,4 +41,16 @@ public interface InterOrderDAO {
 	Map<String, Object> getDeliverFee() throws SQLException;
 	// 배송비 변경하기
 	int updateDeliverFee(int fee, int freeline) throws SQLException;
+	
+	
+	
+	
+	//결제 후 실행되는 메소드
+	// ===== Transaction 처리하기 ===== // 
+	int orderSetleAdd(HashMap<String, Object> paraMap) throws SQLException;
+	
+	
+	
+	
+	
 }

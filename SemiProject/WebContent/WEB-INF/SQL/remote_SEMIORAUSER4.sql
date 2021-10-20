@@ -4,6 +4,9 @@ show user;
 select *
 from ORDER_SETLE;
 
+select *
+from TBL_BASKET;
+
 select * 
 
 from ALL_TAB_COLUMNS
