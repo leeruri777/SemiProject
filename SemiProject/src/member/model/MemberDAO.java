@@ -106,7 +106,7 @@ public class MemberDAO implements InterMemberDAO {
 				
 			} else {
 				
-				if(member.getEmail() == null || member.getEmail() == "") {
+				if(member.getEmail() != null) {
 					
 					sql = "insert into tbl_member(userid, pwd, name, email) "			
 		                + "values(?, ?, ?, ?)";
