@@ -531,8 +531,10 @@ function pay(){
 	var email = '${sessionScope.loginuser.email}';
 	var name = '${sessionScope.loginuser.name}';
 	var mobile = '${sessionScope.loginuser.mobile}';
+	var totalAmount = $("#totalAmount").text();
+	
 	console.log(email, name, mobile);
-	var url = "/order/purchaseEnd.go?email="+email+"&name="+name+"&mobile="+mobile; 
+	var url = "/order/purchaseEnd.go?email="+email+"&name="+name+"&mobile="+mobile+"&totalAmount="+totalAmount; 
     
     //window.open은 팝업창 띄우기임
     window.open(url, "purchaseEnd",

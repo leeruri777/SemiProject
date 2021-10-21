@@ -13,10 +13,12 @@ public class PurchaseEndAction extends AbstractController {
 		String email = request.getParameter("email");
 		String name = request.getParameter("name");
 		String mobile = request.getParameter("mobile");
+		String totalAmount = request.getParameter("totalAmount");
 		
 		request.setAttribute("email", email);
 		request.setAttribute("name", name);
 		request.setAttribute("mobile", mobile);
+		request.setAttribute("totalAmount", totalAmount);
 		
 //		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/views/order/paymentGateway.jsp"); 

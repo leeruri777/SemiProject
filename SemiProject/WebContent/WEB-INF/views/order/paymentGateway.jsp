@@ -22,7 +22,7 @@ $(document).ready(function() {
        pay_method : 'card',   // 결제 수단
        merchant_uid : 'merchant_' + new Date().getTime(), // 가맹점에서 생성/관리하는 고유 주문번호
        name :  '소녀떡집', // '결제테스트(코인충전|주문명)',    // 코인충전 또는 order 테이블에 들어갈 주문명 혹은 주문 번호. // 또는 액션클래스에서 셋어트리뷰트해서 보낸 상품명//(선택항목)원활한 결제정보 확인을 위해 입력 권장(PG사 마다 차이가 있지만) 16자 이내로 작성하기를 권장
-       amount : 100,     //원래는 100이 아닌 총결제금액인 totalAmount가 들어가야 한다.
+       amount : '${requestScope.totalAmount}',  //총결제금액인 totalAmount가 들어가야 한다.
        buyer_email : '${requestScope.email}', // 'leerr@naver.com',  // 구매자 email
        buyer_name : '${requestScope.name}',   // '이루리',    // 구매자 이름 
        buyer_tel : '${requestScope.mobile}',  // '010-2345-6789',   // 구매자 전화번호 (필수항목)
