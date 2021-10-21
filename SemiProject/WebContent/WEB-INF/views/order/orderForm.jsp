@@ -102,7 +102,10 @@ table.table.btable > tbody > tr > td:nth-child(1){
 	  	  		  <td>
 					 <button type="button" class="btn btn-secondary btn-sm" style="font-size: 8pt; padding: 5px;" onclick ="deleteBasket(this)">삭제</button>
 				  </td>
-			      <td><a href="/product/prodDetail.go?prod_code=${basketList.prod_code}"><img src="/img_prod/${basketList.prod_img_url}" width=60px;/></a></td>
+			      <td><a href="/product/prodDetail.go?prod_code=${basketList.prod_code}" ><img src="/img_prod/${basketList.prod_img_url}" width=60px;/></a>
+			      		<input type="hidden" value="${basketList.prod_code}" class="prod_code" /> <%-- 상품번호값알아오려고 추가해봄 --%>
+			      		<input type="hidden" value="${basketList.basket_no}" class="basket_no" /> <%-- 장바구니값알아오려고 추가해봄 --%>
+			      </td>
 			      <td class="prod_name">${basketList.prod_name}</td>
 			      <td>
 			       <span class="price">
@@ -244,7 +247,7 @@ table.table.btable > tbody > tr > td:nth-child(1){
 		    </tr>
 		    <tr>	
 		    	<td>배송메세지</td>	    
-		    	<td><textarea id="omessage" name="omessage" maxlength="255" cols="70"></textarea></td>
+		    	<td><textarea id="omessage" class="omessage" name="omessage" maxlength="255" cols="70"></textarea></td>
 		    </tr>    
 		</table>		
   	</form>
@@ -297,13 +300,36 @@ table.table.btable > tbody > tr > td:nth-child(1){
 						</ul>
 					</td>
 					<td class="tdTitle col-md-1" style="font-size:11px;">총 적립금</td>
-					<td style="text-align:center;" class="col-md-3"><span id="totalPoint"></span>원</td>
+					<td style="text-align:center;" class="col-md-3"><span class="totalPoint" id="totalPoint"></span>원</td>
 					<td class="col-md-1"><a href="javascript:pay();" id="btn_payment" class="btn btn-secondary" style="font-size:16px; font-weight:700; padding:10px 20px;width:170px;">결제하기</a></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>		
 	</div>
+	<%-- goORDER_SETLE_INSERT함수를 실행해서 OrderSetleEndAction로 보낼 폼 --%>
+	<form name="frm_order_setle">
+		<input type="hidden" name="prod_name" />
+		<input type="hidden" name="price" />
+		<input type="hidden" name="goods_qy" /> 
+		
+		<input type="hidden" name="fk_prod_code" /> <%-- 결제내역에 insert하기 위한 상품번호 문자열--%>
+		
+		<input type="hidden" name="user_name" value="${sessionScope.loginuser.name}" />
+		<input type="hidden" name="fk_user_id" value="${sessionScope.loginuser.userid}" />
+		<input type="hidden" name="totalAmount" /> <%-- 결제내역에 insert하기 위한 총결제액 --%>
+		<input type="hidden" name="omessage" /> <%-- 결제내역에 insert하기 위한 배송메세지 --%>
+		
+		<input type="hidden" name="totalPoint" /> <%-- 회원테이블에 update하기 위한 총point --%>
+		<input type="hidden" name="basket_no" /> <%-- 장바구니에서 delet하기 위한 장바구니번호 문자열. 그런데 바로주문하기를할때는 장바구니번호가 없다.--%>
+												<%-- 결제내역에 insert하기 위한 payment_type 아임포트 문자열--%>
+		
+										<%-- TBL_STOCK테이블에서에서 재고량을 감소시킬때는 상품코드를 where에 잡아서 재고량 컬럼인 prod_stock에서 goods_qy를 빼면 될까요?--%>
+												
+												
+	</form>
+	
+	
 </section>	
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>	
@@ -512,40 +538,89 @@ function pay(){
     //window.open은 팝업창 띄우기임
     window.open(url, "purchaseEnd",
     			"left=350px, top=100px, width=850px, height=600px");
+    //goORDER_SETLE_INSERT(); //확인용
 }
 
 
-function goORDER_SETLE_INSERT() {
+function goORDER_SETLE_INSERT() { /* OrderSetleEndAction로 frm_order_setle폼을 전송시키기 위한 함수 */
 	
-	var class_prod_name = document.getElementsByClassName("prod_name");
+	/* 태그에서 class이름을 잡기 */
+	var class_prod_name = document.getElementsByClassName("prod_name"); 
 	var class_price_comma_del = document.getElementsByClassName("price_comma_del");
 	var class_goods_qy = document.getElementsByClassName("goods_qy");
+	var class_prod_code = document.getElementsByClassName("prod_code");//문자열
+	var class_basket_no = document.getElementsByClassName("basket_no");//문자열
 	
+	
+	
+	
+	/* 태그에서 class이름을 잡은 위치에 있는 값들을 각각 태그의 value값이나 텍스트를 쓰는 위치에 넣어주고 배열에 넣기 */
 	var arr_prod_name = new Array(); 
     var arr_price = new Array(); 
     var arr_goods_qy = new Array();
+    var arr_prod_code = new Array();
+    var arr_basket_no = new Array();
 	
     for(var i=0; i<class_prod_name.length; i++) {
-	//	console.log("상품명 : " + class_prod_name[i].innerText + ", 판매가 : " + class_price[i].innerText + ", 주문개수 : " + class_goods_qy[i].value);
+	console.log("상품명 : " + class_prod_name[i].innerText + ", 판매가 : " + class_price_comma_del[i].innerText + ", 주문개수 : " + class_goods_qy[i].value +", 상품번호 : " + class_prod_code[i].value);
     
 	    arr_prod_name.push(class_prod_name[i].innerText);
     	arr_price.push(class_price_comma_del[i].value);
     	arr_goods_qy.push(class_goods_qy[i].value);
+    	arr_prod_code.push(class_prod_code[i].value);//문자열을 배열에 넣음
+    	arr_basket_no.push(class_basket_no[i].value);//문자열을 배열에 넣음
+    	
 	}// end of for---------------------------------------
-     
+	
+	
+	//var user_req = class_user_req.value;
+	//var user_req = $('#textarea').val()
+	//var user_req = $(tag_name[name=omessage]).text();
+	//var omessage = $(".omessage").val();
+	
+	var omessage = $("#omessage").val();
+	
+	
+	var totalPoint = $("#totalPoint").text();
+	totalPoint = parseInt(totalPoint);
+	
+	var totalAmount = $("#totalAmount").text(); 
+	
+	
+	
+	console.log('arr_prod_code',arr_prod_code);
+	console.log("배송메세지 : " , omessage);
+	console.log("총결제액 : " , totalAmount); 
+	
     for(var i=0; i<arr_prod_name.length; i++) {
-    	console.log("상품명 : " + arr_prod_name[i] + ", 판매가 : " + arr_price[i] + ", 주문개수 : " + arr_goods_qy[i] );      
+    	console.log("상품명 : " + arr_prod_name[i] + ", 판매가 : " + arr_price[i] + ", 주문개수 : " + arr_goods_qy[i] + ", 상품코드 : " + arr_prod_code[i] + ", 배송메세지 : " + omessage + ", 총적립금 : " + totalPoint+ ", 장바구니번호 : " + arr_basket_no[i] );      
 	}
  
+   
+    
+	/* 배열을 문자열로 바꿔주고 변수에 넣기 */
 	var prod_name_join = arr_prod_name.join();	
 	var price_join = arr_price.join();
 	var goods_qy_join = arr_goods_qy.join();
+	var prod_code_join = arr_prod_code.join();//prod_code_join는 문자열
+	var basket_no_join = arr_basket_no.join();
 	
+	
+	console.log('prod_code_join', prod_code_join);
+	console.log('basket_no_join', basket_no_join);
+	
+	
+	/* 변수를 폼에 넣기 */
     var frm = document.frm_order_setle;
     frm.prod_name.value = prod_name_join;
     frm.price.value = price_join;
     frm.goods_qy.value = goods_qy_join;
-    
+    frm.fk_prod_code.value = prod_code_join;
+    frm.basket_no.value = basket_no_join;
+    frm.totalAmount.value = totalAmount;
+    frm.totalPoint.value = totalPoint;
+    frm.omessage.value = omessage; // 배송메세지
+        
     frm.action = "/order/orderSetleEnd.go";
     frm.method = "POST"; 
 	frm.submit();
