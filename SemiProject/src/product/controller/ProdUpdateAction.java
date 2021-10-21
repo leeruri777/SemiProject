@@ -82,7 +82,7 @@ public class ProdUpdateAction extends AbstractController {
 				prod.setProd_select(Integer.parseInt(request.getParameter("prod_select")));
 				
 				// 골라담기가 있을 경우 리스트에 담아주기
-				if(prod.getProd_select() == 1) {
+				if(prod.getProd_select() != 0) {
 					
 					String[] arr_prod_select_code = request.getParameterValues("prod_select_code");
 					
