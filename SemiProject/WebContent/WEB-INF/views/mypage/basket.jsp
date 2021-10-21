@@ -390,8 +390,8 @@ function selectOrder(type){
 	$("input[name=select]:checked").each(function() { 
 		
 		basket_no_arr.push($(this).val());
-		var index = $("input[name=select]").index(this); //1,2,3...
-		goods_qy_arrI.push($("input[name=goods_qy]").eq(index-1).val());
+		var index = $("input[name=select]").index(this); 
+		goods_qy_arrI.push($("input[name=goods_qy]").eq(index).val());
 	});
 	 $("#basket_no_arr").val(basket_no_arr);
 	 $("#goods_qy_arrI").val(goods_qy_arrI);

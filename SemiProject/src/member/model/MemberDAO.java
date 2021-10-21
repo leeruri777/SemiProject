@@ -122,7 +122,7 @@ public class MemberDAO implements InterMemberDAO {
 				} else {
 					
 					sql = "insert into tbl_member(userid, pwd, name, logintype) "		
-		                + "values(?, ?, ?)"; 
+		                + "values(?, ?, ?, ?)"; 
 					
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, member.getUserid());
