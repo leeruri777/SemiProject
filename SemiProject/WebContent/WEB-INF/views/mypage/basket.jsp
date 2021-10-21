@@ -192,6 +192,8 @@ for(var i=0; i<goods_qy_arr.length; i++){
 	eval("goods_qy" + i + "= goods_qy_arr[i].value");	
 }
 
+// 수량 직접 입력감지 변수
+var changeFlag = true;
 $(document).ready(function() {
 	
 	// 총 결제금액 불러오기
@@ -321,7 +323,6 @@ function count(type, id, prod_stock_id, prod_code)  {
 // 변경 버튼 누를 경우 결제금액 다시 계산
 $(".changeCount").click(function(){	
 	
-	
 	var index = $(".changeCount").index(this);
 	var prod_code = $(this).val();
 	var goods_qy = Math.floor(parseInt($("#goods_qy"+index).val() ));
@@ -350,9 +351,9 @@ $(".changeCount").click(function(){
 		$("#goods_qy"+index).val(first_goods_qy);
 		
 	} else {
-		$("#goods_qy"+index).val(Math.floor(parseInt($("#goods_qy"+index).val() )));
-	}
-	
+		$("#goods_qy"+index).val(Math.floor(parseInt($("#goods_qy"+index).val() )));		
+	}	
+	changeFlag = true;
 	calTotal();
 });
 
@@ -376,6 +377,12 @@ function deleteBasket(basket_no){
 // 상품 주문
 function selectOrder(type){
 		
+	// 수량을 직접 입력했을 경우 변경버튼을 거쳐야한다.
+	if(changeFlag == false){
+		alert('변경 버튼을 누르시기 바랍니다.');
+		return false;
+	}
+	
 	var basket_no_arr = [];
 	var goods_qy_arrI = [];
 	
@@ -399,7 +406,11 @@ function selectOrder(type){
 	 $("#sendOrder").submit(); 
 		
 }
-
+$(".goods_qy").on("propertychange change keyup paste input", function(){
+	
+	changeFlag = false;
+	
+});
 
 </script>
 <jsp:include page="/WEB-INF/include/footer.jsp"/>
