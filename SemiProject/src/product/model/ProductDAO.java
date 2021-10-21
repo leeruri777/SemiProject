@@ -581,13 +581,15 @@ public class ProductDAO implements InterProductDAO {
 			}
 			
 			// 추가상품이 있을 경우 추가상품 테이블에 기존 것을 삭제하고 다시 insert
-			if(paraMap.get("prod_plus_list") != null) {
+			if(prod.getProd_plus() != 0) {
 				
 				sql = " delete from tbl_prod_plus where fk_prod_code = ? ";
 				
 				pstmt = conn.prepareStatement(sql);
 				
 				pstmt.setString(1, prod.getProd_code());
+				
+				pstmt.executeUpdate();
 				
 				for(String prod_plus_code : (ArrayList<String>)paraMap.get("prod_plus_list")) {
 					
@@ -606,13 +608,15 @@ public class ProductDAO implements InterProductDAO {
 			}
 						
 			// 골라담기상품이 있을 경우 골라담기 테이블에 기존 것을 삭제하고 다시 insert
-			if(paraMap.get("prod_select_list") != null) {
+			if(prod.getProd_select() != 0) {
 				
 				sql = " delete from tbl_prod_select where fk_prod_code = ? ";
 				
 				pstmt = conn.prepareStatement(sql);
 				
 				pstmt.setString(1, prod.getProd_code());
+				
+				pstmt.executeUpdate();
 				
 				for(String prod_select_code : (ArrayList<String>)paraMap.get("prod_select_list")) {
 					

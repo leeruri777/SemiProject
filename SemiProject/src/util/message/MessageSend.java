@@ -7,8 +7,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 
 import common.controller.AbstractController;
+import member.model.InterMemberDAO;
+import member.model.MemberDAO;
+import member.model.MemberVO;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import order.model.InterOrderDAO;
+import order.model.OrderDAO;
+import order.model.OrderSetleVO;
 
 /**
  * @class ExampleSend
@@ -22,22 +28,29 @@ public class MessageSend extends AbstractController {
 	    String api_secret = "D6UOWK6DO228BAQHZUTYTBEPN6UIH4MS";
 	    Message coolsms = new Message(api_key, api_secret);
 
+	    InterOrderDAO odao = new OrderDAO();
+	    InterMemberDAO mdao = new MemberDAO();
 	    
-	    String mobile = request.getParameter("mobile");
-	    String smsContent = request.getParameter("smsContent");
-	    String datetime = request.getParameter("datetime");
-	  
-	 
+	    OrderSetleVO orderSetle = odao.getOrderByOno(request.getParameter("order_no"));
+	    MemberVO customer = mdao.getMemberById(orderSetle.getFk_user_id());
+	    
+	    // String mobile = request.getParameter("mobile"); 
+	    String mobile = customer.getMobile();
+	    String smsContent = odao.getMessageFrom();
+	    	   smsContent += " [현재 상태 = " + request.getParameter("statusKR") + "]";
+	    	   smsContent += " [주문번호 = " + request.getParameter("order_no") + "]";
+	    	   smsContent += " [상품명 = " + orderSetle.getProd_name() + "]";
+	    	   smsContent += " [금액 = " + orderSetle.getTot_amount() + "]";
+	    	   
+	    // String datetime = request.getParameter("datetime");
+ 
 	    // 4 params(to, from, type, text) are mandatory. must be filled
 	    HashMap<String, String> params = new HashMap<String, String>();
 	    params.put("to", mobile); // 수신번호
 	    params.put("from", "01026146217"); // 발신번호
 	    params.put("type", "LMS"); // Message type ( SMS, LMS, MMS, ATA )
 	    params.put("text", smsContent); // 문자내용    
-	    params.put("app_version", "JAVA SDK v2.2"); // application name and version
-	    if(datetime != null) {
-	    	params.put("datetime", datetime);
-	    }  
+	    params.put("app_version", "JAVA SDK v2.2"); // application name and version	    
 	    
 	    // Optional parameters for your own needs
 	    // params.put("image", "desert.jpg"); // image for MMS. type must be set as "MMS"

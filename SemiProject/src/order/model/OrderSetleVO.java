@@ -16,9 +16,18 @@ public class OrderSetleVO {
 	   private String order_dt;				// 주문날짜
 	   private String user_req;				// 배송 메세지
 	   private String payment_type;			// 결제방식
+	   private String status; 				// 상태
 	   
 	   
-	   public OrderSetleVO() {}
+	   public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public OrderSetleVO() {}
 	   
 	   public OrderSetleVO(String order_no, String fk_user_id, String user_name,
 			   			   String fk_prod_code, String prod_name, int prod_price,

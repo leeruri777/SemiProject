@@ -64,7 +64,6 @@ public class LoginAction extends AbstractController {
 				} else {
 										
 					HttpSession session = request.getSession();
-					loginuser.setLoginType("normal");
 					session.setAttribute("loginuser", loginuser);
 
 					InterOrderDAO odao = new OrderDAO();

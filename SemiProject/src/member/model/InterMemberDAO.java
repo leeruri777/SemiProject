@@ -33,6 +33,8 @@ public interface InterMemberDAO {
 		List<MemberVO> getMemberList(Pagination pg) throws SQLException;
 		// 전체 회원목록 갯수(검색)
 		int getTotalCnt(Pagination pg) throws SQLException;
+		// 아이디로 회원정보 검색
+		MemberVO getMemberById(String userid) throws SQLException;
 	
 		/*
 		 * 배송지 관련 메소드

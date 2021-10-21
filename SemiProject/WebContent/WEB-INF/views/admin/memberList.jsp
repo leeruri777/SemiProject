@@ -142,6 +142,8 @@ function fn_next(currPageNo, range, pageSize) {
 }
 
 function goSearch(){
+	
+	var frm = document.memberFrm;
 	frm.submit();
 }
 

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:include page="/WEB-INF/include/header.jsp"/>
 <jsp:include page="/WEB-INF/views/mypage/navbar.jsp"/>
@@ -68,29 +69,44 @@ table#tblMemberUpdate td {
              <input type="text" name="userid" id="userid" class="requiredInfo form-control form-control-sm" value="${sessionScope.loginuser.userid}" readonly />&nbsp;&nbsp;
          </td> 
       </tr>
-      <tr>
-         <td style="width: 20%; font-weight: bold;">비밀번호&nbsp;</td>
-         <td style="width: 80%; text-align: left;"><input type="password" name="pwd" id="pwd" class="requiredInfo form-control form-control-sm" />
-         	<span>(숫자/문자/특수문자/ 포함 형태의 8~15자리 이내)</span>
-         </td>
-      </tr>
-      <tr>
-         <td style="width: 20%; font-weight: bold;">비밀번호확인&nbsp;</td>
-         <td style="width: 80%; text-align: left;"><input type="password" id="pwdcheck" class="requiredInfo form-control form-control-sm" /> 
-            <span class="error">암호가 일치하지 않습니다.</span>
-         </td>
-      </tr>
-      <tr>
+      <c:choose>
+      <c:when test="${sessionScope.loginuser.loginType == 'normal'}">     
+	      <tr>
+	         <td style="width: 20%; font-weight: bold;">비밀번호&nbsp;</td>
+	         <td style="width: 80%; text-align: left;"><input type="password" name="pwd" id="pwd" class="requiredInfo form-control form-control-sm" />
+	         	<span>(숫자/문자/특수문자/ 포함 형태의 8~15자리 이내)</span>
+	         </td>
+	      </tr>
+	      <tr>
+	         <td style="width: 20%; font-weight: bold;">비밀번호확인&nbsp;</td>
+	         <td style="width: 80%; text-align: left;"><input type="password" id="pwdcheck" class="requiredInfo form-control form-control-sm" /> 
+	            <span class="error">암호가 일치하지 않습니다.</span>
+	         </td>
+	      </tr>
+	      <tr>
+	         <td style="width: 20%; font-weight: bold;">이메일&nbsp;</td>
+	         <td style="width: 80%; text-align: left;"><input type="text" name="email" id="email" class="requiredInfo form-control form-control-sm" value="${sessionScope.loginuser.email}" /> 
+	             <span class="error">이메일 형식에 맞지 않습니다.</span>           
+	             <span style="display: inline-block; width: 80px; height: 30px; border: solid 1px gray; border-radius: 5px; font-size: 8pt; text-align: center; margin-left: 10px; cursor: pointer;" onclick="isExistEmailCheck();">이메일중복확인</span> 
+	             <span id="emailCheckResult"></span>
+	         </td>
+      	 </tr>
+	  </c:when>
+	  <c:otherwise>
+	  	  <tr>
+	         <td style="width: 20%; font-weight: bold;">비밀번호&nbsp;</td>
+	         <td style="width: 80%; text-align: left;"><input type="password" name="pwd" id="pwd" class="form-control form-control-sm" disabled/>
+	         	<span>(카카오 계정은 비밀번호를 변경할 수 없습니다.)</span>
+	         </td>
+	      </tr>	      
+	      <tr>
          <td style="width: 20%; font-weight: bold;">이메일&nbsp;</td>
-         <td style="width: 80%; text-align: left;"><input type="text" name="email" id="email" class="requiredInfo form-control form-control-sm" value="${sessionScope.loginuser.email}" /> 
-             <span class="error">이메일 형식에 맞지 않습니다.</span>
-             
-             <%-- ==== 퀴즈 시작 ==== --%>
-             <span style="display: inline-block; width: 80px; height: 30px; border: solid 1px gray; border-radius: 5px; font-size: 8pt; text-align: center; margin-left: 10px; cursor: pointer;" onclick="isExistEmailCheck();">이메일중복확인</span> 
-             <span id="emailCheckResult"></span>
-             <%-- ==== 퀴즈 끝 ==== --%>
+         <td style="width: 80%; text-align: left;"><input type="text" name="email" id="email" class="requiredInfo form-control form-control-sm" value="${sessionScope.loginuser.email}" disabled/>
+         (카카오 사용자는 이메일을 변경할 수 없습니다.)                           
          </td>
-      </tr>
+      	 </tr>
+	  </c:otherwise>     
+      </c:choose>    
       <tr>
          <td style="width: 20%; font-weight: bold;">연락처</td>
          <td style="width: 80%; text-align: left;">

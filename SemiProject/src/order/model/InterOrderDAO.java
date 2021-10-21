@@ -32,20 +32,29 @@ public interface InterOrderDAO {
 	// 주문내역 가져오기
 	List<Map<String, Object>> getOrderSetleList(Pagination pg) throws SQLException;
 	// 주문내역 카운트
-	int getOrderSetleListCount(Pagination pg) throws SQLException;
-	
+	int getOrderSetleListCount(Pagination pg) throws SQLException;	
 	// 주문내역(관리자) 가져오기
 	List<Map<String, Object>> getOrderSetleListAll(Pagination pg) throws SQLException;
 	// 주문내역(관리자) 카운트
-	int getOrderSetleListCountAll(Pagination pg) throws SQLException;
-	
+	int getOrderSetleListCountAll(Pagination pg) throws SQLException;	
 	//주문목록 테이블에 insert하는 메소드
 	int insertOrderSetle(OrderSetleVO ovo) throws SQLException;
-	
+	// 주문번호로 주문서 가져오기
+	OrderSetleVO getOrderByOno(String parameter) throws SQLException;
 	// 현재 배송비 가져오기
 	Map<String, Object> getDeliverFee() throws SQLException;
 	// 배송비 변경하기
 	int updateDeliverFee(int fee, int freeline) throws SQLException;
 	// 배송상태 변경하기
 	int updateDeliverStatus(String order_no, String status);
+	
+	/*
+	 * 메세지 
+	 * */
+	// 메세지 양식 저장
+	int updateMessageForm(String smsContent) throws SQLException;
+	// 메세지 불러오기
+	String getMessageFrom() throws SQLException;
+	
+	
 }

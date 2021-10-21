@@ -91,8 +91,8 @@ public class MemberDAO implements InterMemberDAO {
 			
 			if(type.equalsIgnoreCase("normal")) {
 				
-					sql   += "insert into tbl_member(userid, pwd, name, email, mobile, gender, birthday) "     
-		                  + "values(?, ?, ?, ?, ?, ?, ?)"; 
+					sql   += "insert into tbl_member(userid, pwd, name, email, mobile, gender, birthday, logintype) "     
+		                  + "values(?, ?, ?, ?, ?, ?, ?, ?)"; 
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, member.getUserid());
@@ -103,29 +103,32 @@ public class MemberDAO implements InterMemberDAO {
 		
 				pstmt.setString(6, member.getGender());
 				pstmt.setString(7, member.getBirthday());
+				pstmt.setString(8, type);
 				
 			} else {
 				
 				if(member.getEmail() != null) {
 					
-					sql = "insert into tbl_member(userid, pwd, name, email) "			
-		                + "values(?, ?, ?, ?)";
+					sql = "insert into tbl_member(userid, pwd, name, email, logintype) "			
+		                + "values(?, ?, ?, ?, ?)";
 					
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, member.getUserid());
 					pstmt.setString(2, Sha256.encrypt(member.getPwd()));
 					pstmt.setString(3, member.getName());
 					pstmt.setString(4, aes.encrypt(member.getEmail()));
+					pstmt.setString(5, type);
 					
 				} else {
 					
-					sql = "insert into tbl_member(userid, pwd, name) "		
+					sql = "insert into tbl_member(userid, pwd, name, logintype) "		
 		                + "values(?, ?, ?)"; 
 					
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, member.getUserid());
 					pstmt.setString(2, Sha256.encrypt(member.getPwd()));
 					pstmt.setString(3, member.getName());
+					pstmt.setString(4, type);
 				}		
 			}
 			
@@ -175,13 +178,13 @@ public class MemberDAO implements InterMemberDAO {
 				
 				   sql = "SELECT userid, name, email, mobile, gender"+
 						", birthyyyy, birthmm, birthdd, point, registerday, pwdchangegap"+
-						", NVL(lastlogingap, trunc(months_between(sysdate, registerday)) ) AS lastlogingap, grade "+
+						", NVL(lastlogingap, trunc(months_between(sysdate, registerday)) ) AS lastlogingap, grade, logintype "+
 						"FROM "+
 						"("+
 						"select userid, name, email, mobile, gender"+
 						", substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd"+
 						", point, to_char(registerday, 'yyyy-mm-dd') AS registerday"+
-						", trunc( months_between(sysdate, lastpwdchangedate) ) AS pwdchangegap, grade "+
+						", trunc( months_between(sysdate, lastpwdchangedate) ) AS pwdchangegap, grade, logintype "+
 						"from tbl_member "+
 						"where status = 1 and userid = ? and pwd = ?"+
 						") M "+
@@ -210,6 +213,7 @@ public class MemberDAO implements InterMemberDAO {
 		            member.setPoint(rs.getInt(9));
 		            member.setRegisterday(rs.getString(10));
 		            member.setGrade(rs.getInt(13));
+		            member.setLoginType(rs.getString(14));
 		            
 		            if(rs.getInt(11) >= 3) {
 		            	// 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났으면 true
@@ -924,6 +928,47 @@ public class MemberDAO implements InterMemberDAO {
 	
 	
 	return totalPage;
+	}
+
+	@Override
+	public MemberVO getMemberById(String userid) throws SQLException {
+		
+		MemberVO member = null;
+		try {
+			conn = ds.getConnection();
+			String sql = "select USERID, NAME, EMAIL, MOBILE, GENDER, POINT, REGISTERDAY, STATUS, IDLE, GRADE, LOGINTYPE "
+					    + "FROM tbl_member "
+						+ "WHERE userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, userid);
+	
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				
+				member = new MemberVO();
+				
+				member.setUserid(rs.getString(1));
+				member.setName(rs.getString(2));
+				member.setEmail(aes.decrypt(rs.getString(3)));
+				member.setMobile( aes.decrypt(rs.getString(4)) );
+	            member.setGender(rs.getString(5));
+	            	      
+	            member.setPoint(rs.getInt(6));
+	            member.setRegisterday(rs.getString(7));
+	            member.setStatus(rs.getInt(8));
+	            member.setIdle(rs.getInt(9));
+	            member.setGrade(rs.getInt(10));
+	            member.setLoginType(rs.getString(11));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return member;
 	}
 
 

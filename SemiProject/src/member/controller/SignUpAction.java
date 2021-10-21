@@ -37,14 +37,13 @@ public class SignUpAction extends AbstractController {
 	         String birthday = birthyyyy+"-"+birthmm+"-"+birthdd;
 	         
 	         MemberVO member = new MemberVO(userid, pwd, name, email, mobile, gender, birthday);
-	         
 	         String message = "";
 	         String loc = "";
 	         
 	         try {
 	        	 
 	        	 InterMemberDAO mdao = new MemberDAO();
-		         int n = mdao.registerMember(member, "normal");
+		         int n = mdao.registerMember(member, "normal"); // 2번째 파라미터로 일반 회원가입임을 명시
 		         
 		         if(n==1) {
 		        	 message += "회원가입이 완료되었습니다.";

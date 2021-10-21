@@ -112,5 +112,16 @@ function kakaoLogout() {
       location.href = "/member/logout.go";
 	})
 }
-  
+// 카카오 연결끊기. 테스트 할때만 사용  
+function unlinkApp() {
+    Kakao.API.request({
+      url: '/v1/user/unlink',
+      success: function(res) {
+        alert('success: ' + JSON.stringify(res))
+      },
+      fail: function(err) {
+        alert('fail: ' + JSON.stringify(err))
+      },
+    })
+}  
 </script>
