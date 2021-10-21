@@ -19,17 +19,17 @@ public class OrderSetleEndAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		//String method = request.getMethod();
+		String method = request.getMethod();
 		
 		
 		
-		//if(super.checkLogin(request)) {
+		if(super.checkLogin(request)) {
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		String userid = loginuser.getUserid();
 			
-		//if("POST".equalsIgnoreCase(method)) {
+		if("POST".equalsIgnoreCase(method)) {
 			
 		
 		String fk_user_id = request.getParameter("fk_user_id");
@@ -149,8 +149,8 @@ public class OrderSetleEndAction extends AbstractController {
         */
          
          
-		//}
-		/*
+		}
+		
 		else {
     		
     		// GET 방식이라면 
@@ -165,8 +165,8 @@ public class OrderSetleEndAction extends AbstractController {
     		
     		
     	}
-		*/
-   	 /*
+		
+   	 
 	} else {
 		
 		request.setAttribute("message", "로그인이 필요합니다.");
@@ -174,7 +174,7 @@ public class OrderSetleEndAction extends AbstractController {
 		setViewPage("/WEB-INF/msg.jsp");
 		
 	}
-   	 */
+   	 
    	 
 	}
 
