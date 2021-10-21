@@ -620,9 +620,7 @@ function goORDER_SETLE_INSERT() { /* OrderSetleEndAction로 frm_order_setle폼�
     frm.totalAmount.value = totalAmount;
     frm.totalPoint.value = totalPoint;
     frm.omessage.value = omessage; // 배송메세지
-    
-    
-    
+        
     frm.action = "/order/orderSetleEnd.go";
     frm.method = "POST"; 
 	frm.submit();

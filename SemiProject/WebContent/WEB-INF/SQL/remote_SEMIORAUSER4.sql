@@ -8,7 +8,18 @@ select *
 from tabs;
 
 select *
-from TBL_MEMBER
+from ORDER_SETLE
+where fk_user_id  = 'quant54';
+
+select *
+from tbl_member
+where userid  = 'quant54';
+
+update ORDER_SETLE set status = 'beingdelivered'
+where fk_user_id = 'quant54'
+
+commit;
+
 
 
 select * 

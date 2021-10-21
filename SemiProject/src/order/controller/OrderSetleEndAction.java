@@ -53,13 +53,13 @@ public class OrderSetleEndAction extends AbstractController {
 		String[] fk_prod_code_Arr = fk_prod_code_join.split(",");
 		//String[] basket_no_Arr = basket_no_join.split(",");
 		
-		/*
+		
 		for(int i=0; i<prod_name_Arr.length; i++) {
-			System.out.println("~~~~ 확인용 prod_name : " + prod_name_Arr[i] + ", price : " + price_Arr[i] + ", goods_qy : " + goods_qy_Arr[i]+ ", fk_prod_code : " + fk_prod_code_Arr[i]+ ", basket_no : " + basket_no_Arr[i]);   
+			System.out.println("~~~~ 확인용 prod_name : " + prod_name_Arr[i] + ", price : " + price_Arr[i] + ", goods_qy : " + goods_qy_Arr[i]+ ", fk_prod_code : " + fk_prod_code_Arr[i]);   
 		}
 		
 		System.out.println("~~~~ 확인용 user_name : " + user_name + ", fk_user_id : " + fk_user_id+ totalAmount+ totalPoint+ user_name+ user_req);
-		*/
+		
 		///////////////////////////////////////////////////////////////////////////
 		
 		// 1. 주문 테이블에 insert 하기(수동커밋처리)					
@@ -106,37 +106,42 @@ public class OrderSetleEndAction extends AbstractController {
          // !!!! Transaction 처리를 해주는 메소드 !!!! 
          int isSuccess = odao.orderSetleAdd(paraMap); // Transaction 처리를 해주는 메소드  //성공하면 isSuccess에 1값을 줄 것이다.
         
-        
+         if(isSuccess == 1) {
+        	 super.setRedirect(true);
+        	 super.setViewPage("/mypage/orderlist.go");
+         }
+         else {
+        	// 주문이 실패할 경우
+             String message = "주문이 실패되었습니다.";
+             String loc = "javascript:history.back()";
+              
+             request.setAttribute("message", message);
+             request.setAttribute("loc", loc);
+             
+          // super.setRedirect(false);   
+             super.setViewPage("/WEB-INF/msg.jsp");
+         }
          
-         JSONObject jsobj = new JSONObject();
-		 
-		  
-         jsobj.put("isSuccess", isSuccess);
-		
 		//이메일은 시간 남으면 추가
          
-        String json = jsobj.toString();
-   	  	request.setAttribute("json", json);
-   		//	 수정해야하나 
-   	  	super.setRedirect(false);
-   	  	super.setViewPage("/WEB-INF/jsonview.jsp");
+        
    	   
    	  	
    	    //super.setRedirect(true);
    	  	//super.setViewPage("/WEB-INF/mypage/orderlist.jsp"); 주문내역으로 이동?
 		/*
-         if(isSuccess == 1) {					
+         if(json != null) {					
 			//super.setViewPage("/mypage/orderlist.go?userid="+userid);
 			
-   		//request.setAttribute("message", "결제가 성공되었습니다.");
-       // request.setAttribute("loc", "/mypage/orderlist.go");
+        	 request.setAttribute("message", "결제가 성공되었습니다.");
+        	 request.setAttribute("loc", "/mypage/orderlist.go");
         
-       super.setViewPage("/order/orderForm.go?userid="+userid);
+        	 //super.setViewPage("/order/orderForm.go?userid="+userid);
 					
 			
 		} else {
 			request.setAttribute("message", "결제가 실패되었습니다.");
-			request.setAttribute("loc", "/order/orderForm.go");
+			request.setAttribute("loc", "/order/sendOrder.go");
 			
 			super.setViewPage("/WEB-INF/msg.jsp");
 		}

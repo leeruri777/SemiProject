@@ -702,7 +702,8 @@ public class OrderDAO implements InterOrderDAO {
 					 // 3. 장바구니 테이블에서 주문한 행들을 삭제(delete OR update)하기(수동커밋처리) 
 					
 					// >> 장바구니에서 주문을 한 것이 아니라 특정제품을 바로주문하기를 한 경우에는 장바구니 테이블에서 행들 삭제할 작업은 없다. <<
-					  if( paraMap.get("basket_no_join") != null && n2==1 ) {
+					  if( !"".equals(paraMap.get("basket_no_join")) && n2==1 ) {
+					  //if( paraMap.get("basket_no_join") != null && n2==1 ) {
 						  //for문 쓸 필요없이 in을 쓰면된다. 장바구니번호가 5번, 7번 , 10번인걸 삭제하력 한다면 왼쪽처럼 하면 될 것이다.where cartno in(5, 7, 10) 
 						  String sql = " delete from tbl_basket "
 						  	  + " where basket_no in("+ (String)paraMap.get("basket_no_join") +") ";
@@ -719,8 +720,10 @@ public class OrderDAO implements InterOrderDAO {
 						  
 					  }// end of if------------------------------------------------
 				         
-					  if( paraMap.get("basket_no_join") == null && n2==1 ) { //장바구니번호가 없을 경우니 null일 경우이다.
-					 // "제품 상세 정보" 페이지에서 "바로주문하기" 를 한 경우 
+					  if( "".equals(paraMap.get("basket_no_join")) && n2==1 ) { //장바구니번호가 없을 경우니 null일 경우이다.
+					 
+					  //if( paraMap.get("basket_no_join") == null && n2==1 ) { 
+					  // "제품 상세 정보" 페이지에서 "바로주문하기" 를 한 경우 
 			         // 장바구니 번호인 basket_no_join 이 없는 것이다.
 						  n3 = 1;
 						  
@@ -769,11 +772,6 @@ public class OrderDAO implements InterOrderDAO {
 					    	
 					    }
 					    
-					
-					
-					
-				
-				
 				
 			} catch(SQLException e) {
 				
@@ -787,8 +785,6 @@ public class OrderDAO implements InterOrderDAO {
 			} finally {
 				close();
 			}
-				
-			
 			
 			return isSuccess;
 			
