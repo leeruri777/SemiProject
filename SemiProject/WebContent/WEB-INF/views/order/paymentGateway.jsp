@@ -10,7 +10,6 @@
 <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.2.js"></script>
 
 <script type="text/javascript">
-
 $(document).ready(function() {
    //   여기 링크를 꼭 참고하세용 http://www.iamport.kr/getstarted
    var IMP = window.IMP;     // 생략가능
@@ -43,7 +42,6 @@ $(document).ready(function() {
          }
          alert(msg);
       */
-
       if ( rsp.success ) { // PC 데스크탑용
       /* === 팝업창에서 부모창 함수 호출 방법 3가지 ===
           1-1. 일반적인 방법
@@ -52,7 +50,6 @@ $(document).ready(function() {
          
          1-2. 일반적인 방법
          window.opener.부모창스크립트 함수명();
-
          2. jQuery를 이용한 방법
          $(opener.location).attr("href", "javascript:부모창스크립트 함수명();");
       */
@@ -69,14 +66,11 @@ $(document).ready(function() {
           self.close(); // 팝업창을 닫는 것이다.
          
         } else {
-            location.href="/MyMVC/index.up";
+            location.href="/";
             alert("결제에 실패하였습니다.");
        }
-
    }); // end of IMP.request_pay()----------------------------
-
 }); // end of $(document).ready()-----------------------------
-
 </script>
 </head>   
 

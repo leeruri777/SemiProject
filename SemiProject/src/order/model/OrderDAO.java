@@ -962,7 +962,7 @@ public class OrderDAO implements InterOrderDAO {
 		public int orderSetleAdd(HashMap<String, Object> paraMap) throws SQLException {
 			//paraMap은 이 메소드를 호출하는 곳 즉, OrderSetleEndAction에서 넣어놨었다. 실제로 스트링타입이나 인트타입이더라도 맵에 오브젝트 타입으로 넣어뒀기에 여기에서 끄집어내올때는 원래 타입으로 형변환해준다.
 			int isSuccess = 0;
-			int n1=0, n2=0, n3=0, n4=0;
+			int n1=0, n2=0, n3=0, n4=0, n5=0;;
 			try {
 				
 				 conn = ds.getConnection();
@@ -1100,10 +1100,22 @@ public class OrderDAO implements InterOrderDAO {
 					    }// end of if-----------------------------------------------
 					  
 					
-					
+					  if(n4 > 0 ) {
+						  
+						  String sql = "update tbl_member set point = point - ? "
+						  			 + "where userid = ? ";
+						  			 
+			  			  pstmt = conn.prepareStatement(sql);
+			             
+			              pstmt.setInt(1, Integer.parseInt((String)paraMap.get("usedPoint")) );
+			              pstmt.setString(2, (String)paraMap.get("fk_user_id") );
+			              
+			              n5 = pstmt.executeUpdate();
+						  			 
+					  }
 					  // 5. **** 모든처리가 성공되었을시 commit 하기(commit) **** 
 					
-					  if(n1*n2*n3*n4 > 0) {
+					  if(n1*n2*n3*n4*n5 > 0) {
 					    	
 					    	conn.commit();
 					    	

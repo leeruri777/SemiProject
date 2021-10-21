@@ -52,7 +52,7 @@ public class OrderSetleEndAction extends AbstractController {
 		String[] goods_qy_Arr = goods_qy_join.split(",");
 		String[] fk_prod_code_Arr = fk_prod_code_join.split(",");
 		//String[] basket_no_Arr = basket_no_join.split(",");
-		
+		String usedPoint = request.getParameter("usedPoint");
 		
 		for(int i=0; i<prod_name_Arr.length; i++) {
 			System.out.println("~~~~ 확인용 prod_name : " + prod_name_Arr[i] + ", price : " + price_Arr[i] + ", goods_qy : " + goods_qy_Arr[i]+ ", fk_prod_code : " + fk_prod_code_Arr[i]);   
@@ -91,23 +91,21 @@ public class OrderSetleEndAction extends AbstractController {
          paraMap.put("price_Arr", price_Arr); // 상품별 가격이 들어간 배열
          paraMap.put("goods_qy_Arr", goods_qy_Arr); //주문량들이 들어간 배열
          paraMap.put("fk_prod_code_Arr", fk_prod_code_Arr); //상품코드들이 들어간 배열
-        
-         
+                 
          // 장바구니 테이블에 delete
           paraMap.put("basket_no_join", basket_no_join);
          // 특정제품을 바로주문하기를 한 경우라면 basket_no_join 의 값은 null 이 된다. 
-          
-         
-         
+       
          // 주문 테이블에 insert
          paraMap.put("userid", loginuser.getUserid()); //파라맵에 로그인한 유저 아이디를 넣음 //누가 주문했는지 알아오기위해서 로그인한 유저 아이디를 알아온 것이다
+         paraMap.put("usedPoint", usedPoint);
          
 		
          // !!!! Transaction 처리를 해주는 메소드 !!!! 
          int isSuccess = odao.orderSetleAdd(paraMap); // Transaction 처리를 해주는 메소드  //성공하면 isSuccess에 1값을 줄 것이다.
         
-         if(isSuccess == 1) {
-        	 super.setRedirect(true);
+         if(isSuccess == 1) {       	 
+        	 super.setRedirect(true);       	 
         	 super.setViewPage("/mypage/orderlist.go");
          }
          else {
@@ -122,59 +120,6 @@ public class OrderSetleEndAction extends AbstractController {
              super.setViewPage("/WEB-INF/msg.jsp");
          }
          
-		//이메일은 시간 남으면 추가
-         
-        
-   	   
-   	  	
-   	    //super.setRedirect(true);
-   	  	//super.setViewPage("/WEB-INF/mypage/orderlist.jsp"); 주문내역으로 이동?
-		/*
-         if(json != null) {					
-			//super.setViewPage("/mypage/orderlist.go?userid="+userid);
-			
-        	 request.setAttribute("message", "결제가 성공되었습니다.");
-        	 request.setAttribute("loc", "/mypage/orderlist.go");
-        
-        	 //super.setViewPage("/order/orderForm.go?userid="+userid);
-					
-			
-		} else {
-			request.setAttribute("message", "결제가 실패되었습니다.");
-			request.setAttribute("loc", "/order/sendOrder.go");
-			
-			super.setViewPage("/WEB-INF/msg.jsp");
-		}
-		
-        */
-         
-         
-		//}
-		/*
-		else {
-    		
-    		// GET 방식이라면 
-              String message = "비정상적인 경로로 들어왔습니다";
-              String loc = "javascript:history.back()";
-               
-              request.setAttribute("message", message);
-              request.setAttribute("loc", loc);
-              
-           //  super.setRedirect(false);   
-              super.setViewPage("/WEB-INF/msg.jsp");
-    		
-    		
-    	}
-		*/
-   	 /*
-	} else {
-		
-		request.setAttribute("message", "로그인이 필요합니다.");
-		request.setAttribute("loc", "/member/login.go");
-		setViewPage("/WEB-INF/msg.jsp");
-		
-	}
-   	 */
    	 
 	}
 
