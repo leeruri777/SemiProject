@@ -219,24 +219,49 @@ $(".change").click(function(){
         success:function(json){
           	
 	    	if(json.success == '1') {
-	    		alert('변경되었습니다.');	    		
+	    		
 	    		var id = $("#parent").val();
+	    		var statusKR = ''; // 상태 한글명
 	    		if(status == 'beforedeposit'){
-	    			$("#"+id).html("입금전&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
+	    			statusKR = '입금전';
+	    			$("#"+id).html(statusKR + "&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");	    			
 	    		} else if(status == 'readydelivery') {
-	    			$("#"+id).html("배송준비중&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
+	    			statusKR = '배송준비중';
+	    			$("#"+id).html(statusKR + "&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
 	    		} else if(status == 'beingdelivered'){
-	    			$("#"+id).html("배송중&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
+	    			statusKR = '배송중';
+	    			$("#"+id).html(statusKR + "&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
 	    		} else if(status == 'deliverycompleted'){
-	    			$("#"+id).html("배송완료&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
+	    			statusKR = '배송완료';
+	    			$("#"+id).html(statusKR + "&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
 	    		} else if(status == 'cancel'){
-	    			$("#"+id).html("취소&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
+	    			statusKR = '취소';
+	    			$("#"+id).html(statusKR + "&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
 	    		} else if(status == 'exchange'){
-	    			$("#"+id).html("교환&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
+	    			statusKR = '교환';
+	    			$("#"+id).html(statusKR + "&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
 	    		} else if(status == 'return'){
-	    			$("#"+id).html("환불&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
+	    			statusKR = '환불';
+	    			$("#"+id).html(statusKR + "&nbsp;<button class='changeStatus' type='button' onclick='modal(event, "+order_no+")'>변경</button>");
 	    		}	    		
-	    		 
+	    			    		
+    			$.ajax({
+    				url:"/message/sendMessage.go",
+    		        type:"POST",
+    		        data:{"statusKR":statusKR,
+    		        	 "order_no":order_no}, 
+    		        dataType:"json",
+    		        success:function(json){
+    			    	
+    			    	if(json.error_count != 0) {
+    			    		alert('문자 전송에 실패했습니다.');
+    			    	}
+    		        },
+    		        error: function(request, status, error){
+    		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+    		         }
+    			});	    			
+	    		
 	    	} else{
 	    		alert('변경에 실패했습니다.');
 	    	}

@@ -142,7 +142,7 @@ public class Pagination {
 		this.totalCnt = totalCnt;
 		
 		// 전체 페이지 수
-		this.pageCnt = (int) Math.ceil(totalCnt/sizePerPage);
+		this.pageCnt = (int) Math.ceil((double)totalCnt/sizePerPage);
 		// 시작 페이지
 		this.startPage = (range - 1) * pageSize + 1;
 		// 끝 페이지

@@ -859,4 +859,101 @@ public class OrderDAO implements InterOrderDAO {
 		      return result;
 		}
 
+		@Override
+		public int updateMessageForm(String smsContent) throws SQLException {
+			
+			int result = 0;
+		      
+		      try {
+		         
+		         conn = ds.getConnection();
+	     
+	             String sql = "UPDATE tbl_message SET SMSCONTENT = ? ";
+	           
+	             pstmt = conn.prepareStatement(sql);
+	            
+	             pstmt.setString(1, smsContent);            
+	             result = pstmt.executeUpdate();            
+	         
+		      } catch (Exception e){
+		    	  e.printStackTrace();
+		      } finally {
+		         close();
+		      }
+		      
+		    return result;
+		}
+
+		@Override
+		public String getMessageFrom() throws SQLException {
+			
+			String smsContent = "";
+			
+			try {
+		         
+		         conn = ds.getConnection();
+	     
+	             String sql = "SELECT smscontent FROM tbl_message ";
+	           
+	             pstmt = conn.prepareStatement(sql);
+	            
+	             rs = pstmt.executeQuery();
+	             while(rs.next()) {
+	            	 smsContent = rs.getString(1);
+	             }
+	         
+		      } catch (Exception e){
+		    	  e.printStackTrace();
+		      } finally {
+		         close();
+		      }
+			
+			return smsContent;
+		}
+
+		@Override
+		public OrderSetleVO getOrderByOno(String order_no) throws SQLException {
+			
+			OrderSetleVO orderSetle = new OrderSetleVO();
+			
+			try {
+		         
+		         conn = ds.getConnection();
+	     
+	             String sql = "SELECT FK_USER_ID, USER_NAME, FK_PROD_CODE, PROD_NAME, PROD_PRICE, GOODS_QY, DSCNT_AMOUNT, TOT_AMOUNT, ORDER_DT, USER_REQ, PAYMENT_TYPE, STATUS "
+	             	     	+ "FROM order_setle "
+	             	     	+ "where order_no = ? ";
+	           
+	             pstmt = conn.prepareStatement(sql);
+	             pstmt.setString(1, order_no);
+	             
+	             rs = pstmt.executeQuery();
+	             
+	             while(rs.next()) {
+	            	 
+	            	 orderSetle.setFk_user_id(rs.getString(1));
+	            	 orderSetle.setUser_name(rs.getString(2));
+	            	 orderSetle.setFk_prod_code(rs.getString(3));
+	            	 orderSetle.setProd_name(rs.getString(4));
+	            	 orderSetle.setProd_price(rs.getInt(5));
+	            	 
+	            	 orderSetle.setGoods_qy(rs.getInt(6));
+	            	 orderSetle.setDscnt_amount(rs.getInt(7));
+	            	 orderSetle.setTot_amount(rs.getInt(8));
+	            	 orderSetle.setOrder_dt(rs.getString(9));
+	            	 orderSetle.setUser_req(rs.getString(10));
+	            	 
+	            	 orderSetle.setPayment_type(rs.getString(11));
+	            	 orderSetle.setStatus(rs.getString(12));
+	             }
+	         
+		      } catch (Exception e){
+		    	  e.printStackTrace();
+		      } finally {
+		         close();
+		      }
+			
+			return orderSetle;
+		}
+
 }

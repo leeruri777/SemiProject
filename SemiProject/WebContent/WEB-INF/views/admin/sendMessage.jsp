@@ -109,13 +109,14 @@ $("#btnSend").click(function(){
 				"smsContent" : $("textarea#smsContent").val(),
 				"datetime":datetime };
 	}
+	
+	
 	$.ajax({
 		url:"/message/sendMessage.go",
         type:"POST",
         data:dataObj,
         dataType:"json",
         success:function(json){
-        	// json 은 {"group_id":"R2GWPBT7UoW308sI","success_count":1,"error_count":0} 처럼 된다.
 	    	
 	    	if(json.success_count == 1) {
 	    		$("div#smsResult").html("문자전송이 성공되었습니다"); 

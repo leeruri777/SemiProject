@@ -72,6 +72,17 @@
                                     <a class="nav-link" href="/admin/deliverManage.go">배송관리</a>
                                     <a class="nav-link" href="/admin/deliverFee.go">배송비</a>
                                 </nav>
+                            </div>
+                            
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts5" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                기타
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts5" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/admin/messageManage.go">문자메세지</a>
+                                </nav>
                             </div>                      
          					<!-- 항목 끝 -->                           
                         </div>
