@@ -206,7 +206,6 @@ body {
           <h4 class="modal-title">아이디 찾기</h4>
           <button type="button" class="close myclose" data-dismiss="modal">&times;</button>
         </div>
-        <a style="cursor: pointer;" data-toggle="modal" data-target="#userIdfind" data-dismiss="modal">아이디 찾기</a>
         <!-- Modal body -->
         <div class="modal-body">
           <div id="idFind">
