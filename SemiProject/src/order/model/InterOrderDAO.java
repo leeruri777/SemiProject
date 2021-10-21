@@ -1,6 +1,7 @@
 package order.model;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,12 @@ public interface InterOrderDAO {
 	int updateMessageForm(String smsContent) throws SQLException;
 	// 메세지 불러오기
 	String getMessageFrom() throws SQLException;
+	
+
+	
+	//결제 후 실행되는 메소드
+	// ===== Transaction 처리하기 ===== // 
+	int orderSetleAdd(HashMap<String, Object> paraMap) throws SQLException;
 	
 	
 }
