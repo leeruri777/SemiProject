@@ -74,13 +74,14 @@
 					</c:when>
 					<c:otherwise>
 						<c:if test="${sessionScope.loginuser.grade == 1}">
-							<li class="nav-item"><a class="nav-link" href="/admin/adminMain.go">관리자 모드</a></li>
+							<li class="nav-item"><a class="nav-link" href="/admin/deliverManage.go">관리자 모드</a></li>
 						</c:if>
 						<li class="nav-item"><a class="nav-link" href="#">${sessionScope.loginuer.userid}</a></li>
 						<li class="nav-item"><a class="nav-link" href="/mypage/orderlist.go">마이페이지</a></li>
 						<c:choose>
 							<c:when test="${sessionScope.loginuser.loginType == 'kakao'}">
 								<li class="nav-item"><a class="nav-link" onclick="kakaoLogout();">로그아웃!</a></li>
+								<!-- <li class="nav-item"><a class="nav-link" onclick="unlinkApp();">연결끊기.테스트용</a></li> -->
 							</c:when>
 							<c:otherwise>
 								<li class="nav-item"><a class="nav-link" href="/member/logout.go">로그아웃</a></li>						

@@ -87,11 +87,6 @@ $(function(){
 				alert("이메일에 맞는 형식을 입력해주세요.");
 				return;
 			} else {
-				/* const frm = document.pwdFindFrm;
-				frm.action = "/member/findPw.go";
-				frm.method = "post";
-				frm.submit(); */
-	
 				
 				$.ajax({
 					type : "post",
