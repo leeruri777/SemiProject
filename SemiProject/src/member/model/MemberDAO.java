@@ -734,7 +734,7 @@ public class MemberDAO implements InterMemberDAO {
 			conn = ds.getConnection();
 			String sql = "SELECT userid "
 						+"FROM TBL_MEMBER "
-						+ "WHERE name = ? and email = ?";
+						+ "WHERE name = ? and email = ? and logintype ='normal' ";
 			
 			pstmt = conn.prepareStatement(sql);
 	        pstmt.setString(1, paraMap.get("name"));

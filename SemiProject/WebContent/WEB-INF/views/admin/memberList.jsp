@@ -26,8 +26,7 @@ a {
 			</select> 
 			<input type="text" id="keyword" name="keyword" />
 			<button class="btn btn-sm btn-primary" type="button" onclick="goSearch()" id="btnSearch"style="margin-right: 30px;">검색</button>
-			<select id="sizePerPage" name="sizePerPage"
-				style="width: 60px; height: 35px;">
+			<select id="sizePerPage" name="sizePerPage" style="width: 60px; height: 35px;">
 				<option value="10">10</option>
 				<option value="5">5</option>
 				<option value="3">3</option>
@@ -67,9 +66,6 @@ a {
 				<li class="page-item"><a class="page-link" href="#" onClick="fn_prev('${pagination.currPageNo}', '${pagination.range}', '${pagination.pageSize}')">이전</a></li>
 			</c:if>
 			<c:forEach begin="${pagination.startPage}" end="${pagination.endPage}" var="idx">
-				<c:if test="${pagination.startPage == 1 && pagination.endPage == 1}">
-					<li class="page-item active"/><a class="page-link" href="#">${idx}</a></li>
-				</c:if>
 				<li class="page-item <c:out value="${pagination.currPageNo == idx ? 'active' : ''}"/> "><a class="page-link" href="#" onClick="fn_pagination('${idx}', '${pagination.range}')"> ${idx} </a></li>
 			</c:forEach>
 			<c:if test="${pagination.next}">
@@ -90,8 +86,8 @@ $(function(){
 	}
 	$("#keyword").val("${requestScope.keyword}");	
 	
-	$("#select#sizePerPage").val(${requestScope.sizePerPage});
-	$("#select#sizePerPage").change(function(){
+	$("select#sizePerPage").val(${requestScope.sizePerPage});
+	$("select#sizePerPage").change(function(){
 		goSearch();	
 	});
 	
