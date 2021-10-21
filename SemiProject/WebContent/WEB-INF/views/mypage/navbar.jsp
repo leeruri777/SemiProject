@@ -27,7 +27,7 @@ table > tbody:nth-child(1) > tr > td {
 	      <a class="nav-link text-secondary" href="/mypage/orderlist.go">주문/배송</a>
 	    </li>
 	    <li class="nav-item">
-	      <a class="nav-link text-secondary" href="/member/updateMember.go">회원 정보 수정</a>
+	      <a id="updateMemberLink" class="nav-link text-secondary" href="/member/updateMember.go">회원 정보 수정</a>
 	    </li>
 	    <li class="nav-item">
 	      <a class="nav-link text-secondary" href="/mypage/point.go">적립금</a>
@@ -39,4 +39,12 @@ table > tbody:nth-child(1) > tr > td {
 	      <a class="nav-link text-secondary" href="/mypage/deliveraddr.go">배송 주소록 관리</a>
 	    </li>
   </ul>
-</nav>	
+</nav>
+<script>
+$("#updateMemberLink").click(function(){
+	if(${sessionScope.loginuser.loginType == 'kakao'}){
+		alert('카카오 회원은 회원정보를 수정할 수 없습니다.');
+		return false;;
+	}
+});
+</script>
