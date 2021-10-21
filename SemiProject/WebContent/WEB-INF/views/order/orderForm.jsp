@@ -326,7 +326,7 @@ table.table.btable > tbody > tr > td:nth-child(1){
 		
 										<%-- TBL_STOCK테이블에서에서 재고량을 감소시킬때는 상품코드를 where에 잡아서 재고량 컬럼인 prod_stock에서 goods_qy를 빼면 될까요?--%>
 												
-												
+		<input type="hidden" id="usedPoint" name="usedPoint" value="0"/>										
 	</form>
 	
 	
@@ -507,6 +507,9 @@ $("#usePoint").click(function() {
 	$("#totalAmount").text(parseInt($("#totalAmount").text()) -  inputPoint);
 	$("#point").text(point-inputPoint);
 
+    var usedPoint = document.getElementById('usedPoint');
+    usedPoint.value = parseInt(usedPoint.value) + inputPoint;
+   
 });
 
 function pay(){
@@ -531,8 +534,9 @@ function pay(){
 	var email = '${sessionScope.loginuser.email}';
 	var name = '${sessionScope.loginuser.name}';
 	var mobile = '${sessionScope.loginuser.mobile}';
-	console.log(email, name, mobile);
-	var url = "/order/purchaseEnd.go?email="+email+"&name="+name+"&mobile="+mobile; 
+	var totalAmount = $("#totalAmount").text();
+	
+	var url = "/order/purchaseEnd.go?email="+email+"&name="+name+"&mobile="+mobile+"&totalAmount="+totalAmount; 
     
     //window.open은 팝업창 띄우기임
     window.open(url, "purchaseEnd",
