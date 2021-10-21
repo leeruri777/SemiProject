@@ -9,6 +9,8 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 import common.controller.AbstractController;
+import member.model.InterMemberDAO;
+import member.model.MemberDAO;
 import member.model.MemberVO;
 
 import order.model.*;
@@ -17,10 +19,18 @@ public class OrderSetleEndAction extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		//String method = request.getMethod();
 		
-		//메소드에 넣을 값들 (미완성)
 		
 		
+		//if(super.checkLogin(request)) {
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		String userid = loginuser.getUserid();
+			
+		//if("POST".equalsIgnoreCase(method)) {
+			
 		
 		String fk_user_id = request.getParameter("fk_user_id");
 		String user_name = request.getParameter("user_name");
@@ -90,13 +100,12 @@ public class OrderSetleEndAction extends AbstractController {
          
          
          // 주문 테이블에 insert
-         HttpSession session = request.getSession();
-         MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
          paraMap.put("userid", loginuser.getUserid()); //파라맵에 로그인한 유저 아이디를 넣음 //누가 주문했는지 알아오기위해서 로그인한 유저 아이디를 알아온 것이다
          
 		
          // !!!! Transaction 처리를 해주는 메소드 !!!! 
          int isSuccess = odao.orderSetleAdd(paraMap); // Transaction 처리를 해주는 메소드  //성공하면 isSuccess에 1값을 줄 것이다.
+        
         
          
          JSONObject jsobj = new JSONObject();
@@ -108,14 +117,60 @@ public class OrderSetleEndAction extends AbstractController {
          
         String json = jsobj.toString();
    	  	request.setAttribute("json", json);
-   			  
+   		//	 수정해야하나 
    	  	super.setRedirect(false);
    	  	super.setViewPage("/WEB-INF/jsonview.jsp");
-   	  
+   	   
+   	  	
+   	    //super.setRedirect(true);
+   	  	//super.setViewPage("/WEB-INF/mypage/orderlist.jsp"); 주문내역으로 이동?
+		/*
+         if(isSuccess == 1) {					
+			//super.setViewPage("/mypage/orderlist.go?userid="+userid);
+			
+   		//request.setAttribute("message", "결제가 성공되었습니다.");
+       // request.setAttribute("loc", "/mypage/orderlist.go");
+        
+       super.setViewPage("/order/orderForm.go?userid="+userid);
+					
+			
+		} else {
+			request.setAttribute("message", "결제가 실패되었습니다.");
+			request.setAttribute("loc", "/order/orderForm.go");
+			
+			super.setViewPage("/WEB-INF/msg.jsp");
+		}
 		
+        */
+         
+         
+		//}
+		/*
+		else {
+    		
+    		// GET 방식이라면 
+              String message = "비정상적인 경로로 들어왔습니다";
+              String loc = "javascript:history.back()";
+               
+              request.setAttribute("message", message);
+              request.setAttribute("loc", loc);
+              
+           //  super.setRedirect(false);   
+              super.setViewPage("/WEB-INF/msg.jsp");
+    		
+    		
+    	}
+		*/
+   	 /*
+	} else {
 		
+		request.setAttribute("message", "로그인이 필요합니다.");
+		request.setAttribute("loc", "/member/login.go");
+		setViewPage("/WEB-INF/msg.jsp");
 		
-		
+	}
+   	 */
+   	 
 	}
 
 }

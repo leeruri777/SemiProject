@@ -645,7 +645,7 @@ public class OrderDAO implements InterOrderDAO {
 			         			  "                       , fk_prod_code, prod_name, prod_price  " + 
 			         			  "                       , goods_qy, dscnt_amount , tot_amount " + 
 			         			  "                       , order_dt, user_req, payment_type, status) " +  
-			                      " values(order_no.nextval, ?, ?, ?, ?, ?, ?, ?, ?, default, ?, 'kp', '배송준비중') ";
+			                      " values(order_no.nextval, ?, ?, ?, ?, ?, ?, ?, ?, default, ?, 'kp', 'beingdelivered') ";
 						
 						pstmt = conn.prepareStatement(sql); 
 						

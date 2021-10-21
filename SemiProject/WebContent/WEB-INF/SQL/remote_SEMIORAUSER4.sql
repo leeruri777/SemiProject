@@ -5,7 +5,11 @@ select *
 from ORDER_SETLE;
 
 select *
-from TBL_BASKET;
+from tabs;
+
+select *
+from TBL_MEMBER
+
 
 select * 
 

@@ -551,10 +551,6 @@ function goORDER_SETLE_INSERT() { /* OrderSetleEndAction로 frm_order_setle폼�
 	var class_prod_code = document.getElementsByClassName("prod_code");//문자열
 	var class_basket_no = document.getElementsByClassName("basket_no");//문자열
 	
-	//var textarea = document.getElementById("#omessage"); 
-	//console.log(textarea.value);
-	
-	//var class_user_req = document.getElementsByClassName("user_req");//
 	
 	
 	
