@@ -72,6 +72,18 @@ public class BoardWriteAction extends AbstractController {
 			request.setAttribute("boardList", boardList);
 			request.setAttribute("sizePerPage", sizePerPage);
 			
+			///////////////////////////////////////////////////////////////////////
+			if(searchType == null) {
+				searchType = "";
+			}
+			
+			if(searchWord == null) {
+				searchWord = "";
+			}
+			
+			request.setAttribute("searchType", searchType);
+			request.setAttribute("searchWord", searchWord);
+			///////////////////////////////////////////////////////////////////////
 			
 			// 페이지바 시작 // 
 			String pageBar = "";
