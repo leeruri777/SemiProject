@@ -643,9 +643,9 @@ public class OrderDAO implements InterOrderDAO {
 						
 						 String sql =  " insert into order_setle(order_no, fk_user_id , user_name " + 
 			         			  "                       , fk_prod_code, prod_name, prod_price  " + 
-			         			  "                       , goods_qy, dscnt_amount , tot_amount " + 
+			         			  "                       , goods_qy, tot_amount " + 
 			         			  "                       , order_dt, user_req, payment_type, status) " +  
-			                      " values(order_no.nextval, ?, ?, ?, ?, ?, ?, ?, ?, default, ?, 'kp', 'beingdelivered') ";
+			                      " values(order_no.nextval, ?, ?, ?, ?, ?, ?, ?, default, ?, 'kp', 'readydelivery') ";
 						
 						pstmt = conn.prepareStatement(sql); 
 						
@@ -656,9 +656,8 @@ public class OrderDAO implements InterOrderDAO {
 						pstmt.setString(4, prod_name_Arr[i]); 
 						pstmt.setString(5, price_Arr[i]); 
 						pstmt.setString(6, goods_qy_Arr[i]); 
-						pstmt.setString(7, price_Arr[i]); //할인가? dscnt_amount
-						pstmt.setInt(8, Integer.parseInt((String)paraMap.get("totalAmount")));//totalAmount   setInt Integer.parseInt((String)paraMap.get("sumtotalPrice"))
-						pstmt.setString(9, (String)paraMap.get("user_req"));
+						pstmt.setInt(7, Integer.parseInt((String)paraMap.get("totalAmount")));//totalAmount   setInt Integer.parseInt((String)paraMap.get("sumtotalPrice"))
+						pstmt.setString(8, (String)paraMap.get("user_req"));
 						
 						pstmt.executeUpdate();
 						cnt++; // 이 배열의 개수만큼 cnt가 늘어난다. 3개의 상품이 들어가있다면 cnt는 3이다.
