@@ -327,18 +327,19 @@ public class MemberDAO implements InterMemberDAO {
 			conn = ds.getConnection();
 			String sql = "update tbl_member set email = ?, mobile = ?, lastpwdchangedate = sysdate ";
 			if(member.getPwd() != "") {
-				   sql += "pwd = ? ";
+				   sql += ",pwd = ? ";
 			}
-				   sql += "where userid = ?";
+				   sql += "where name = ?";
 			
 			pstmt = conn.prepareStatement(sql);        
 	        pstmt.setString(1, aes.encrypt(member.getEmail()) );
 	        pstmt.setString(2, aes.encrypt(member.getMobile()) );
+	        
 	        if(member.getPwd() != "") {
 	        	pstmt.setString(3, Sha256.encrypt(member.getPwd()));
-	        	pstmt.setString(4, member.getUserid() );
+	        	pstmt.setString(4, member.getName() );
 	        } else {
-	        	pstmt.setString(3, member.getUserid() );
+	        	pstmt.setString(3, member.getName() );
 	        }
 	
 			n = pstmt.executeUpdate();

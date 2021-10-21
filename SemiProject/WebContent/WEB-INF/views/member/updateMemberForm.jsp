@@ -87,7 +87,7 @@ table#tblMemberUpdate td {
 	         <td style="width: 20%; font-weight: bold;">이메일&nbsp;</td>
 	         <td style="width: 80%; text-align: left;"><input type="text" name="email" id="email" class="requiredInfo form-control form-control-sm" value="${sessionScope.loginuser.email}" /> 
 	             <span class="error">이메일 형식에 맞지 않습니다.</span>           
-	             <span style="display: inline-block; width: 80px; height: 30px; border: solid 1px gray; border-radius: 5px; font-size: 8pt; text-align: center; margin-left: 10px; cursor: pointer;" onclick="isExistEmailCheck();">이메일중복확인</span> 
+	             <button type="button" id="emailCheck" style="display: inline-block; width: 100px; height: 30px; border: solid 1px gray; border-radius: 5px; font-size: 8pt; text-align: center; margin-left: 10px; cursor: pointer;" onclick="isExistEmailCheck();">이메일중복확인</button> 
 	             <span id="emailCheckResult"></span>
 	         </td>
       	 </tr>
@@ -134,6 +134,11 @@ var pwdCheck = false; // 비밀번호 검사
 var pwdConfirmCheck = false; // 비밀번호 확인 검사
 
 function isExistEmailCheck(){
+	
+	if($("#email").val() == '${sessionScope.loginuser.email}'){
+		b_flagEmailDuplicateClick = true;
+		return;
+	}
 	 
   	  $.ajax({
 				type : "post",
@@ -158,11 +163,6 @@ function isExistEmailCheck(){
 			});
    
 }
-// 이메일 수정시 중복확인 초기화 
-$("#email").on("propertychange change keyup paste input", function(){
-	b_flagEmailDuplicateClick = false;
-});  
-
 function goUpdate(){
 	
 	var pwd = $("input#pwd").val().trim();
@@ -233,20 +233,10 @@ $(function(){
 		
 		$("input#email").blur(function(){
 			// 이메일 정규표현식 확인
-			var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-			var email = $(this).val().trim();
-			if(email == ""){
-				showError($(this));
-			} else{
-				
-				var bool = regExp.test(email);
-				if(!bool){
-					showError($(this));
-				} else{
-					nextStep($(this));
-				}
-			} 
+			emailCheck();
 		}); // 이메일
+		
+		
 		
 		$("input#hp2").blur(function(){
 			// 숫자 4자리만 들어오도록 검사해주는 정규표현식
@@ -282,6 +272,41 @@ $(function(){
 			} 
 		}); // 핸드폰 마지막
 	   	
-	});
+});
+
+//이메일 수정시 중복확인 초기화 [기존과 동일한 경우 스킵]
+$("#email").on("propertychange change keyup paste input", function(){
+	
+	if($("#email").val() == '${sessionScope.loginuser.email}'){
+		b_flagEmailDuplicateClick = true;
+		return false;;
+	}
+	b_flagEmailDuplicateClick = false;
+	emailCheck();	
+	
+});
+
+function emailCheck(){
+		
+	var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+	var email = $("#email").val().trim();
+	if(email == ""){
+		showError(this);
+		b_flagEmailDuplicateClick = false;
+		$("#emailCheck").attr("disabled",true);
+	} else{
+		
+		var bool = regExp.test(email);
+		if(!bool){
+			showError($("#email"));
+			b_flagEmailDuplicateClick = false;
+			$("#emailCheck").attr("disabled",true);
+		} else{
+			nextStep($("#email"));
+			$("#emailCheck").attr("disabled",false);
+		}
+	} 
+	
+}	
 </script>
 <jsp:include page="/WEB-INF/include/footer.jsp"/>
