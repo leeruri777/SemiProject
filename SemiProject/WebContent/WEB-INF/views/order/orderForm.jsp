@@ -513,18 +513,17 @@ function pay(){
 	
 	if( ${empty sessionScope.loginuser} ) {
 		alert("결제를 하시려면 먼저 로그인 부터 하세요!!");
-		return;
+		return false;;
 	}
 	
 	var arr_requiredInfo = document.getElementsByClassName("required");
 	
-	var boolFlag = false;
 	for(var i=0; i<arr_requiredInfo.length; i++){
 		var value = arr_requiredInfo[i].value;
+		
 		if(value == "" || value == null){
 			alert("필수사항 입력");
-			boolFlag = true;
-			break;
+		    return false;
 		}
 	}
 	// orderForm . PG사에 보낼 폼데이터 설정하기
@@ -532,7 +531,7 @@ function pay(){
 	var email = '${sessionScope.loginuser.email}';
 	var name = '${sessionScope.loginuser.name}';
 	var mobile = '${sessionScope.loginuser.mobile}';
-	
+	console.log(email, name, mobile);
 	var url = "/order/purchaseEnd.go?email="+email+"&name="+name+"&mobile="+mobile; 
     
     //window.open은 팝업창 띄우기임
