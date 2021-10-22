@@ -37,6 +37,7 @@
            		 <li class="nav-item"><a class="nav-link" href="/board/boardWrite.go">공지사항</a></li>
            		 <li class="nav-item"><a class="nav-link" href="/board/boardQA.go">상품 Q&A</a></li>
            		 <li class="nav-item"><a class="nav-link" href="/board/boardIntro.go">소녀떡집 소개</a></li>
+           		 <li class="nav-item"><a class="nav-link" href="/location.go">오시는길</a></li>
 				 <li class="nav-item dropdown">
 			       <a class="nav-link dropdown-toggle menufont_size text-secondary" href="#" id="navbarDropdown" data-toggle="dropdown"> 
 			           	카테고리          				        
