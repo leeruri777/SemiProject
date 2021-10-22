@@ -702,8 +702,8 @@ public class OrderDAO implements InterOrderDAO {
 							pstmt.setInt(5, pg.getStartList() );
 					    } else {
 					    	//검색 기한이 없는 경우
-					    	pstmt.setInt(3, currPageNo * sizePerPage );
-							pstmt.setInt(4, pg.getStartList() );
+					    	pstmt.setInt(2, currPageNo * sizePerPage );
+							pstmt.setInt(3, pg.getStartList() );
 					    }
 					} else { 
 						// 배송상태 검색값은 없지만 검색기간은 있는 경우
